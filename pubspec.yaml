@@ -38,6 +38,14 @@ dependencies:
   firebase_core:
   cloud_firestore:
   firebase_auth:
+  get:
+  get_storage:
+  intl:
+  http:
+  firebase_messaging: ^15.0.3
+  fluttertoast:
+  googleapis_auth:
+  permission_handler:
 
 dev_dependencies:
   flutter_test:
