@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sell_buy/model/user_data_model.dart';
 import 'package:sell_buy/utilities/my_strings.dart';
 
-import '../model/health_institution_model.dart';
+
 
 class FireStoreMethods {
   final CollectionReference healthInstitutionCollection =
@@ -20,12 +20,7 @@ class FireStoreMethods {
     }
   }
 
-  Future<void> updateHealthInstitution(
-      {required HealthInstitutionModel healthInstitution}) async {
-    await healthInstitutionCollection
-        .doc(healthInstitution.uid)
-        .update(healthInstitution.toJson());
-  }
+
 
   Future<void> updateUser({required UserModel userModel}) async {
     await usersCollection.doc(userModel.uid).update(userModel.toJson());

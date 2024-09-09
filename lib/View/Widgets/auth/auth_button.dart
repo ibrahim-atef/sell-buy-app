@@ -37,7 +37,7 @@ class AuthButton extends StatelessWidget {
           ],
           color: backgroundColor ?? mainColor,
           gradient: LinearGradient(
-            colors: [chathamsBlue, mainColor, secondColor],
+            colors: [thirdColor, mainColor, secondColor],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             stops: [0.1, 0.6, 1.9],
