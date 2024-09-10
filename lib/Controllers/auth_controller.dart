@@ -7,6 +7,7 @@ class AuthController extends GetxController {
   bool isVisibility2 = false;
   bool agreePolicies = false;
   RxBool isSignUpLoading = false.obs;
+  RxBool isLoginLoading = false.obs;
   ///////////////////sett agreePolicies val///////////////////////
   void settAgreePolicyVal(bool x) {
     agreePolicies = x;

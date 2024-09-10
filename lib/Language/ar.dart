@@ -134,4 +134,7 @@ const Map<String, String> ar = {
   'Create a new account': 'انشاء حساب جديد',
   'By registering, you will get full access to all benefits Our advantages: Faster': "من خلال التسجيل ستحصل على صلاحية كاملة للاستفادة من جميع مزايانا اسرع",
 "You Have an account already?": "لديك حساب بالفعل؟",
+  "Log in to post an ad": "تسجيل الدخول لنشر إعلان",
+  "Don't have an account?": "ليس لديك حساب؟",
+  'Register here': 'سجل هنا',
 };

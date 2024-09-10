@@ -1,86 +1,174 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sell_buy/Routes/routes.dart';
+import 'package:sell_buy/Utilities/icons.dart';
+import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
+import 'package:sell_buy/Controllers/auth_controller.dart';
+import 'package:sell_buy/Utilities/my_strings.dart';
+import 'package:sell_buy/Utilities/themes.dart';
+import '../../Widgets/auth/auth_text_from_field.dart';
+import '../../Widgets/utilities_widgets/button_component.dart';
 
-import '../../../Controllers/auth_controller.dart';
-import '../../../Routes/routes.dart';
+class LoginScreen extends StatelessWidget {
+  LoginScreen({Key? key}) : super(key: key);
+  final formKey = GlobalKey<FormState>();
+  final authController = Get.put(AuthController());
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final AuthController _authController = Get.put(AuthController());
-
-  late String _email, _password;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        elevation: 0,
+        backgroundColor: white,
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(
+            IconBroken.Close_Square,
+            color: black,
+          ),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _email = value!,
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _password = value!,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-
-                  }
-                },
-                child: const Text('Login'),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: white,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Text('Don\'t have an account?'),
-                  TextButton(
-                    onPressed: () {
-                      Get.toNamed(Routes.RegisterScreen);
-                    },
-                    child: const Text('Sign up'),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: TextComponent(
+                        text: 'Log in to post an ad'.tr,
+                        size: 24,
+                        color: black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
+
+                  SizedBox(height: 40),
+                  AuthTextFromField(
+                    controller: emailController,
+                    obscureText: false,
+                    validator: (value) {
+                      if (value!.isEmpty) return 'Please enter your email'.tr;
+                      if (!RegExp(emailPattern).hasMatch(value))
+                        return 'Please enter a valid email address'.tr;
+                      return null;
+                    },
+                    hintText: 'E-mail'.tr,
+                    textInputType: TextInputType.emailAddress,
+                    prefixIcon: SizedBox.shrink(),
+                    suffixIcon: SizedBox.shrink(),
+                  ),
+                  SizedBox(height: 10),
+                  GetBuilder<AuthController>(builder: (_) {
+                    return AuthTextFromField(
+                      controller: passwordController,
+                      obscureText: !authController.isVisibility ? true : false,
+                      validator: (value) {
+                        if (value!.isEmpty)
+                          return 'Please enter your password'.tr;
+                        if (!RegExp(passwordPattern).hasMatch(value))
+                          return 'The password must be at least 8 characters long and contain one letter and one number'
+                              .tr;
+                        return null;
+                      },
+                      hintText: 'password'.tr,
+                      textInputType: TextInputType.text,
+                      prefixIcon: SizedBox.shrink(),
+                      suffixIcon: InkWell(
+                          onTap: () {
+                            authController.visibility();
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 1,
+                                height: 29,
+                                color: mainColor.withOpacity(.3),
+                              ),
+                              SizedBox(width: 5),
+                              !authController.isVisibility
+                                  ? Icon(Icons.visibility_outlined,
+                                      color: mainColor.withOpacity(.5))
+                                  : Icon(IconBroken.Hide,
+                                      color: mainColor.withOpacity(.5)),
+                            ],
+                          )),
+                    );
+                  }),
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: Get.width * .06),
+                    child: GetBuilder<AuthController>(
+                      builder: (_) {
+                        return ButtonComponent(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              // Proceed with login logic
+                            }
+                          },
+                          text: authController.isLoginLoading.value
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  child: LinearProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(
+                                  'Login'.tr,
+                                  style: TextStyle(
+                                    color: white,
+                                    fontFamily: 'Rubik',
+                                  ),
+                                ),
+                          width: double.infinity,
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextComponent(
+                        text: "Don't have an account?".tr,
+                        size: 12,
+                        color: black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      SizedBox(width: 12),
+                      GestureDetector(
+                        onTap: () {
+                          // Navigate to the register screen
+                          Get.toNamed(Routes.RegisterScreen);
+                        },
+                        child: TextComponent(
+                          text: 'Register here'.tr,
+                          size: 14,
+                          color: backgroundColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),

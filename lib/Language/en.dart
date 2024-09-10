@@ -136,4 +136,7 @@ const Map<String, String> en = {
   "Create a new account":'Create a new account',
   'By registering, you will get full access to all benefits Our advantages: Faster': "By registering, you will get full access to all benefits Our advantages: Faster",
 "You Have an account already?":"You Have an account already?",
+  "Log in to post an ad": "Log in to post an ad",
+  "Don't have an account?": "Don't have an account?",
+  'Register here': 'Register here',
 };
