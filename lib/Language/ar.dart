@@ -125,4 +125,9 @@ const Map<String, String> ar = {
   "This treatment request has already been responded to.":"لقد تم الرد على طلب العلاج هذا بالفعل.",
   "Please agree to our policies":"يرجى الموافقة على سياساتنا",
   "A treatment request for this patient already exists for today.":"طلب العلاج لهذا المريض موجود بالفعل لهذا اليوم.",
+  'Home': 'الرئيسية',
+  'Search': 'بحث',
+  'Create AD': 'أضف إعلان',
+  'Commercial': 'تجاري',
+  'Profile': 'الملف الشخصي',
 };

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sell_buy/utilities/themes.dart';
 import 'package:sell_buy/view/widgets/utilities_widgets/text_Component.dart';
+
+import '../../../Routes/routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -38,13 +41,22 @@ class _SplashScreenState extends State<SplashScreen> {
   // }
 
   @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 3), () {
+      Get.offNamed(Routes.MainLayoutScreen);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: Center(
           child: TextComponent(
         text: "بيع و اشتر",
-        size: 39,
+        size: Get.width * 0.14,
+
         color: Colors.white,
         fontWeight: FontWeight.bold, fontStyle: FontStyle.italic,
           )),

@@ -127,6 +127,10 @@ const Map<String, String> en = {
   "privacy policy":"privacy policy",
   "Please agree to our policies":"Please agree to our policies",
   "A treatment request for this patient already exists for today.":"A treatment request for this patient already exists for today.",
-
+  "Home": "Home",
+  "Search": "Search",
+  "Create AD": "Create AD",
+  "Commercial": "Commercial",
+  "Profile": "Profile",
 
 };

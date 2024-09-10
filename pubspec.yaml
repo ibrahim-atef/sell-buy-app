@@ -98,6 +98,10 @@ flutter:
           weight: 800
         - asset: assets/ArFont/Rubik-Medium.ttf
           weight: 500
+    - family: IconBroken
+      fonts:
+        - asset: assets/Icons/icons.ttf
+
 
   #   - family: Trajan Pro
   #     fonts:
