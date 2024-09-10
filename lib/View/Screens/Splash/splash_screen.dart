@@ -44,14 +44,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 3), () {
-      Get.offNamed(Routes.MainLayoutScreen);
+      Get.offNamed(Routes.LoginScreen);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: mainColor,
       body: Center(
           child: TextComponent(
         text: "بيع و اشتر",

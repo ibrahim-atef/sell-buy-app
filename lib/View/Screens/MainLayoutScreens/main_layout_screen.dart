@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sell_buy/Controller/Controllers/main_layout_controller.dart';
+import 'package:sell_buy/Controllers/main_layout_controller.dart';
 
 import '../../../Utilities/icons.dart';
 import '../../../Utilities/themes.dart';

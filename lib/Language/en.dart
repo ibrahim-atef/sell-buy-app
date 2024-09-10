@@ -93,7 +93,8 @@ const Map<String, String> en = {
   'Reminder for next follow-up': 'Reminder for next follow-up',
   'Date of Birth': 'Date of Birth',
   'Please enter your birth date': 'Please enter your birth date',
-  "I agree to the policies": "I agree to the policies",
+  "I agree to the ": "I agree to the ",
+  "policies": "policies",
   "Requests Status": "Requests Status",
   "Patients medication requests": "Patients medication requests",
   'No Internet Connection':'No Internet Connection',
@@ -132,5 +133,7 @@ const Map<String, String> en = {
   "Create AD": "Create AD",
   "Commercial": "Commercial",
   "Profile": "Profile",
-
+  "Create a new account":'Create a new account',
+  'By registering, you will get full access to all benefits Our advantages: Faster': "By registering, you will get full access to all benefits Our advantages: Faster",
+"You Have an account already?":"You Have an account already?",
 };

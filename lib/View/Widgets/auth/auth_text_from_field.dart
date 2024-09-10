@@ -22,8 +22,8 @@ class AuthTextFromField extends StatelessWidget {
     this.prefixIcon,
     this.inputColor,
     required this.suffixIcon,
-    this.maxLines=1,
-    this.enabled=true,
+    this.maxLines = 1,
+    this.enabled = true,
   }) : super(key: key);
 
   @override
@@ -33,33 +33,41 @@ class AuthTextFromField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
-      textAlign: TextAlign.center,
-      cursorColor: Colors.black,enabled: enabled,
-      style: TextStyle(color: inputColor ?? Colors.black.withOpacity(0.6)),
+      textAlign: TextAlign.start, // Align text to start
+      cursorColor: Colors.grey,
+      enabled: enabled,
+      style: TextStyle(
+        color: inputColor ?? Colors.black.withOpacity(0.8),
+        fontFamily: isArabic ? 'Rubik' : 'BonaNovaSC',
+        fontSize: 16,
+      ),
       keyboardType: textInputType,
       validator: (value) => validator(value),
-      maxLines:maxLines ,
+      maxLines: maxLines,
       decoration: InputDecoration(
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
+        prefixIcon: Padding(
+          padding: const EdgeInsets.only(left: 10.0), // Padding for the prefix icon
+          child: prefixIcon,
+        ),
+        suffixIcon: Padding(
+          padding: const EdgeInsets.only(right: 10.0), // Padding for the suffix icon
+          child: suffixIcon,
+        ),
         hintText: hintText,
         hintStyle: TextStyle(
-          fontFamily: isArabic ? 'Amiri' : 'BonaNovaSC',
-          color: inputColor ?? Colors.black,
+          fontFamily: isArabic ? 'Rubik' : 'BonaNovaSC',
+          color: Colors.grey.withOpacity(0.8),
           fontSize: 16,
-          fontWeight: FontWeight.w500,
         ),
         filled: true,
-        fillColor: const Color(0xff91bfc6),
-        // Background color
-        contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        // Adjust padding
+        fillColor: Colors.white, // White background as shown in the image
+        contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.transparent),
+          borderSide: BorderSide(color: Colors.grey.withOpacity(0.5), width: 1), // Light border color
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.transparent),
+          borderSide: BorderSide(color: Colors.grey.withOpacity(0.8), width: 1.5), // Slightly darker on focus
           borderRadius: BorderRadius.circular(10),
         ),
         errorBorder: OutlineInputBorder(
@@ -67,10 +75,10 @@ class AuthTextFromField extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black.withOpacity(0.5)),
+          borderSide: BorderSide(color: Colors.red.withOpacity(0.8)),
           borderRadius: BorderRadius.circular(10),
         ),
-        errorStyle: TextStyle(fontWeight: FontWeight.bold),
+        errorStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
       ),
     );
   }

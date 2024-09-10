@@ -1,14 +1,14 @@
 import 'package:sell_buy/utilities/themes.dart';
 import 'package:flutter/material.dart';
 
-class AuthButton extends StatelessWidget {
+class ButtonComponent extends StatelessWidget {
   final Function() onPressed;
   final Widget text;
   final double width;
   final Color? backgroundColor;
   final double? h;
 
-  AuthButton({
+  ButtonComponent({
     Key? key,
     required this.onPressed,
     required this.text,
@@ -36,12 +36,7 @@ class AuthButton extends StatelessWidget {
             ),
           ],
           color: backgroundColor ?? mainColor,
-          gradient: LinearGradient(
-            colors: [thirdColor, mainColor, secondColor],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            stops: [0.1, 0.6, 1.9],
-          ),
+
           borderRadius: BorderRadius.circular(12),
         ),
         child: Center(

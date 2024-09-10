@@ -90,7 +90,8 @@ const Map<String, String> ar = {
   'Reminder for next follow-up': 'تذكير للمتابعة القادمة',
   'Date of Birth': 'تاريخ الميلاد',
   'Please enter your birth date': 'الرجاء ادخال تاريخ ميلادك',
-  "I agree to the policies": "أنا أوافق على السياسات",
+  "I agree to the ": "أنا أوافق على ",
+  "policies": "السياسات",
   "Requests Status": "متابعة الطلبات",
   "Patients medication requests": "طلبات الأدوية للمرضى",
   'No Internet Connection': "لا يوجد اتصال بالإنترنت",
@@ -130,4 +131,7 @@ const Map<String, String> ar = {
   'Create AD': 'أضف إعلان',
   'Commercial': 'تجاري',
   'Profile': 'الملف الشخصي',
+  'Create a new account': 'انشاء حساب جديد',
+  'By registering, you will get full access to all benefits Our advantages: Faster': "من خلال التسجيل ستحصل على صلاحية كاملة للاستفادة من جميع مزايانا اسرع",
+"You Have an account already?": "لديك حساب بالفعل؟",
 };

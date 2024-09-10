@@ -12,3 +12,5 @@ const Color mainColor=Color(0xff071952);
 
 const Color white=Colors.white;
 const Color black=Colors.black;
+const Color grey=Colors.grey;
+

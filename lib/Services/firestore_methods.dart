@@ -5,12 +5,10 @@ import 'package:sell_buy/utilities/my_strings.dart';
 
 
 class FireStoreMethods {
-  final CollectionReference healthInstitutionCollection =
-      FirebaseFirestore.instance.collection(healthInstitutionCollectionKey);
+
   final CollectionReference usersCollection =
       FirebaseFirestore.instance.collection(usersCollectionKey);
-  final CollectionReference treatmentRequestsCollection =
-      FirebaseFirestore.instance.collection(treatmentRequestsCollectionKey);
+
 
   Future<void> createUser({required UserModel userModel}) async {
     try {
@@ -27,18 +25,4 @@ class FireStoreMethods {
   }
 
 
-  Stream<QuerySnapshot> getTreatmentRequestsByHealthInstitutionId(
-      String healthInstitutionId) {
-    return treatmentRequestsCollection
-        .where('healthInstitutionID', isEqualTo: healthInstitutionId)
-        .orderBy('updatedAt', descending: true)
-        .snapshots();
-  }
-
-  Stream<QuerySnapshot> getTreatmentRequestsForMyLoggedUser(String userId) {
-    return treatmentRequestsCollection
-        .where('requesterID', isEqualTo: userId)
-        .orderBy('updatedAt', descending: true)
-        .snapshots();
-  }
 }
