@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sell_buy/Controllers/main_layout_controller.dart';
+import 'package:sell_buy/View/Widgets/SearchBar/search_bar_widget.dart';
 
 import '../../../Utilities/icons.dart';
 import '../../../Utilities/themes.dart';
@@ -25,6 +26,9 @@ class MainLayoutScreen extends StatelessWidget {
     return GetBuilder<MainLayoutController>(
       builder: (_) {
         return Scaffold(
+          appBar: AppBar(elevation: .5,
+            title: SearchBarWidget (),
+          ),
           body: _children[mainLayoutController.currentIndex],
           bottomNavigationBar: BottomNavigationBar(
             onTap: mainLayoutController.onTabTapped,

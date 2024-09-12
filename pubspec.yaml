@@ -48,6 +48,7 @@ dependencies:
   permission_handler:
   country_code_picker:
   url_launcher:
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

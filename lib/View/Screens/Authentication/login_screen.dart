@@ -7,7 +7,7 @@ import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
 import 'package:sell_buy/Controllers/auth_controller.dart';
 import 'package:sell_buy/Utilities/my_strings.dart';
 import 'package:sell_buy/Utilities/themes.dart';
-import '../../Widgets/auth/auth_text_from_field.dart';
+import '../../Widgets/utilities_widgets/custom_text_from_field.dart';
 import '../../Widgets/utilities_widgets/button_component.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -56,9 +56,8 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   SizedBox(height: 40),
-                  AuthTextFromField(
+                  CustomTextFromField(
                     controller: emailController,
                     obscureText: false,
                     validator: (value) {
@@ -74,7 +73,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   GetBuilder<AuthController>(builder: (_) {
-                    return AuthTextFromField(
+                    return CustomTextFromField(
                       controller: passwordController,
                       obscureText: !authController.isVisibility ? true : false,
                       validator: (value) {
@@ -129,7 +128,7 @@ class LoginScreen extends StatelessWidget {
                                   ),
                                 )
                               : Text(
-                                  'Login'.tr,
+                                  'sign in'.tr,
                                   style: TextStyle(
                                     color: white,
                                     fontFamily: 'Rubik',

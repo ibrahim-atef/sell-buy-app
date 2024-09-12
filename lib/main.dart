@@ -22,23 +22,20 @@ class MyApp extends StatelessWidget {
     ]);
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      locale: Locale(GetStorage().read<String>('lang') ??ara),
+      locale: Locale(GetStorage().read<String>('lang') ?? ara),
       translations: LocaliztionApp(),
       fallbackLocale: Locale(ara),
       title: 'بيع واشتر',
       theme: ThemeData(
-
         backgroundColor: white,
-
         useMaterial3: true,
       ),
-
       initialRoute: Routes.SplashScreen,
       getPages: AppRoutes.routes,
-     );
+    );
   }
 }
 
 /*
----> total hours on this project : 1+1
+---> total hours on this project : 3
  */

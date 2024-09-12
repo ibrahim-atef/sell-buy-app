@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../Controllers/auth_controller.dart';
 import '../../../Utilities/my_strings.dart';
 import '../../../Utilities/themes.dart';
-import '../../Widgets/auth/auth_text_from_field.dart';
+import '../../Widgets/utilities_widgets/custom_text_from_field.dart';
 import '../../Widgets/utilities_widgets/button_component.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -78,7 +78,7 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 40),
-                  AuthTextFromField(
+                  CustomTextFromField(
                     controller: userNameController,
                     obscureText: false,
                     validator: (value) {
@@ -97,7 +97,7 @@ class RegisterScreen extends StatelessWidget {
 
                   Directionality(
                     textDirection: TextDirection.ltr,
-                    child: AuthTextFromField(
+                    child: CustomTextFromField(
                       controller: phoneNumberController,
                       obscureText: false,
                       validator: (value) {
@@ -136,7 +136,7 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 10),
-                  AuthTextFromField(
+                  CustomTextFromField(
                     controller: emailController,
                     obscureText: false,
                     validator: (value) {
@@ -152,7 +152,7 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   GetBuilder<AuthController>(builder: (_) {
-                    return AuthTextFromField(
+                    return CustomTextFromField(
                       controller: passwordController,
                       obscureText: !authController.isVisibility2 ? true : false,
                       validator: (value) {
@@ -191,7 +191,7 @@ class RegisterScreen extends StatelessWidget {
                   SizedBox(height: 10),
                   // Re-enter Password Field
                   GetBuilder<AuthController>(builder: (_) {
-                    return AuthTextFromField(
+                    return CustomTextFromField(
                       controller: reEnterPasswordController,
                       obscureText: !authController.isVisibility ? true : false,
                       validator: (value) {

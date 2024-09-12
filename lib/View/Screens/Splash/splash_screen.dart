@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 3), () {
-      Get.offNamed(Routes.LoginScreen);
+      Get.offNamed(Routes.MainLayoutScreen);
     });
   }
 

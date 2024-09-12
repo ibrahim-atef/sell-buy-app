@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AuthTextFromField extends StatelessWidget {
+class CustomTextFromField extends StatelessWidget {
   final TextEditingController controller;
   final bool obscureText;
   final String hintText;
@@ -12,7 +12,7 @@ class AuthTextFromField extends StatelessWidget {
   int maxLines;
   bool enabled;
 
-  AuthTextFromField({
+  CustomTextFromField({
     Key? key,
     required this.controller,
     required this.obscureText,
