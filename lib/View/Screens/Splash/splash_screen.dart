@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:sell_buy/utilities/themes.dart';
 import 'package:sell_buy/view/widgets/utilities_widgets/text_Component.dart';
 
 import '../../../Routes/routes.dart';
+import '../../../Utilities/my_strings.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,40 +15,22 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   final authValue = GetStorage().read(KRole);
-  //   if (authValue == null) {
-  //
-  //   } else if (authValue == usersCollectionKey) {
-  //     Get.put(UserController());
-  //   } else if (authValue == healthInstitutionCollectionKey) {
-  //     Get.put(HealthInstitutionController());
-  //   } else {
-  //
-  //   }
-  //   Future.delayed(Duration(seconds: 3), () {
-  //
-  //     if (authValue == null) {
-  //       Get.offNamed(Routes.loginScreen);
-  //     } else if (authValue == usersCollectionKey) {
-  //       Get.offNamed(Routes.patientsListScreen);
-  //     } else if (authValue == healthInstitutionCollectionKey) {
-  //       Get.offNamed(Routes.homeHealthInstitutionScreen);
-  //     } else {
-  //       Get.offNamed(Routes.loginScreen);
-  //     }
-  //   });
-  // }
-
   @override
   void initState() {
     super.initState();
+    final authValue = GetStorage().read(KUid);
+
     Future.delayed(Duration(seconds: 3), () {
-      Get.offNamed(Routes.MainLayoutScreen);
+
+      if (authValue == null) {
+        Get.offNamed(Routes.LoginScreen);
+      }   else {
+        Get.offNamed(Routes.MainLayoutScreen);
+      }
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {

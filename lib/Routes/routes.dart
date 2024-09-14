@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sell_buy/View/Screens/Authentication/login_screen.dart';
 
@@ -19,8 +20,21 @@ class AppRoutes {
     GetPage(name: Routes.CreateAdScreen, page: () => CreateAdScreen()),
     GetPage(name: Routes.CommercialScreen, page: () => CommercialScreen()),
     GetPage(name: Routes.MainLayoutScreen, page: () => MainLayoutScreen()),
-    GetPage(name: Routes.RegisterScreen, page: () => RegisterScreen()),
-    GetPage(name: Routes.LoginScreen, page: () => LoginScreen()),
+    GetPage(
+      name: Routes.RegisterScreen,
+      page: () => RegisterScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 500),
+      curve: Curves.fastEaseInToSlowEaseOut,
+
+    ),
+    GetPage(
+      name: Routes.LoginScreen,
+      page: () => LoginScreen(),
+      transition: Transition.upToDown,
+      transitionDuration: Duration(milliseconds: 500),
+      curve: Curves.fastEaseInToSlowEaseOut,
+    ),
   ];
 }
 

@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -7,7 +8,10 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sell_buy/utilities/themes.dart';
 import 'language/localiztion.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+   await Firebase.initializeApp();
+  await GetStorage.init();
   runApp(const MyApp());
 }
 
@@ -37,5 +41,5 @@ class MyApp extends StatelessWidget {
 }
 
 /*
----> total hours on this project : 3
+---> total hours on this project : 3 + 1
  */

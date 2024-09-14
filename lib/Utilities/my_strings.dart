@@ -9,11 +9,16 @@ const String passwordPattern =
 String arabic = 'Arabic';
 String english = 'English';
 const String KUid = "uid";
-const String KRole = "role";
+
 
 String ara = 'ar';
 String ene = 'en';
 const String usersCollectionKey = "users";
+const String favoritesCollectionKey = "favorites";
+const String savedSearchesCollectionKey = "saved_searches";
+const String reviewsCollectionKey = "reviews";
+
+
 
 const String fcmBaseUrl = "https://fcm.googleapis.com/fcm/send";
 const String policyUrl = "";

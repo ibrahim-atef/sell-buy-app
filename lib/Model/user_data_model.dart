@@ -1,45 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserModel {
+class UserDataModel {
   String? userName;
   String? email;
-  String? civilNumber;
   String? phoneNumber;
   Timestamp? registerDate;
-  String? birthDate;
   String? uid;
-  String?
-      role; // Added role to distinguish user types  'user', 'admin', 'health_institution'
-  String? address;
+  String? role;
   String? fcmToken;
   bool isActivated;
+  Map<String, bool>? notificationPreferences;
 
-  UserModel(
-      {this.userName,
-      this.uid,
-      this.email,
-      this.civilNumber,
-      required this.birthDate,
-      required this.isActivated,
-      this.phoneNumber,
-      this.registerDate,
-      this.role,
-      this.address,
-      this.fcmToken});
+  UserDataModel({
+    this.userName,
+    this.uid,
+    this.email,
+    required this.isActivated,
+    this.phoneNumber,
+    this.registerDate,
+    this.role,
+    this.fcmToken,
+    this.notificationPreferences,
+  });
 
-  factory UserModel.fromMap(map) {
-    return UserModel(
+  factory UserDataModel.fromMap(map) {
+    return UserDataModel(
       userName: map['userName'],
       uid: map['uid'],
       email: map['email'],
-      civilNumber: map['civilNumber'],
       phoneNumber: map['phoneNumber'],
       registerDate: map['registerDate'],
       role: map['role'],
-      address: map['address'],
       fcmToken: map['fcmToken'],
-      birthDate: map['birthDate'],
       isActivated: map['isActivated'],
+      notificationPreferences:
+          Map<String, bool>.from(map['notificationPreferences'] ?? {}),
     );
   }
 
@@ -47,15 +42,13 @@ class UserModel {
     return {
       'userName': userName,
       'email': email,
-      'civilNumber': civilNumber,
       'phoneNumber': phoneNumber,
       'registerDate': registerDate,
       'uid': uid,
       'role': role,
-      'birthDate': birthDate,
       'fcmToken': fcmToken,
-      'address': address,
-      'isActivated': isActivated
+      'isActivated': isActivated,
+      'notificationPreferences': notificationPreferences
     };
   }
 }
