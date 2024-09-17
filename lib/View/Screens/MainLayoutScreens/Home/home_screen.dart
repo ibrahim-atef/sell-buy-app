@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
             : SingleChildScrollView(
                 child: Column(
                   children: [
-                    HomeGridViewComponents(),
+                    GridViewComponent(),
                   ],
                 ),
               ),
