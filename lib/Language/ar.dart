@@ -1,10 +1,7 @@
 const Map<String, String> ar = {
   "GENERAL": "عام",
-  "Dark Mode": "الوضع الداكن",
-  "Light Mode": "الوضع الساطع",
   "Language": "اللغة",
   "Logout": "تسجيل خروج",
-  "Switch as a doctor": "طلب التبديل كطبيب",
   "No": "لا",
   "Yes": "نعم",
   "Are you sure to Logout...!": "هل أنت متأكد من تسجيل الخروج...!",
@@ -137,6 +134,7 @@ const Map<String, String> ar = {
   "Log in to post an ad": "تسجيل الدخول لنشر إعلان",
   "Don't have an account?": "ليس لديك حساب؟",
   'Register here': 'سجل هنا',
+
   "ELECTRONICS": "إلكترونيات",
   "PHONES": "هواتف",
   "COMPUTERS": "كمبيوترات",

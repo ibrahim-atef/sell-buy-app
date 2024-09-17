@@ -343,7 +343,7 @@ class RegisterScreen extends StatelessWidget {
                           SizedBox(width: 12),
                           GestureDetector(
                             onTap: () {
-                              Get.toNamed(Routes.LoginScreen);
+                              Get.back();
                             },
                             child: TextComponent(
                               text: 'Click here to log in'.tr,

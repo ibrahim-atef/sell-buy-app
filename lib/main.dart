@@ -8,10 +8,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sell_buy/utilities/themes.dart';
 import 'language/localiztion.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   await Firebase.initializeApp();
+  await Firebase.initializeApp();
   await GetStorage.init();
+
   runApp(const MyApp());
 }
 

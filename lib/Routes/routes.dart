@@ -17,7 +17,11 @@ class AppRoutes {
     GetPage(name: Routes.HomeScreen, page: () => HomeScreen()),
     GetPage(name: Routes.SearchScreen, page: () => SearchScreen()),
     GetPage(name: Routes.ProfileScreen, page: () => ProfileScreen()),
-    GetPage(name: Routes.CreateAdScreen, page: () => CreateAdScreen()),
+    GetPage(
+      name: Routes.CreateAdScreen,
+      page: () => CreateAdScreen(),
+      transition: Transition.downToUp,
+    ),
     GetPage(name: Routes.CommercialScreen, page: () => CommercialScreen()),
     GetPage(name: Routes.MainLayoutScreen, page: () => MainLayoutScreen()),
     GetPage(
@@ -26,13 +30,14 @@ class AppRoutes {
       transition: Transition.downToUp,
       transitionDuration: Duration(milliseconds: 500),
       curve: Curves.fastEaseInToSlowEaseOut,
-
+      preventDuplicates: true,
     ),
     GetPage(
       name: Routes.LoginScreen,
       page: () => LoginScreen(),
-      transition: Transition.upToDown,
+      transition: Transition.downToUp,
       transitionDuration: Duration(milliseconds: 500),
+      preventDuplicates: true,
       curve: Curves.fastEaseInToSlowEaseOut,
     ),
   ];

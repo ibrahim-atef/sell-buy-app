@@ -155,10 +155,32 @@ class AuthController extends GetxController {
         return;
       }
 
-      await auth.signInWithEmailAndPassword(email: email, password: password);
+      await auth.signInWithEmailAndPassword(email: email, password: password).then((value) async {
+        final userCollection =
+        FirebaseFirestore.instance.collection(usersCollectionKey);
+        final userQuery =
+        await userCollection.where("email", isEqualTo: email).get();
 
-      _showSuccessSnackbar("Login successful!");
-      Get.offNamed(Routes.MainLayoutScreen);
+        if (userQuery.docs.isNotEmpty) {
+          final userData = userQuery.docs.first.data();
+          UserDataModel userModel = UserDataModel.fromMap(userData);
+          userModel.fcmToken = await FirebaseMessaging.instance.getToken();
+
+          FireStoreMethods().updateUser(userModel: userModel);
+          authBox.write(KUid, userData['uid']);
+          Get.offNamed(Routes.MainLayoutScreen);
+        } else {
+          // Email does not exist
+          await auth.signOut();
+          Get.snackbar(
+            "خطأ",
+            "البريد الإلكتروني غير موجود",
+            duration: Duration(seconds: 5),
+          );
+        }
+      });
+
+
     } on FirebaseAuthException catch (error) {
       _handleFirebaseAuthException(error);
     } catch (error) {

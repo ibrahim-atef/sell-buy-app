@@ -6,9 +6,9 @@ class Category {
 
   Category({required this.id, required this.name, this.imagePath, this.subcategories = const []});
 
-  // Method to return the image path or a default image
+
   String get image {
-    return imagePath ?? 'path/to/default/image.png'; // Replace with your default image path
+    return imagePath ?? 'path/to/default/image.png';
   }
 }
 

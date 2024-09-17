@@ -1,7 +1,5 @@
 const Map<String, String> en = {
   "GENERAL": "GENERAL",
-  "Dark Mode": "Dark Mode",
-  "Light Mode": "Light Mode",
   "Language": "Language",
   "Logout": "Logout",
   "No": "No",
@@ -138,6 +136,9 @@ const Map<String, String> en = {
   "Log in to post an ad": "Log in to post an ad",
   "Don't have an account?": "Don't have an account?",
   'Register here': 'Register here',
+
+
+
   "ELECTRONICS": "Electronics",
   "PHONES": "Phones",
   "COMPUTERS": "Computers",

@@ -11,12 +11,12 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(10),
-        child: true
+        child: false
             ? HomeLoadingShimmer()
             : SingleChildScrollView(
                 child: Column(
                   children: [
-                    GridViewComponent(),
+                    HomeGridViewComponent(),
                   ],
                 ),
               ),

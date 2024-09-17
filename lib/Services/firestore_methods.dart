@@ -17,14 +17,7 @@ class FireStoreMethods {
     }
   }
 
-  /// Update an existing user document in Firestore
-  static Future<void> updateUser({required UserDataModel userModel}) async {
-    try {
-      await usersCollection.doc(userModel.uid).update(userModel.toJson());
-    } catch (error) {
-      throw Exception("Failed to update user: $error");
-    }
-  }
+
 
   /// Fetch user data by UID
   static Future<UserDataModel?> getUserByUID(String uid) async {
@@ -39,46 +32,17 @@ class FireStoreMethods {
     return null;
   }
 
-  /// Delete a user by UID
-  static Future<void> deleteUser(String uid) async {
-    try {
-      await usersCollection.doc(uid).delete();
-    } catch (error) {
-      throw Exception("Failed to delete user: $error");
-    }
+
+
+
+
+
+
+  /// Update an existing user document in Firestore
+  Future<void> updateUser({required UserDataModel userModel}) async {
+    await usersCollection.doc(userModel.uid).update(userModel.toJson());
   }
 
-  /// Fetch all users (paginated or filtered can be added later)
-  static Future<List<UserDataModel>> getAllUsers() async {
-    try {
-      QuerySnapshot querySnapshot = await usersCollection.get();
-      return querySnapshot.docs
-          .map((doc) => UserDataModel.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
-    } catch (error) {
-      throw Exception("Failed to fetch users: $error");
-    }
-  }
-
-  /// Update the user's activation status
-  static Future<void> updateUserActivationStatus(
-      {required String uid, required bool isActivated}) async {
-    try {
-      await usersCollection.doc(uid).update({'isActivated': isActivated});
-    } catch (error) {
-      throw Exception("Failed to update activation status: $error");
-    }
-  }
-
-  /// Update the FCM token
-  static Future<void> updateUserFCMToken(
-      {required String uid, required String fcmToken}) async {
-    try {
-      await usersCollection.doc(uid).update({'fcmToken': fcmToken});
-    } catch (error) {
-      throw Exception("Failed to update FCM token: $error");
-    }
-  }
 
   // Add a new favorite item to the user subcollection
   static Future<void> addFavorite(
