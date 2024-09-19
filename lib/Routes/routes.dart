@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:sell_buy/View/Screens/Authentication/login_screen.dart';
 
 import '../View/Screens/Authentication/register_screen.dart';
+import '../View/Screens/MainLayoutScreens/CreateAd/category_selection_screen.dart';
 import '../View/Screens/MainLayoutScreens/Home/home_screen.dart';
 import '../View/Screens/MainLayoutScreens/Search/search_screen.dart';
 import '../View/Screens/MainLayoutScreens/CreateAd/create_ad_screen.dart';
@@ -40,6 +41,12 @@ class AppRoutes {
       preventDuplicates: true,
       curve: Curves.fastEaseInToSlowEaseOut,
     ),
+    GetPage(
+      name: Routes.CategorySelectionScreen,
+      page: () => CategorySelectionScreen(),
+      transition: Transition.leftToRight,
+      transitionDuration: Duration(milliseconds: 500),
+    ),
   ];
 }
 
@@ -53,4 +60,5 @@ class Routes {
   static const MainLayoutScreen = "/MainLayoutScreen";
   static const RegisterScreen = "/RegisterScreen";
   static const LoginScreen = "/LoginScreen";
+  static const CategorySelectionScreen = "/CategorySelectionScreen";
 }

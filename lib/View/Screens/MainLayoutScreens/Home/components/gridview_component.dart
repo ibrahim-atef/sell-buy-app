@@ -62,7 +62,7 @@ class HomeGridViewComponent extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                     child: TextComponent(
-                        text: category.name.toUpperCase().tr,
+                        text: category.name.tr,
                         size: 12,
                         color: Colors.black,
                         fontWeight: FontWeight.bold),

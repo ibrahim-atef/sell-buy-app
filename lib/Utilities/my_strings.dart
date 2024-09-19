@@ -18,15 +18,32 @@ const String favoritesCollectionKey = "favorites";
 const String savedSearchesCollectionKey = "saved_searches";
 const String reviewsCollectionKey = "reviews";
 
+/// adds collection types
+const String usersAddsCollectionKey = "UsersAdds";
+const String commercialsAddsCollectionKey = "CommercialsAdds";
+
+
+/// categories collection keys or names
+const String electronicsCollectionKey = "Electronics";
+const String realEstateCollectionKey = "REAL_ESTATE";
+const String carsCollectionKey = "Cars";
+const String campingCollectionKey = "Camping";
+const String servicesCollectionKey = "Services";
+const String contractingCollectionKey = "Contracting";
+const String giftsCollectionKey = "Gifts";
+const String fashionHomeCollectionKey = "FASHION_HOME";
+const String animalsCollectionKey = "Animals";
+const String miscellaneousCollectionKey = "Miscellaneous";
+const String jobsCollectionKey = "Jobs";
+const String furnitureCollectionKey = "Furniture";
+
+
+
+
+
 
 
 const String fcmBaseUrl = "https://fcm.googleapis.com/fcm/send";
 const String policyUrl = "";
 
-
-///---------------------------------------------------------------------------  topics to follow in messaging
-
-// const String allDevicesTopic = "/topics/allDevices";
-// const String allHealthInstitutionsTopic = "/topics/allHealthInstitutions";
-// const String allUsersTopic = "/topics/allUsers";
 

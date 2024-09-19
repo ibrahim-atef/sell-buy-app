@@ -42,5 +42,5 @@ class MyApp extends StatelessWidget {
 }
 
 /*
----> total hours on this project : 3 + 2
+---> total hours on this project : 3 + 2 +3 +2 +2 =
  */

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+ import 'package:sell_buy/View/Screens/MainLayoutScreens/Home/components/category_list_view_adds.dart';
 
+import '../../../../Model/ad_model.dart';
 import '../../../Widgets/utilities_widgets/Home_loading_shimmer.dart';
 import 'components/gridview_component.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+    HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +19,7 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     HomeGridViewComponent(),
+
                   ],
                 ),
               ),
