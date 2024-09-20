@@ -11,6 +11,7 @@ class ItemModel {
   String postedTime;
   String ownerName;
   String ownerID;
+  String ownerPhoneNum;
   String category;
   String subCategory;
   Timestamp createdAt;
@@ -28,6 +29,7 @@ class ItemModel {
     required this.postedTime,
     required this.ownerName,
     required this.ownerID,
+    required this.ownerPhoneNum,
     required this.category,
     required this.subCategory,
     required this.createdAt,
@@ -48,6 +50,7 @@ class ItemModel {
       postedTime: json['postedTime'],
       ownerName: json['ownerName'],
       ownerID: json['ownerID'],
+      ownerPhoneNum: json['ownerPhoneNum'],
       category: json['category'],
       subCategory: json['subCategory'],
       createdAt: json['createdAt'],
@@ -69,6 +72,7 @@ class ItemModel {
       'postedTime': postedTime,
       'ownerName': ownerName,
       'ownerID': ownerID,
+      'ownerPhoneNum': ownerPhoneNum,
       'category': category,
       'subCategory': subCategory,
       'createdAt': createdAt,

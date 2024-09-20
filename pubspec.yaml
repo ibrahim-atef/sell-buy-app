@@ -50,7 +50,7 @@ dependencies:
   url_launcher:
   shimmer: ^3.0.0
   image_picker:
-  drag_and_drop_lists: ^0.4.1
+  firebase_storage:
 
 dev_dependencies:
   flutter_test:

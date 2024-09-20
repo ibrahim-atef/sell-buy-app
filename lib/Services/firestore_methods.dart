@@ -1,12 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
- import 'package:sell_buy/utilities/my_strings.dart';
+import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sell_buy/utilities/my_strings.dart';
+import 'package:path/path.dart';
 import '../Model/user_data_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FireStoreMethods {
   // Collection reference remains static as we don't need instance-specific references.
   static final CollectionReference usersCollection =
       FirebaseFirestore.instance.collection(usersCollectionKey);
+  static final CollectionReference usersAddsCollection =
+      FirebaseFirestore.instance.collection(usersAddsCollectionKey);
+
+
 
   /// Create a new user document in Firestore
   static Future<void> createUser({required UserDataModel userDataModel}) async {
@@ -16,8 +23,6 @@ class FireStoreMethods {
       throw Exception("Failed to create user: $error");
     }
   }
-
-
 
   /// Fetch user data by UID
   static Future<UserDataModel?> getUserByUID(String uid) async {
@@ -32,17 +37,10 @@ class FireStoreMethods {
     return null;
   }
 
-
-
-
-
-
-
   /// Update an existing user document in Firestore
   Future<void> updateUser({required UserDataModel userModel}) async {
     await usersCollection.doc(userModel.uid).update(userModel.toJson());
   }
-
 
   // Add a new favorite item to the user subcollection
   static Future<void> addFavorite(
@@ -74,6 +72,21 @@ class FireStoreMethods {
       await usersCollection.doc(uid).collection('reviews').add(review);
     } catch (error) {
       throw Exception("Failed to add review: $error");
+    }
+  }
+
+  /// Helper function to upload a file to Firebase Storage
+ static Future<String> uploadFileToFirebaseStorage(File file) async {
+    try {
+      String fileName = basename(file.path); // Get the file name
+      Reference firebaseStorageRef =  FirebaseStorage.instance.ref().child('ads/$fileName');
+      TaskSnapshot uploadTask = await firebaseStorageRef.putFile(file);
+      String downloadURL =
+          await uploadTask.ref.getDownloadURL(); // Get the URL after uploading
+      return downloadURL;
+    } catch (e) {
+      print('Error uploading file to Firebase Storage: $e');
+      rethrow; // Propagate the error for further handling
     }
   }
 }

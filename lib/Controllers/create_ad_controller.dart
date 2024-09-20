@@ -1,13 +1,22 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sell_buy/Model/user_data_model.dart';
+import 'package:sell_buy/Services/firestore_methods.dart';
 
+import '../Model/ad_model.dart';
 import '../Utilities/categories.dart';
+import '../Utilities/my_strings.dart';
+import '../Utilities/themes.dart';
 
 class CreateAdController extends GetxController {
+  final GetStorage storageBox = GetStorage();
   final picker = ImagePicker();
   List<File>? pickedImages = [];
+  final myData = Rxn<UserDataModel>();
   RxBool isAddingAd = false.obs;
   RxBool isUpdatingAd = false.obs;
   final uPicker = ImagePicker();
@@ -15,6 +24,16 @@ class CreateAdController extends GetxController {
   final Map<String, bool> _categoryExpansionStates = {};
   String? selectedCategoryId;
   String? selectedSubcategoryId;
+
+  late final String userId;
+
+  @override
+  void onInit() {
+    super.onInit();
+    userId = storageBox.read(KUid) ?? "";
+
+    getUserData();
+  }
 
   ///--------------------------------------------------------------------------- Function to check if a category is expanded
   bool isCategoryExpanded(String categoryId) {
@@ -71,8 +90,85 @@ class CreateAdController extends GetxController {
     if (selectedCategoryId == null || selectedSubcategoryId == null) {
       return 'choose category'.tr;
     }
-    final category = categories.firstWhere((category) => category.id == selectedCategoryId);
-    final subcategory = category.subcategories.firstWhere((subcategory) => subcategory.id == selectedSubcategoryId);
+    final category =
+        categories.firstWhere((category) => category.id == selectedCategoryId);
+    final subcategory = category.subcategories
+        .firstWhere((subcategory) => subcategory.id == selectedSubcategoryId);
     return '${category.name.tr} - ${subcategory.name.tr}';
+  }
+
+  /// ---------------------------------------------------------------------------function to get user data
+  void getUserData() async {
+    final String? uid = await storageBox.read(KUid);
+    debugPrint("======================" + uid!);
+    if (uid != null) {
+      FireStoreMethods.usersCollection.doc(uid).snapshots().listen((event) {
+        print("getting user data");
+
+        myData.value = null;
+        if (event.exists) {
+          myData.value = UserDataModel.fromMap(event);
+          update();
+        } else {
+          debugPrint("getting user data error");
+        }
+      });
+    } else {
+      debugPrint("No UID found in authBox");
+    }
+  }
+
+  Future<void> uploadAd(ItemModel ad) async {
+    isAddingAd.value = true; // Start the loading state
+    List<String> imageUrls = [];
+
+    try {
+      if (pickedImages == null || pickedImages!.isEmpty) {
+        throw Exception('Please select at least one image.'.tr);
+      }
+
+      for (File image in pickedImages!) {
+        String imageUrl =
+            await FireStoreMethods.uploadFileToFirebaseStorage(image);
+        imageUrls.add(imageUrl); // Add URL to the list
+      }
+
+      if (myData.value == null) {
+        throw Exception("User data not available.".tr);
+      }
+
+      // Set ad details, including owner info from the user data
+      ad.imageUrls = imageUrls;
+      ad.createdAt = Timestamp.now();
+      ad.updatedAt = Timestamp.now();
+      ad.ownerName =
+          myData.value!.userName!;
+      ad.ownerID = myData.value!.uid!;
+      ad.ownerPhoneNum=myData.value!.phoneNumber!;
+
+      // Upload the ad to Firestore
+      await FireStoreMethods.usersAddsCollection.doc(ad.id).set(ad.toJson());
+
+      // Clear images after successful upload
+      pickedImages!.clear();
+      isAddingAd.value = false;
+      Get.back();
+      // Notify user of success
+      Get.snackbar(
+        "Success".tr,
+        "Your ad has been uploaded successfully!".tr,
+        snackPosition: SnackPosition.TOP,
+      );
+
+    } catch (error) {
+      // Handle any errors during the process
+      isAddingAd.value = false;
+      Get.snackbar("Error", "Failed to upload ad: $error",
+          snackPosition: SnackPosition.TOP);
+      print("Upload Ad Error: $error");
+    }
+    finally {
+      isAddingAd.value = false;
+    }
   }
 }

@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sell_buy/Routes/routes.dart';
+import 'package:sell_buy/Services/firestore_methods.dart';
 import 'package:sell_buy/Utilities/icons.dart';
+import 'package:sell_buy/View/Widgets/utilities_widgets/button_component.dart';
+import 'package:sell_buy/View/Widgets/utilities_widgets/custom_text_from_field.dart';
 import 'package:sell_buy/view/widgets/utilities_widgets/text_Component.dart';
 
 import '../../../../Controllers/create_ad_controller.dart';
@@ -17,23 +20,11 @@ class CreateAdScreen extends StatefulWidget {
 
 class _CreateAdScreenState extends State<CreateAdScreen> {
   final _formKey = GlobalKey<FormState>();
-  ItemModel _item = ItemModel(
-    title: '',
-    location: '',
-    imagePath: '',
-    price: '',
-    description: '',
-    category: '',
-    subCategory: '',
-    imageUrls: [],
-    postedTime: '',
-    ownerName: '',
-    ownerID: '',
-    isSuspended: false,
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-    id: '',
-  );
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+
   final controller = Get.put(CreateAdController());
 
   @override
@@ -103,9 +94,14 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Card(
-                          child: const ListTile(
-                            leading: Icon(Icons.add),
-                            title: Text("Add Image"),
+                          child: ListTile(
+                            leading: Icon(IconBroken.Image),
+                            title: TextComponent(
+                              text: "Add Image".tr,
+                              color: Colors.black,
+                              size: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         Container(
@@ -125,7 +121,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
 
                               return GridView.builder(
                                 gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: crossAxisCount,
                                   crossAxisSpacing: 8,
                                   mainAxisSpacing: 8,
@@ -140,7 +136,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                                         margin: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(8),
+                                          BorderRadius.circular(8),
                                           image: DecorationImage(
                                             image: FileImage(controller
                                                 .pickedImages![index]),
@@ -155,7 +151,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                                           onPressed: () {
                                             controller
                                                 .removeImageFromImagesList(
-                                                    index);
+                                                index);
                                           },
                                           icon: const Icon(
                                               Icons.highlight_remove_rounded),
@@ -174,113 +170,122 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                   const SizedBox(height: 20),
 
                   // Title Field
-                  TextFormField(
-                    decoration: const InputDecoration(labelText: 'العنوان'),
+                  CustomTextFromField(
+                    controller: titleController,
+                    obscureText: false,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'يرجى إدخال العنوان';
+                        return "Please enter title".tr;
                       }
-                      return null;
                     },
-                    onSaved: (value) {
-                      _item.title = value!;
-                    },
-                    onChanged: (value) {
-                      _item.title = value;
-                    },
+                    hintText: 'title'.tr,
+                    textInputType: TextInputType.text,
+                    suffixIcon: Icon(IconBroken.Location),
                   ),
+
                   const SizedBox(height: 20),
 
                   // Price Field
-                  TextFormField(
-                    decoration: const InputDecoration(labelText: 'السعر'),
-                    keyboardType: TextInputType.number,
+                  CustomTextFromField(
+                    controller: priceController,
+                    obscureText: false,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'يرجى إدخال السعر';
+                        return 'Please enter the price'.tr;
                       }
-                      return null;
                     },
-                    onSaved: (value) {
-                      _item.price = value!;
-                    },
-                    onChanged: (value) {
-                      _item.price = value;
-                    },
+                    hintText: 'price'.tr,
+                    textInputType: TextInputType.number,
+                    suffixIcon: Icon(IconBroken.Discount),
                   ),
                   const SizedBox(height: 20),
 
                   // Description Field
-                  TextFormField(
-                    decoration: const InputDecoration(labelText: 'الوصف'),
+                  CustomTextFromField(
+                    controller: descriptionController,
+                    obscureText: false,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'يرجى إدخال الوصف';
+                        return 'Please enter a description'.tr;
                       }
                       return null;
                     },
-                    onSaved: (value) {
-                      _item.description = value!;
-                    },
-                    onChanged: (value) {
-                      _item.description = value;
-                    },
+                    hintText: 'description'.tr,
+                    textInputType: TextInputType.multiline,
+                    maxLines: 2,
+                    suffixIcon: SizedBox.shrink(),
                   ),
                   const SizedBox(height: 20),
 
                   // Location Section
-                  const Text('موقعك:',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  GestureDetector(
-                    onTap: () {
-                      // Implement location picker functionality
+
+                  CustomTextFromField(
+                    controller: addressController,
+                    hintText: 'address'.tr,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter address'.tr;
+                      }
+                      return null;
                     },
-                    child: Container(
-                      height: 100,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(Icons.location_pin, size: 40),
-                          Text('شارع 12, الاحمدي'),
-                        ],
-                      ),
-                    ),
+                    obscureText: false,
+                    textInputType: TextInputType.text,
+                    suffixIcon: Icon(IconBroken.Location),
                   ),
                   const SizedBox(height: 20),
 
-                  // Save Draft & Continue Buttons
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () {
-                            // Save Draft Logic
-                          },
-                          child: const Text('حفظ المسودة'),
+                  ButtonComponent(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        if ( controller.selectedCategoryId==null||controller.selectedSubcategoryId==null) {
+                          Get.snackbar("Error".tr, "Please select category and subcategory".tr);
+                        }else{                        // Create the ad object with the form data
+                          ItemModel ad = ItemModel(
+                            id: FireStoreMethods.usersAddsCollection.doc().id,
+                            title: titleController.text.trim(),
+                            description: descriptionController.text.trim(),
+                            location: addressController.text.trim(),
+                            imagePath: '',
+                            imageUrls: [],
+                            price: priceController.text.trim(),
+                            postedTime: DateTime.now().toString(),
+                            ownerName: 'Owner Name',
+                            ownerID: 'Owner ID',
+                            ownerPhoneNum :"00000000",
+                            category: controller.selectedCategoryId ?? 'Unknown',
+                            subCategory:
+                            controller.selectedSubcategoryId ?? 'Unknown',
+                            createdAt: Timestamp.now(),
+                            updatedAt: Timestamp.now(),
+                          );
+
+                          // Call the controller's method to upload the ad
+                          if (controller.isAddingAd.value == false) {
+                            controller.uploadAd(ad);
+                          }
+
+                        }
+                      }
+                    },
+                    width: Get.width,
+                    text: Obx(() {
+                      return controller.isAddingAd.value
+                          ? Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: const LinearProgressIndicator(
+                          color: Colors.white,
+                          semanticsLabel: 'جاري المعالجة',
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                            }
-                          },
-                          child: Obx(() {
-                            return controller.isAddingAd.value
-                                ? const CircularProgressIndicator()
-                                : const Text('استكمل');
-                          }),
-                        ),
-                      ),
-                    ],
+                      )
+                          : TextComponent(
+                        text: "Create AD".tr,
+                        size: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      );
+                    }),
                   ),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
