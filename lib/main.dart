@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:sell_buy/Model/categories_subcategories_model.dart';
 import 'package:sell_buy/routes/routes.dart';
 import 'package:sell_buy/utilities/my_strings.dart';
 import 'package:get_storage/get_storage.dart';
@@ -42,5 +44,5 @@ class MyApp extends StatelessWidget {
 }
 
 /*
----> total hours on this project : 3 + 2 +3 +2 +2 =
+---> total hours on this project : 3 + 2 +3 +2 +2 + 1.3 + 2
  */

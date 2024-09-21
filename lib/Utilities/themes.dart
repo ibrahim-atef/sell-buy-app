@@ -13,4 +13,6 @@ const Color mainColor=Color(0xff071952);
 const Color white=Colors.white;
 const Color black=Colors.black;
 const Color grey=Colors.grey;
+const Color baseColorShimmer=Color(0xFFE5E5EA);
+const Color highlightColorShimmer=Color(0xFFF5F5F5);
 

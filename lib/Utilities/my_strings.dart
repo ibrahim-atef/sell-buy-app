@@ -21,6 +21,8 @@ const String reviewsCollectionKey = "reviews";
 /// adds collection types
 const String usersAddsCollectionKey = "UsersAdds";
 const String commercialsAddsCollectionKey = "CommercialsAdds";
+const String categoriesCollectionKey = "categories";
+const String subcategoriesCollectionKey = "subcategories";
 
 
 

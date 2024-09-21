@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../../../../Controllers/home_controller.dart';
 import '../../../../../Model/ad_model.dart';
-
-
 
 class ItemCard extends StatelessWidget {
   final ItemModel item;
+  final homeController = Get.put(HomeController());
 
-  const ItemCard({Key? key, required this.item}) : super(key: key);
+  ItemCard({Key? key, required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

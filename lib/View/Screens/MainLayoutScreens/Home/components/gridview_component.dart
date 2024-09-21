@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sell_buy/Controllers/create_ad_controller.dart';
+import 'package:sell_buy/View/Widgets/utilities_widgets/custom_shimmer_widget.dart';
 import 'package:sell_buy/view/widgets/utilities_widgets/text_Component.dart';
 
-import '../../../../../Utilities/categories.dart';
-
 class HomeGridViewComponent extends StatelessWidget {
+  final createAdController = Get.put(CreateAdController());
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -18,16 +20,15 @@ class HomeGridViewComponent extends StatelessWidget {
           mainAxisSpacing: 7,
           crossAxisSpacing: 7,
         ),
-        itemCount: categories.length,
+        itemCount: createAdController.categoriesList.length,
         itemBuilder: (context, index) {
-          final category = categories[index];
+          final category = createAdController.categoriesList[index];
 
           return GestureDetector(
             onTap: () {
-              debugPrint('Category tapped:-${category.name.tr}');
+              debugPrint('Category tapped: ${category.name.tr}');
               // Define the action when category is tapped (e.g., navigate to subcategories)
-              Get.snackbar(
-                  "Selected Category", category.name.tr); // For demonstration
+              Get.snackbar("Selected Category", category.name.tr);
             },
             child: Card(
               elevation: .6,
@@ -35,37 +36,51 @@ class HomeGridViewComponent extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Category Image
+                  // Category Image with shimmer loading
                   Expanded(
-                    child: category.imagePath != null
-                        ? Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.asset(
-                                category.imagePath!,
-                                fit: BoxFit.cover,
-                                errorBuilder: (BuildContext context,
-                                    Object error, StackTrace? stackTrace) {
-                                  // Fallback widget when image loading fails
-                                  return Icon(Icons.image_not_supported);
-                                },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          category.imagePath,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child; // Image is fully loaded
+                            }
+                            // Show circular progress indicator until the image loads
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                    : null,
                               ),
-                            ),
-                          )
-                        : Icon(Icons
-                            .image_not_supported), // Fallback if imagePath is null
+                            );
+                          },
+                          errorBuilder: (BuildContext context, Object error,
+                              StackTrace? stackTrace) {
+                            // Fallback widget when image loading fails
+                            return Icon(Icons.image_not_supported);
+                          },
+                        ),
+                      ),
+                    ),
                   ),
 
                   // Category Name
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                    const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                     child: TextComponent(
-                        text: category.name.tr,
-                        size: 12,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                      text: Get.locale!.languageCode == "ar"
+                          ? category.arName
+                          : category.name,
+                      size: 12,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),

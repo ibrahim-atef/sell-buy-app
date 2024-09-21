@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sell_buy/Model/categories_subcategories_model.dart';
 import 'package:sell_buy/utilities/my_strings.dart';
 import 'package:path/path.dart';
 import '../Model/user_data_model.dart';
@@ -12,8 +13,8 @@ class FireStoreMethods {
       FirebaseFirestore.instance.collection(usersCollectionKey);
   static final CollectionReference usersAddsCollection =
       FirebaseFirestore.instance.collection(usersAddsCollectionKey);
-
-
+  static final CollectionReference categoriesCollection =
+      FirebaseFirestore.instance.collection(categoriesCollectionKey);
 
   /// Create a new user document in Firestore
   static Future<void> createUser({required UserDataModel userDataModel}) async {
@@ -76,10 +77,11 @@ class FireStoreMethods {
   }
 
   /// Helper function to upload a file to Firebase Storage
- static Future<String> uploadFileToFirebaseStorage(File file) async {
+  static Future<String> uploadFileToFirebaseStorage(File file) async {
     try {
       String fileName = basename(file.path); // Get the file name
-      Reference firebaseStorageRef =  FirebaseStorage.instance.ref().child('ads/$fileName');
+      Reference firebaseStorageRef =
+          FirebaseStorage.instance.ref().child('ads/$fileName');
       TaskSnapshot uploadTask = await firebaseStorageRef.putFile(file);
       String downloadURL =
           await uploadTask.ref.getDownloadURL(); // Get the URL after uploading
@@ -88,5 +90,27 @@ class FireStoreMethods {
       print('Error uploading file to Firebase Storage: $e');
       rethrow; // Propagate the error for further handling
     }
+  }
+
+  /// Get categories from Firestore
+  static Future<List<Category>> getCategories() async {
+    List<Category> categories = [];
+
+    try {
+      QuerySnapshot snapshot = await categoriesCollection.get();
+
+      // Loop through documents and add category names to the list
+      for (DocumentSnapshot doc in snapshot.docs) {
+        if (doc.exists && doc.data() != null) {
+          categories.add(Category.fromMap(doc.data() as Map<String, dynamic>));
+        }
+      }
+    } catch (error) {
+      print("Error getting categories: $error");
+      // You could throw the error further if you want to handle it elsewhere
+      throw Exception("Failed to load categories");
+    }
+
+    return categories;
   }
 }
