@@ -204,4 +204,11 @@ class AuthController extends GetxController {
     }
     return false;
   }
+  ///-------------------------------------------------------logout fun
+  void logout() async {
+    await authBox.erase();
+    await auth.signOut();
+
+    Get.offNamed(Routes.LoginScreen);
+  }
 }

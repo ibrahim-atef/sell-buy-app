@@ -116,12 +116,12 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
 
                               if (controller.pickedImages!.length >= 3) {
                                 crossAxisCount =
-                                2; // Set to 2 columns if more than 3 images
+                                    2; // Set to 2 columns if more than 3 images
                               }
 
                               return GridView.builder(
                                 gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: crossAxisCount,
                                   crossAxisSpacing: 8,
                                   mainAxisSpacing: 8,
@@ -136,7 +136,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                                         margin: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                           borderRadius:
-                                          BorderRadius.circular(8),
+                                              BorderRadius.circular(8),
                                           image: DecorationImage(
                                             image: FileImage(controller
                                                 .pickedImages![index]),
@@ -151,7 +151,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                                           onPressed: () {
                                             controller
                                                 .removeImageFromImagesList(
-                                                index);
+                                                    index);
                                           },
                                           icon: const Icon(
                                               Icons.highlight_remove_rounded),
@@ -237,10 +237,15 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                   ButtonComponent(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        if ( controller.selectedCategoryId==null||controller.selectedSubcategoryId==null) {
-                          Get.snackbar("Error".tr, "Please select category and subcategory".tr);
-                        }else{                        // Create the ad object with the form data
-                          ItemModel ad = ItemModel(
+                        if (controller.selectedCategoryId == null ||
+                            controller.selectedSubcategoryId == null ||
+                            controller.selectedCategoryArName == null ||
+                            controller.selectedSubcategoryArName == null) {
+                          Get.snackbar("Error".tr,
+                              "Please select category and subcategory".tr);
+                        } else {
+                          // Create the ad object with the form data
+                          AdModel ad = AdModel(
                             id: FireStoreMethods.usersAddsCollection.doc().id,
                             title: titleController.text.trim(),
                             description: descriptionController.text.trim(),
@@ -251,19 +256,23 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                             postedTime: DateTime.now().toString(),
                             ownerName: 'Owner Name',
                             ownerID: 'Owner ID',
-                            ownerPhoneNum :"00000000",
-                            category: controller.selectedCategoryId ?? 'Unknown',
+                            ownerPhoneNum: "00000000",
+                            category:
+                                controller.selectedCategoryId ?? 'Unknown',
                             subCategory:
-                            controller.selectedSubcategoryId ?? 'Unknown',
+                                controller.selectedSubcategoryId ?? 'Unknown',
                             createdAt: Timestamp.now(),
                             updatedAt: Timestamp.now(),
+                            categoryNameAr:
+                                controller.selectedCategoryArName ?? '',
+                            selectedSubcategoryArName:
+                                controller.selectedSubcategoryArName ?? '',
                           );
 
                           // Call the controller's method to upload the ad
                           if (controller.isAddingAd.value == false) {
                             controller.uploadAd(ad);
                           }
-
                         }
                       }
                     },
@@ -271,18 +280,18 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                     text: Obx(() {
                       return controller.isAddingAd.value
                           ? Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: const LinearProgressIndicator(
-                          color: Colors.white,
-                          semanticsLabel: 'جاري المعالجة',
-                        ),
-                      )
+                              padding: const EdgeInsets.all(20.0),
+                              child: const LinearProgressIndicator(
+                                color: Colors.white,
+                                semanticsLabel: 'جاري المعالجة',
+                              ),
+                            )
                           : TextComponent(
-                        text: "Create AD".tr,
-                        size: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      );
+                              text: "Create AD".tr,
+                              size: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            );
                     }),
                   ),
                   SizedBox(height: 20),

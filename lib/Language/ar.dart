@@ -223,4 +223,12 @@ const Map<String, String> ar = {
   "Please enter address": "الرجاء ادخال العنوان",
   "Error": "خطأ",
   "Please select category and subcategory" : "الرجاء تحديد القسم والقسم الفرعي",
+  "d": "يوم",
+  "m": "دقيقة",
+  "mo": "شهر",
+  "h": "ساعة",
+  "y": "سنة",
+  "view": "مشاهدة",
+  "whatsapp": "واتساب",
+  "Call Now": "اتصل الان",
 };

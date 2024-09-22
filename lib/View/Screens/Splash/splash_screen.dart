@@ -22,11 +22,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Future.delayed(Duration(seconds: 3), () {
 
-      // if (authValue == null) {
-      //   Get.offNamed(Routes.LoginScreen);
-      // }   else {
-      //   Get.offNamed(Routes.MainLayoutScreen);
-      // }
+      if (authValue == null) {
+        Get.offNamed(Routes.LoginScreen);
+      }   else {
+        Get.offNamed(Routes.MainLayoutScreen);
+      }
       Get.offNamed(Routes.MainLayoutScreen);
     });
   }

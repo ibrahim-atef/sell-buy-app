@@ -26,7 +26,7 @@ class MainLayoutScreen extends StatelessWidget {
     return GetBuilder<MainLayoutController>(
       builder: (_) {
         return Scaffold(
-          appBar: AppBar(elevation: .5,
+          appBar: mainLayoutController.currentIndex == 4 ? null : AppBar(elevation: .5,
             title: SearchBarWidget (),
           ),
           body: _children[mainLayoutController.currentIndex],

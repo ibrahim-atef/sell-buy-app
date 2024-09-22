@@ -26,6 +26,8 @@ class CreateAdController extends GetxController {
   final Map<String, bool> _categoryExpansionStates = {};
   String? selectedCategoryId;
   String? selectedSubcategoryId;
+  String? selectedCategoryArName;
+  String? selectedSubcategoryArName;
 
   late final String userId;
 
@@ -89,20 +91,28 @@ class CreateAdController extends GetxController {
 
   /// ---------------------------------------------------------------------------function to get names of category and subcategory after selecting them
   String getCategoryAndSubcategoryNames() {
+    debugPrint("------- getting category and subcategory names");
+
     if (selectedCategoryId == null || selectedSubcategoryId == null) {
       return 'choose category'.tr;
     }
-    final category =
-        categoriesList.firstWhere((category) => category.id == selectedCategoryId);
+    final category = categoriesList
+        .firstWhere((category) => category.id == selectedCategoryId);
     final subcategory = category.subcategories!
         .firstWhere((subcategory) => subcategory.id == selectedSubcategoryId);
-    return '${category.name.tr} - ${subcategory.name.tr}';
+    selectedCategoryArName = category.arName;
+    selectedSubcategoryArName = subcategory.arName;
+
+    return Get.locale!.languageCode == "ar"
+        ? '${category.arName} - ${subcategory.arName}'
+        : '${category.name} - ${subcategory.name}';
   }
 
   /// ---------------------------------------------------------------------------function to get user data
   void getUserData() async {
+    debugPrint("------- getting user data");
+
     final String? uid = await storageBox.read(KUid);
-    debugPrint("======================" + uid!);
     if (uid != null) {
       FireStoreMethods.usersCollection.doc(uid).snapshots().listen((event) {
         print("getting user data");
@@ -111,13 +121,9 @@ class CreateAdController extends GetxController {
         if (event.exists) {
           myData.value = UserDataModel.fromMap(event);
           update();
-        } else {
-          debugPrint("getting user data error");
-        }
+        } else {}
       });
-    } else {
-      debugPrint("No UID found in authBox");
-    }
+    } else {}
   }
 
   /// ---------------------------------------------------------------------------function to get categories and subcategories from firestore
@@ -125,16 +131,17 @@ class CreateAdController extends GetxController {
   RxBool isLoadingCategories = false.obs;
 
   Future<void> getCategoriesAndSubcategories() async {
+    debugPrint("------- getting categories and subcategories");
     isLoadingCategories.value = true;
     try {
       // Get the categories collection
-      final categoriesSnapshot = await FireStoreMethods.categoriesCollection.get();
+      final categoriesSnapshot =
+          await FireStoreMethods.categoriesCollection.get();
       categoriesList.clear(); // Clear the previous list
 
       // Loop through each category document
       for (var categoryDoc in categoriesSnapshot.docs) {
         // Debug log for category document
-        debugPrint('Category Data: ${categoryDoc.data()}');
 
         // Try-catch to handle specific category parsing issues
         try {
@@ -150,14 +157,13 @@ class CreateAdController extends GetxController {
           List<Subcategory> subcategories = [];
           for (var subcategoryDoc in subcategoriesSnapshot.docs) {
             // Debug log for subcategory document
-            debugPrint('Subcategory Data: ${subcategoryDoc.data()}');
 
             // Try-catch to handle subcategory parsing issues
             try {
-              Subcategory subcategory = Subcategory.fromMap(subcategoryDoc.data());
+              Subcategory subcategory =
+                  Subcategory.fromMap(subcategoryDoc.data());
               subcategories.add(subcategory);
             } catch (e) {
-              debugPrint('Error parsing subcategory: ${subcategoryDoc.data()}');
               print('Error: $e');
             }
           }
@@ -168,12 +174,10 @@ class CreateAdController extends GetxController {
           // Add the category (with subcategories) to the list
           categoriesList.add(category);
         } catch (e) {
-          debugPrint('Error parsing category: ${categoryDoc.data()}');
           print('Error: $e');
         }
       }
 
-      debugPrint(categoriesList.length.toString()); // Print the length of categories
       update(); // Update UI after fetching categories
     } catch (error) {
       print("Error getting categories: $error");
@@ -184,8 +188,7 @@ class CreateAdController extends GetxController {
     }
   }
 
-
-  Future<void> uploadAd(ItemModel ad) async {
+  Future<void> uploadAd(AdModel ad) async {
     isAddingAd.value = true; // Start the loading state
     List<String> imageUrls = [];
 
@@ -206,14 +209,21 @@ class CreateAdController extends GetxController {
 
       // Set ad details, including owner info from the user data
       ad.imageUrls = imageUrls;
+      ad.imagePath = imageUrls[0];
       ad.createdAt = Timestamp.now();
       ad.updatedAt = Timestamp.now();
       ad.ownerName = myData.value!.userName!;
       ad.ownerID = myData.value!.uid!;
       ad.ownerPhoneNum = myData.value!.phoneNumber!;
-
+      if (selectedCategoryId == null || selectedSubcategoryId == null) {
+        Get.snackbar("Error".tr, "Please select category and subcategory".tr);
+        return;
+      }
       // Upload the ad to Firestore
-      await FireStoreMethods.usersAddsCollection.doc(ad.id).set(ad.toJson());
+      await FirebaseFirestore.instance
+          .collection(selectedCategoryId!)
+          .doc(ad.id)
+          .set(ad.toJson());
 
       // Clear images after successful upload
       pickedImages!.clear();

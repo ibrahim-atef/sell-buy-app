@@ -2,11 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sell_buy/Controllers/create_ad_controller.dart';
+import 'package:sell_buy/Controllers/home_controller.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/custom_shimmer_widget.dart';
 import 'package:sell_buy/view/widgets/utilities_widgets/text_Component.dart';
 
 class HomeGridViewComponent extends StatelessWidget {
-  final createAdController = Get.put(CreateAdController());
+  final homeController = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +21,9 @@ class HomeGridViewComponent extends StatelessWidget {
           mainAxisSpacing: 7,
           crossAxisSpacing: 7,
         ),
-        itemCount: createAdController.categoriesList.length,
+        itemCount: homeController.categoriesList.length,
         itemBuilder: (context, index) {
-          final category = createAdController.categoriesList[index];
+          final category = homeController.categoriesList[index];
 
           return GestureDetector(
             onTap: () {

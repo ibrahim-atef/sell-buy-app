@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ItemModel {
+class AdModel {
   String id;
   String title;
   String description;
@@ -13,12 +13,14 @@ class ItemModel {
   String ownerID;
   String ownerPhoneNum;
   String category;
+  String categoryNameAr;
   String subCategory;
+  String selectedSubcategoryArName;
   Timestamp createdAt;
   Timestamp updatedAt;
   bool isSuspended = false;
 
-  ItemModel({
+  AdModel({
     required this.id,
     required this.title,
     required this.description,
@@ -31,15 +33,17 @@ class ItemModel {
     required this.ownerID,
     required this.ownerPhoneNum,
     required this.category,
+    required this.categoryNameAr,
     required this.subCategory,
+    required this.selectedSubcategoryArName,
     required this.createdAt,
     required this.updatedAt,
     this.isSuspended = false,
   });
 
-  // Convert from JSON
-  factory ItemModel.fromJson(json) {
-    return ItemModel(
+
+  factory AdModel.fromJson(json) {
+    return AdModel(
       id: json['id'],
       title: json['title'],
       description: json['description'],
@@ -52,14 +56,16 @@ class ItemModel {
       ownerID: json['ownerID'],
       ownerPhoneNum: json['ownerPhoneNum'],
       category: json['category'],
+      categoryNameAr: json['categoryNameAr'],
       subCategory: json['subCategory'],
+      selectedSubcategoryArName: json['selectedSubcategoryArName'],
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
       isSuspended: json['isSuspended'] ?? false,
     );
   }
 
-  // Convert to JSON
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -74,7 +80,9 @@ class ItemModel {
       'ownerID': ownerID,
       'ownerPhoneNum': ownerPhoneNum,
       'category': category,
+      'categoryNameAr': categoryNameAr,
       'subCategory': subCategory,
+      'selectedSubcategoryArName': selectedSubcategoryArName,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'isSuspended': isSuspended,
