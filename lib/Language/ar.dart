@@ -231,4 +231,7 @@ const Map<String, String> ar = {
   "view": "مشاهدة",
   "whatsapp": "واتساب",
   "Call Now": "اتصل الان",
+  "Thank you for using our application.": "شكرا لك على استخدام تطبيقنا.",
+  'recently viewed': 'شاهدت مؤخراً',
+  "Edit Profile ": "تعديل الملف الشخصي",
 };

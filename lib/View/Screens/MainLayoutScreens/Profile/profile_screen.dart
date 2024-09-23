@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sell_buy/Controllers/auth_controller.dart';
+import 'package:sell_buy/Model/user_data_model.dart';
 import 'package:sell_buy/Utilities/icons.dart';
 import 'package:sell_buy/Utilities/themes.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/button_component.dart';
+import 'package:sell_buy/View/Widgets/utilities_widgets/custom_shimmer_widget.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
 
 import '../../../../Controllers/app_setting_controller.dart';
@@ -18,64 +21,119 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: Get.height * 0.07),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildUserInfoSection(),
-            ),
-            SizedBox(height: 12),
-            ButtonComponent(
-              backgroundColor: backgroundColor,
-              onPressed: () {Get.toNamed(Routes.LoginScreen);},
-              text: TextComponent(
-                  text: "تسجيل الدخول".tr,
-                  size: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
-              width: Get.width * 0.9,
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: GetBuilder<AppSettingController>(
+        builder: (_) {
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                TextComponent(
-                  text: "Don't have an account?".tr,
-                  size: 12,
-                  color: black,
-                  fontWeight: FontWeight.bold,
+                SizedBox(height: Get.height * 0.07),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: settingController.myData.value == null
+                      ? _buildUserInfoLoadingShimmer()
+                      :settingController.uid == null ? _buildHelloSection(): _buildUserInfoSection(userData: settingController.myData.value!),
                 ),
-                SizedBox(width: 12),
-                GestureDetector(
-                  onTap: () {
-                    // Navigate to the register screen
-                    Get.toNamed(Routes.RegisterScreen);
-                  },
-                  child: TextComponent(
-                    text: 'Register here'.tr,
-                    size: 14,
-                    color: backgroundColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                SizedBox(height: 12),
+                !settingController.isUserLoggedIn()
+                    ? ButtonComponent(
+                        backgroundColor: backgroundColor,
+                        onPressed: () {
+                          Get.toNamed(Routes.LoginScreen);
+                        },
+                        text: TextComponent(
+                            text: "تسجيل الدخول".tr,
+                            size: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                        width: Get.width * 0.9,
+                      )
+                    : SizedBox.shrink(),
+                settingController.isUserLoggedIn()
+                    ? SizedBox.shrink()
+                    : SizedBox(height: 20),
+                settingController.isUserLoggedIn()
+                    ? SizedBox.shrink()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextComponent(
+                            text: "Don't have an account?".tr,
+                            size: 12,
+                            color: black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          SizedBox(width: 12),
+                          GestureDetector(
+                            onTap: () {
+                              // Navigate to the register screen
+                              Get.toNamed(Routes.RegisterScreen);
+                            },
+                            child: TextComponent(
+                              text: 'Register here'.tr,
+                              size: 14,
+                              color: backgroundColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                SizedBox(height: Get.height * 0.03),
+                Container(
+                  height: 6,
+                  color: baseColorShimmer,
                 ),
+                _buildOptionsSection(),
               ],
             ),
-            SizedBox(height: Get.height * 0.03),
-            Container(
-              height: 6,
-              color: baseColorShimmer,
-            ),
-            _buildOptionsSection(),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildUserInfoSection() {
+  Widget _buildUserInfoSection({required UserDataModel userData}) {
+    return Row(
+      children: [
+        const CircleAvatar(
+          radius: 30,
+          backgroundColor: baseColorShimmer,
+          child: Icon(
+            Icons.person,
+            size: 50,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox( height: 20,),
+            TextComponent(
+                text:'Welcome'.tr +   userData.userName!,
+                size: 16,
+                color: mainColor,
+                fontWeight: FontWeight.bold),
+            TextComponent(
+                text:
+                    "Thank you for using our application.".tr,
+                size: 12,
+                color: Colors.black54,
+                fontWeight: FontWeight.bold),
+            TextComponent(
+                text:
+                    "${userData.email}\n${userData.phoneNumber}",
+                size: 12,
+                color: Colors.grey,
+                fontWeight: FontWeight.normal),
+          ],
+        ),
+      ],
+    );
+  }
+  Widget _buildHelloSection() {
     return Row(
       children: [
         const CircleAvatar(
@@ -110,14 +168,82 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildUserInfoLoadingShimmer() {
+    return Row(
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundColor: baseColorShimmer,
+          child: CustomShimmer(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: const Color(0xFFE5E5EA),
+              ),
+              width: 50,
+              height: 50,
+            ),
+            baseColor: const Color(0xFFE5E5EA),
+            highlightColor: const Color(0xFFF5F5F5),
+          ),
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomShimmer(
+              baseColor: const Color(0xFFE5E5EA),
+              highlightColor: const Color(0xFFF5F5F5),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  color: const Color(0xFFE5E5EA),
+                ),
+                width: 50,
+                height: 10,
+              ),
+            ),
+            SizedBox(height: 4),
+            CustomShimmer(
+              baseColor: const Color(0xFFE5E5EA),
+              highlightColor: const Color(0xFFF5F5F5),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  color: const Color(0xFFE5E5EA),
+                ),
+                width: Get.width*.65,
+                height: 10,
+              ),
+            ),    SizedBox(height: 4),
+            CustomShimmer(
+              baseColor: const Color(0xFFE5E5EA),
+              highlightColor: const Color(0xFFF5F5F5),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  color: const Color(0xFFE5E5EA),
+                ),
+                width: Get.width*.5,
+                height: 10,
+              ),
+            )
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildOptionsSection() {
     return Column(
       children: [
-        _buildOptionItem(Icons.visibility, 'شاهدت مؤخراً', () {}),
+        _buildOptionItem(Icons.visibility, 'recently viewed'.tr, () {}),
         // "Recently Viewed"
-        _buildOptionItem(Icons.bookmark, 'البحث المحفوظ', () {}),
+        _buildOptionItem(IconBroken.Edit, 'Edit Profile ', () {}),
         // "Saved Searches"
-        _buildOptionItem(Icons.language, 'English', () {}),
+     GetBuilder<AppSettingController>(builder: (_) {return    _buildOptionItem(Icons.language, 'English', () {});  },),
         // "Language"
 
         // "List of Representatives"
@@ -125,8 +251,16 @@ class ProfileScreen extends StatelessWidget {
         // "Technical Support"
         _buildOptionItem(Icons.security, 'القواعد والشروط', () {}),
         GetBuilder<AuthController>(
-          builder: (_) {
-            return _buildOptionItem(IconBroken.Logout, 'تسجيل الخروج', () {authController.logout();});
+          builder: (authController) {
+            return GetBuilder<AppSettingController>(
+              builder: (appSettingController) {
+                return !appSettingController.isUserLoggedIn()
+                    ? SizedBox.shrink()
+                    : _buildOptionItem(IconBroken.Logout, 'تسجيل الخروج', () {
+                        authController.logout();
+                      });
+              },
+            );
           },
         ),
         // "Rules and Terms"
