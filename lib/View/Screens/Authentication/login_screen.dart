@@ -7,6 +7,8 @@ import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
 import 'package:sell_buy/Controllers/auth_controller.dart';
 import 'package:sell_buy/Utilities/my_strings.dart';
 import 'package:sell_buy/Utilities/themes.dart';
+import '../../../Controllers/app_setting_controller.dart';
+import '../../../Controllers/home_controller.dart';
 import '../../Widgets/utilities_widgets/custom_text_from_field.dart';
 import '../../Widgets/utilities_widgets/button_component.dart';
 
@@ -14,9 +16,10 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
   final formKey = GlobalKey<FormState>();
   final authController = Get.put(AuthController());
-
+  final settingController = Get.put(AppSettingController());
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +29,7 @@ class LoginScreen extends StatelessWidget {
         backgroundColor: white,
         leading: IconButton(
           onPressed: () {
+            settingController.onInit();
             Get.back();
           },
           icon: Icon(

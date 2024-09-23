@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sell_buy/Controllers/home_controller.dart';
+import '../../../../Controllers/ad_services_controller.dart';
 import '../../../Widgets/utilities_widgets/Home_loading_shimmer.dart';
 import 'components/gridview_component.dart';
 import 'components/category_list_view_adds.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
 
-  final homeController = Get.put(HomeController());
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends State<HomeScreen> {
+  final homeController = Get.put(HomeController());
+  final adServicesController = Get.put(AdServicesController());
+
+  @override
+  void initState() {
+    adServicesController.onInit();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

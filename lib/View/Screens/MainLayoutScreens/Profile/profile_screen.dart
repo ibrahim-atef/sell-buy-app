@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sell_buy/Controllers/auth_controller.dart';
+import 'package:sell_buy/Controllers/home_controller.dart';
 import 'package:sell_buy/Model/user_data_model.dart';
 import 'package:sell_buy/Utilities/icons.dart';
 import 'package:sell_buy/Utilities/themes.dart';
@@ -25,6 +26,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final authController = Get.put(AuthController());
 
   @override
+  void initState() {
+    settingController.onInit();
+
+
+     super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GetBuilder<AppSettingController>(
@@ -36,13 +45,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(height: Get.height * 0.07),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: settingController.myData.value == null
+                  child:settingController.isUserLoading.value ||
+                      settingController.uid == null ||
+                      settingController.uid!.isEmpty
+                      ? _buildHelloSection()
+                      : settingController.myData.value == null
                       ? _buildUserInfoLoadingShimmer()
-                      : settingController.isUserLoading.value ||
-                              settingController.uid == null ||
-                              settingController.uid!.isEmpty
-                          ? _buildHelloSection()
-                          : _buildUserInfoSection(
+                      :  _buildUserInfoSection(
                               userData: settingController.myData.value!),
                 ),
                 SizedBox(height: 12),

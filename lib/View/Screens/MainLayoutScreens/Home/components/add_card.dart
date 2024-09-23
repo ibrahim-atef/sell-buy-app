@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sell_buy/Controllers/ad_services_controller.dart';
 import 'package:sell_buy/Utilities/themes.dart';
 
 import '../../../../../Controllers/home_controller.dart';
@@ -10,6 +11,7 @@ import '../ad_details screen.dart';
 class AdCard extends StatelessWidget {
   final AdModel item;
   final homeController = Get.put(HomeController());
+  final adServicesController = Get.put(AdServicesController());
 
   AdCard({Key? key, required this.item}) : super(key: key);
 
@@ -70,7 +72,7 @@ class AdCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     TextComponent(
-                      text: homeController.timePassed(
+                      text: adServicesController.timePassed(
                           item.createdAt
                               .toDate()
                               .millisecondsSinceEpoch),

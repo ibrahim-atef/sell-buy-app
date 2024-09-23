@@ -80,5 +80,6 @@ class AppSettingController extends GetxController {
         } else {}
       });
     } else {}
+
   }
 }
