@@ -51,12 +51,12 @@ class AdCard extends StatelessWidget {
                     TextComponent(
                       text: item.title,
                       size: 14,
-                      color: Colors.black,
+                      color: Colors.black,maxLines:1,
                       fontWeight: FontWeight.bold,
                     ),
                     TextComponent(
                       text: item.description,
-                      size: 12,
+                      size: 12,maxLines: 2,
                       color: Colors.grey,
                       fontWeight: FontWeight.normal,
 

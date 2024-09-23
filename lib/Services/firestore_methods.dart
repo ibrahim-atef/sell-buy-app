@@ -1,8 +1,9 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:sell_buy/Model/ad_model.dart';
 import 'package:sell_buy/Model/categories_subcategories_model.dart';
-import 'package:sell_buy/utilities/my_strings.dart';
+import 'package:sell_buy/Utilities/my_strings.dart';
 import 'package:path/path.dart';
 import '../Model/user_data_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -44,12 +45,26 @@ class FireStoreMethods {
   }
 
   // Add a new favorite item to the user subcollection
-  static Future<void> addFavorite(
-      {required String uid, required Map<String, dynamic> favoriteItem}) async {
+  static Future<void> addAdToFavourites(
+      {required String uid, required AdModel favoriteItem}) async {
     try {
-      await usersCollection.doc(uid).collection('favorites').add(favoriteItem);
+      await usersCollection.doc(uid).collection(favoritesCollectionKey).doc(favoriteItem.id).set(favoriteItem.toJson());
     } catch (error) {
       throw Exception("Failed to add favorite: $error");
+    }
+  }
+
+  // Remove a favorite item from the user subcollection
+  static Future<void> removeAdFromFavourites(
+      {required String uid, required String adId}) async {
+    try {
+      await usersCollection
+          .doc(uid)
+          .collection(favoritesCollectionKey)
+          .doc(adId)
+          .delete();
+    } catch (error) {
+      throw Exception("Failed to remove favorite: $error");
     }
   }
 
@@ -113,4 +128,46 @@ class FireStoreMethods {
 
     return categories;
   }
+
+  static Future<void> addViewToAd({
+    required String uid,
+    required String adId,
+    required String categoryCollection,
+  }) async {
+    debugPrint(
+        "Adding view to ad: uid: $uid, adId: $adId, categoryCollection: $categoryCollection");
+    if (uid.isEmpty || adId.isEmpty || categoryCollection.isEmpty) {
+      throw Exception(
+          "Invalid parameters: uid, adId, and categoryCollection must be non-empty.");
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection(categoryCollection)
+          .doc(adId)
+          .collection(viewsCollectionKey)
+          .doc(uid)
+          .set({});
+    } catch (error) {
+      print("Error adding view to ad: $error");
+      throw Exception("Failed to add view to ad");
+    }
+  }
+
+  static Future<int> getViewsCount(
+      {required String adId, required String categoryCollection}) async {
+    try {
+      QuerySnapshot? snapshot = await FirebaseFirestore.instance
+          .collection(categoryCollection)
+          .doc(adId)
+          .collection(viewsCollectionKey)
+          .get();
+      return snapshot?.docs.length ?? 0;
+    } catch (error) {
+      print("Error getting views count: $error");
+      throw Exception("Failed to get views count");
+    }
+  }
+
+
 }

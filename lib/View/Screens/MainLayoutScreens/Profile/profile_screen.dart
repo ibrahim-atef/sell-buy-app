@@ -12,10 +12,16 @@ import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
 import '../../../../Controllers/app_setting_controller.dart';
 import '../../../../routes/routes.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   ProfileScreen({super.key});
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   final settingController = Get.put(AppSettingController());
+
   final authController = Get.put(AuthController());
 
   @override
@@ -32,7 +38,12 @@ class ProfileScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: settingController.myData.value == null
                       ? _buildUserInfoLoadingShimmer()
-                      :settingController.uid == null ? _buildHelloSection(): _buildUserInfoSection(userData: settingController.myData.value!),
+                      : settingController.isUserLoading.value ||
+                              settingController.uid == null ||
+                              settingController.uid!.isEmpty
+                          ? _buildHelloSection()
+                          : _buildUserInfoSection(
+                              userData: settingController.myData.value!),
                 ),
                 SizedBox(height: 12),
                 !settingController.isUserLoggedIn()
@@ -110,21 +121,21 @@ class ProfileScreen extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox( height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             TextComponent(
-                text:'Welcome'.tr +   userData.userName!,
+                text: 'Welcome'.tr + userData.userName!,
                 size: 16,
                 color: mainColor,
                 fontWeight: FontWeight.bold),
             TextComponent(
-                text:
-                    "Thank you for using our application.".tr,
+                text: "Thank you for using our application.".tr,
                 size: 12,
                 color: Colors.black54,
                 fontWeight: FontWeight.bold),
             TextComponent(
-                text:
-                    "${userData.email}\n${userData.phoneNumber}",
+                text: "${userData.email}\n${userData.phoneNumber}",
                 size: 12,
                 color: Colors.grey,
                 fontWeight: FontWeight.normal),
@@ -133,6 +144,7 @@ class ProfileScreen extends StatelessWidget {
       ],
     );
   }
+
   Widget _buildHelloSection() {
     return Row(
       children: [
@@ -214,10 +226,11 @@ class ProfileScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(2),
                   color: const Color(0xFFE5E5EA),
                 ),
-                width: Get.width*.65,
+                width: Get.width * .65,
                 height: 10,
               ),
-            ),    SizedBox(height: 4),
+            ),
+            SizedBox(height: 4),
             CustomShimmer(
               baseColor: const Color(0xFFE5E5EA),
               highlightColor: const Color(0xFFF5F5F5),
@@ -226,7 +239,7 @@ class ProfileScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(2),
                   color: const Color(0xFFE5E5EA),
                 ),
-                width: Get.width*.5,
+                width: Get.width * .5,
                 height: 10,
               ),
             )
@@ -243,7 +256,11 @@ class ProfileScreen extends StatelessWidget {
         // "Recently Viewed"
         _buildOptionItem(IconBroken.Edit, 'Edit Profile ', () {}),
         // "Saved Searches"
-     GetBuilder<AppSettingController>(builder: (_) {return    _buildOptionItem(Icons.language, 'English', () {});  },),
+        GetBuilder<AppSettingController>(
+          builder: (_) {
+            return _buildOptionItem(Icons.language, 'English', () {});
+          },
+        ),
         // "Language"
 
         // "List of Representatives"

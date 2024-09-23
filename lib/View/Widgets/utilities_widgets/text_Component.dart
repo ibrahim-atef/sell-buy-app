@@ -7,6 +7,8 @@ class TextComponent extends StatelessWidget {
   final FontWeight fontWeight;
   final FontStyle fontStyle;  // New fontStyle parameter
   final TextDecoration? textDecoration;
+  final int? maxLines;  // New maxLines parameter
+  final TextOverflow? overflow;  // New overflow parameter
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,8 @@ class TextComponent extends StatelessWidget {
 
     return Text(
       text,
-      maxLines: 2,
+      maxLines: maxLines ?? 1,  // Use default 1 if not passed
+      overflow: overflow ?? TextOverflow.ellipsis,  // Default to ellipsis if not passed
       style: TextStyle(
         fontFamily: isArabic ? 'Rubik' : 'BonaNovaSC',
         fontSize: size,
@@ -33,5 +36,7 @@ class TextComponent extends StatelessWidget {
     required this.fontWeight,
     this.fontStyle = FontStyle.normal, // Set normal as the default style
     this.textDecoration,
+    this.maxLines,  // Optional parameter for maxLines
+    this.overflow,  // Optional parameter for overflow behavior
   });
 }

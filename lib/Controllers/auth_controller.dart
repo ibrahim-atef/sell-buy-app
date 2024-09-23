@@ -168,7 +168,7 @@ class AuthController extends GetxController {
 
           FireStoreMethods().updateUser(userModel: userModel);
           authBox.write(KUid, userData['uid']);
-          Get.offNamed(Routes.MainLayoutScreen);
+          Get.offNamed(Routes.MainLayoutScreen,preventDuplicates: true);
         } else {
           // Email does not exist
           await auth.signOut();
@@ -209,6 +209,6 @@ class AuthController extends GetxController {
     await authBox.erase();
     await auth.signOut();
 
-    Get.offNamed(Routes.LoginScreen);
+    Get.toNamed(Routes.LoginScreen);
   }
 }

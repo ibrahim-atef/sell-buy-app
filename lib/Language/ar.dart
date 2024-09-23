@@ -234,4 +234,6 @@ const Map<String, String> ar = {
   "Thank you for using our application.": "شكرا لك على استخدام تطبيقنا.",
   'recently viewed': 'شاهدت مؤخراً',
   "Edit Profile ": "تعديل الملف الشخصي",
+  'Owner: ': 'المالك: ',
+  'Ad Details': 'تفاصيل الاعلان',
 };

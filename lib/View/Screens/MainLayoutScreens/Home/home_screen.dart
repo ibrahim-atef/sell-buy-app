@@ -20,33 +20,41 @@ class HomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: HomeLoadingShimmer(),
                 )
-              : SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: HomeGridViewComponent(),
-                      ),
-                      // ListView for Categories and Ads
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: homeController.categoriesList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final category = homeController.categoriesList[index];
-                          final ads = homeController.adsPerCategory[index];
+              : RefreshIndicator(
+                  onRefresh: () async {
+                    // Call the refresh logic here, e.g., reloading categories and ads
+                    await homeController.getCategoriesAndAds();
+                  },
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: HomeGridViewComponent(),
+                        ),
+                        // ListView for Categories and Ads
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: homeController.categoriesList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final category =
+                                homeController.categoriesList[index];
+                            final ads = homeController.adsPerCategory[index];
 
-                          return ads.isEmpty
-                              ? const SizedBox.shrink()
-                              : CategoryListView(
-                                  categoryName:
-                                      category.name, // Pass category name
-                                  items:
-                                      ads, categoryArName: category.arName, // Pass list of ads for this category
-                                );
-                        },
-                      ),
-                    ],
+                            return ads.isEmpty
+                                ? const SizedBox.shrink()
+                                : CategoryListView(
+                                    categoryName:
+                                        category.name, // Pass category name
+                                    items: ads,
+                                    categoryArName: category
+                                        .arName, // Pass list of ads for this category
+                                  );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 );
         },

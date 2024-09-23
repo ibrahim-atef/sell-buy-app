@@ -9,14 +9,30 @@ import '../utilities/my_strings.dart';
 class AppSettingController extends GetxController {
   GetStorage storage = GetStorage();
   var langLocal = ara;
-  late String? uid;
+  late String? uid = null;
   final myData = Rxn<UserDataModel>();
+  RxBool isUserLoading = false.obs;
+
   @override
   void onInit() async {
     // TODO: implement onInit
-    uid = await storage.read(KUid);
-    getUserData();
+    initUser();
     super.onInit();
+  }
+
+  Future<void> initUser() async {
+    isUserLoading.value = true;
+    uid = await storage.read(KUid);
+    if (uid != null && uid!.isNotEmpty) {
+      getUserData();
+      isUserLoading.value = false;
+    } else {
+      // Handle the case when uid is null or empty, possibly show error or ask the user to login.
+      print('UID is null or empty');
+      isUserLoading.value = false;
+    }
+
+    update();
   }
 
   ///add localization logic
@@ -27,10 +43,12 @@ class AppSettingController extends GetxController {
   Future<String> get getLanguage async {
     return await storage.read("lang") ?? ene;
   }
+
   /// This function listens to the uid and returns true if it's not null or empty, otherwise false
   bool isUserLoggedIn() {
     return uid != null && uid!.isNotEmpty;
   }
+
   void changeLanguage(String typeLang) {
     saveLanguage(typeLang);
     if (langLocal == typeLang) {
@@ -63,5 +81,4 @@ class AppSettingController extends GetxController {
       });
     } else {}
   }
-
 }

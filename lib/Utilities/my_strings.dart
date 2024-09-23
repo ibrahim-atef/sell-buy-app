@@ -17,6 +17,7 @@ const String usersCollectionKey = "users";
 const String favoritesCollectionKey = "favorites";
 const String savedSearchesCollectionKey = "saved_searches";
 const String reviewsCollectionKey = "reviews";
+const String viewsCollectionKey = "views";
 
 /// adds collection types
 const String usersAddsCollectionKey = "UsersAdds";

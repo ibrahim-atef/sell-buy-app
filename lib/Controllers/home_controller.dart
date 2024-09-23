@@ -4,18 +4,21 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sell_buy/Model/categories_subcategories_model.dart';
 import 'package:sell_buy/Model/ad_model.dart'; // Assuming AdModel is in this file
+import 'package:sell_buy/Routes/routes.dart';
 import '../Services/firestore_methods.dart';
 import '../Utilities/my_strings.dart';
 
 class HomeController extends GetxController {
   final GetStorage storageBox = GetStorage();
   late final String userId;
+  List<AdModel> favouriteAds = [];
 
   @override
   void onInit() {
     super.onInit();
     userId = storageBox.read(KUid) ?? "";
     getCategoriesAndAds(); // Call function to fetch categories and ads
+    getFavouriteAds();
   }
 
   List<Category> categoriesList = <Category>[]; // Store categories
@@ -112,5 +115,91 @@ class HomeController extends GetxController {
     } else {
       return '${minutes} ' + 'm'.tr; // Translate 'm' for minutes
     }
+  }
+
+  void addViewToAd({
+    required String adId,
+    required String userId,
+    required String categoryCollection,
+  }) async {
+    try {
+      await FireStoreMethods.addViewToAd(
+          adId: adId, uid: userId, categoryCollection: categoryCollection);
+    } catch (e) {
+      print("Error adding view to ad: $e");
+    }
+  }
+
+  Future<int> getViewsCount(
+      {required String adId, required String categoryCollection}) async {
+    try {
+      int? snapshot = await FireStoreMethods.getViewsCount(
+          adId: adId, categoryCollection: categoryCollection);
+      return snapshot ?? 0;
+    } catch (error) {
+      print("Error getting views count: $error");
+      throw Exception("Failed to get views count");
+    }
+  }
+
+  /// Add ad to Favourites
+  RxBool isAddingToFavourites = false.obs;
+
+  void addAdToFavourites(
+      {required AdModel adModel, required String userId}) async {
+    if (userId.isEmpty || userId == null) {
+      Get.toNamed(Routes.LoginScreen);
+
+      return;
+    }
+    try {
+      isAddingToFavourites.value = true;
+      await FireStoreMethods.addAdToFavourites(
+          favoriteItem: adModel, uid: userId);
+    } catch (e) {
+      isAddingToFavourites.value = false;
+      print("Error adding ad to favourites: $e");
+    } finally {
+      isAddingToFavourites.value = false;
+      update();
+    }
+  }
+
+  /// Remove ad from Favourites
+  void removeAdFromFavourites(
+      {required String adId, required String userId}) async {
+    if (userId.isEmpty || userId == null) {
+      return;
+    }
+    try {
+      await FireStoreMethods.removeAdFromFavourites(uid: userId, adId: adId);
+    } catch (e) {
+      print("Error removing ad from favourites: $e");
+    } finally {
+      update();
+    }
+  }
+
+  /// get user favourite ads
+  getFavouriteAds() async {
+    if (userId.isEmpty || userId == null) {
+      return;
+    }
+    FireStoreMethods.usersCollection
+        .doc(userId)
+        .collection(favoritesCollectionKey)
+        .snapshots()
+        .listen((event) {
+      favouriteAds.clear();
+      for (var doc in event.docs) {
+        favouriteAds.add(AdModel.fromJson(doc.data()));
+      }
+      update();
+    });
+  }
+
+  /// function to check if ad is favourite
+  bool isAdFavourite(String adId) {
+    return favouriteAds.any((element) => element.id == adId);
   }
 }
