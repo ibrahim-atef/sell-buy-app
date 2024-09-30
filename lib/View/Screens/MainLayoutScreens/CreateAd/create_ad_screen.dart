@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sell_buy/Routes/routes.dart';
@@ -8,8 +9,11 @@ import 'package:sell_buy/View/Widgets/utilities_widgets/button_component.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/custom_text_from_field.dart';
 import 'package:sell_buy/view/widgets/utilities_widgets/text_Component.dart';
 
+import '../../../../Controllers/auth_controller.dart';
 import '../../../../Controllers/create_ad_controller.dart';
 import '../../../../Model/ad_model.dart';
+import '../../../../Utilities/my_strings.dart';
+import '../../../../Utilities/themes.dart';
 
 class CreateAdScreen extends StatefulWidget {
   const CreateAdScreen({Key? key}) : super(key: key);
@@ -24,8 +28,9 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-
+  final ownerWhatsappNumController = TextEditingController();
   final controller = Get.put(CreateAdController());
+  final authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -215,6 +220,44 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                     maxLines: 2,
                     suffixIcon: SizedBox.shrink(),
                   ),
+                  SizedBox(height: 10),
+                  CustomTextFromField(
+                    controller: ownerWhatsappNumController,
+                    obscureText: false,
+                    validator: (value) {
+                      if (value!.isEmpty) return 'Please enter phone number'.tr;
+                      if (!RegExp(phonePattern)
+                          .hasMatch(authController.countryCode.value + value))
+                        return 'Please enter a valid phone number'.tr;
+                      return null;
+                    },
+                    hintText: 'whatsapp number'.tr,
+                    textInputType: TextInputType.phone,
+                    prefixIcon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CountryCodePicker(
+                          padding: EdgeInsets.zero,
+                          flagWidth: Get.width * .045,
+                          onChanged: (code) {
+                            authController.updateCountryCode(code.dialCode!);
+                          },
+                          initialSelection: 'SA',
+                          textStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Container(
+                          width: 1,
+                          height: 29,
+                          color: mainColor.withOpacity(.3),
+                        ),
+                        SizedBox(width: 10),
+                      ],
+                    ),
+                    suffixIcon: SizedBox.shrink(),
+                  ),
                   const SizedBox(height: 20),
 
                   // Location Section
@@ -245,6 +288,9 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                               "Please select category and subcategory".tr);
                         } else {
                           // Create the ad object with the form data
+                          String whatsappPhoneNumber =
+                              authController.countryCode.value +
+                                  ownerWhatsappNumController.text;
                           AdModel ad = AdModel(
                             id: FireStoreMethods.usersAddsCollection.doc().id,
                             title: titleController.text.trim(),
@@ -267,6 +313,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                                 controller.selectedCategoryArName ?? '',
                             selectedSubcategoryArName:
                                 controller.selectedSubcategoryArName ?? '',
+                            ownerWhatsappNum: whatsappPhoneNumber,
                           );
 
                           // Call the controller's method to upload the ad

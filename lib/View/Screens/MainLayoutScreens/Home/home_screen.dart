@@ -44,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: HomeGridViewComponent(),
                         ),
+
                         // ListView for Categories and Ads
                         ListView.builder(
                           shrinkWrap: true,

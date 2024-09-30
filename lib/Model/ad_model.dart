@@ -12,6 +12,7 @@ class AdModel {
   String ownerName;
   String ownerID;
   String ownerPhoneNum;
+  String ownerWhatsappNum;
   String category;
   String categoryNameAr;
   String subCategory;
@@ -33,6 +34,7 @@ class AdModel {
     required this.ownerID,
     required this.ownerPhoneNum,
     required this.category,
+    required this.ownerWhatsappNum,
     required this.categoryNameAr,
     required this.subCategory,
     required this.selectedSubcategoryArName,
@@ -56,6 +58,7 @@ class AdModel {
       ownerID: json['ownerID'],
       ownerPhoneNum: json['ownerPhoneNum'],
       category: json['category'],
+      ownerWhatsappNum: json['ownerWhatsappNum'],
       categoryNameAr: json['categoryNameAr'],
       subCategory: json['subCategory'],
       selectedSubcategoryArName: json['selectedSubcategoryArName'],
@@ -79,6 +82,7 @@ class AdModel {
       'ownerName': ownerName,
       'ownerID': ownerID,
       'ownerPhoneNum': ownerPhoneNum,
+      'ownerWhatsappNum': ownerWhatsappNum,
       'category': category,
       'categoryNameAr': categoryNameAr,
       'subCategory': subCategory,

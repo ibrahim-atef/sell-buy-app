@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:sell_buy/Model/categories_subcategories_model.dart';
 import 'package:sell_buy/routes/routes.dart';
 import 'package:sell_buy/utilities/my_strings.dart';
 import 'package:get_storage/get_storage.dart';
@@ -30,6 +29,9 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       locale: Locale(GetStorage().read<String>('lang') ?? ara),
+
+      /// TODO ::  please complete adding whatsapp number to ad model and its functionality and then go to commerce ad model
+
       translations: LocaliztionApp(),
       fallbackLocale: Locale(ara),
       title: 'بيع واشتر',
@@ -44,5 +46,5 @@ class MyApp extends StatelessWidget {
 }
 
 /*
----> total hours on this project : 5 +5 +5 + 4 + 4
+---> total hours on this project : 5 +5 +5 + 4 + 4+1
  */

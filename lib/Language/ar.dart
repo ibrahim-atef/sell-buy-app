@@ -244,4 +244,5 @@ const Map<String, String> ar = {
   "account settings" : "اعدادات الحساب",
   'change password' : 'تغيير كلمة المرور',
   'Member since:' : 'تاريخ الانضمام:',
+  'whatsapp number' : 'رقم واتساب',
 };
