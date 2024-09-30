@@ -21,20 +21,47 @@ class AppSettingController extends GetxController {
   }
 
   Future<void> initUser() async {
+    // Set loading to true
     isUserLoading.value = true;
-    uid = await storage.read(KUid);
-    if (uid != null && uid!.isNotEmpty) {
-      getUserData();
-      isUserLoading.value = false;
-    } else {
-      // Handle the case when uid is null or empty, possibly show error or ask the user to login.
-      print('UID is null or empty');
-      isUserLoading.value = false;
-    }
 
-    update();
+    try {
+      // Retrieve UID from storage
+      uid = await storage.read(KUid);
+      if (uid != null && uid!.isNotEmpty) {
+        // Fetch user data if UID exists
+        await getUserData();
+      } else {
+        debugPrint('UID is null or empty');
+      }
+    } catch (e) {
+      // Handle any errors in UID retrieval or user data fetching
+      debugPrint('Error during initUser: $e');
+    } finally {
+      // Always stop the loading spinner regardless of success or failure
+      isUserLoading.value = false;
+      update(); // Update UI after loading completes
+    }
   }
 
+  /// Fetch user data from Firestore
+  Future<void> getUserData() async {
+    debugPrint("------- getting user data");
+
+    if (uid != null) {
+      try {
+        final doc = await FireStoreMethods.usersCollection.doc(uid).get();
+        if (doc.exists) {
+          myData.value = UserDataModel.fromMap(doc.data()!);
+        } else {
+          debugPrint('No user data found');
+        }
+      } catch (e) {
+        debugPrint('Error fetching user data: $e');
+      }
+    }
+
+    update(); // Update UI with new user data
+  }
   ///add localization logic
   void saveLanguage(String lang) async {
     await storage.write("lang", lang);
@@ -51,6 +78,7 @@ class AppSettingController extends GetxController {
 
   void changeLanguage(String typeLang) {
     saveLanguage(typeLang);
+    update();
     if (langLocal == typeLang) {
       return;
     }
@@ -65,21 +93,5 @@ class AppSettingController extends GetxController {
     update();
   }
 
-  void getUserData() async {
-    debugPrint("------- getting user data");
 
-    final String? uid = await storage.read(KUid);
-    if (uid != null) {
-      FireStoreMethods.usersCollection.doc(uid).snapshots().listen((event) {
-        print("getting user data");
-
-        myData.value = null;
-        if (event.exists) {
-          myData.value = UserDataModel.fromMap(event);
-          update();
-        } else {}
-      });
-    } else {}
-
-  }
 }

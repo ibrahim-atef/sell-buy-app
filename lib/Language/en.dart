@@ -226,6 +226,9 @@ const Map<String, String> en = {
   "Please enter address" : "Please enter address",
   "Error" : "Error",
   "Please select category and subcategory" : "Please select category and subcategory",
-
-
+  "Thank you for using our application." : "Thank you for using our application.",
+    "recently viewed" : "recently viewed",
+  'Technical Support' : 'Technical Support',
+  'Terms and Conditions' : 'Terms and Conditions',
+  "Edit Profile " : "Edit Profile ",
 };

@@ -11,6 +11,7 @@ import 'package:sell_buy/View/Widgets/utilities_widgets/custom_shimmer_widget.da
 import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
 
 import '../../../../Controllers/app_setting_controller.dart';
+import '../../../../Utilities/my_strings.dart';
 import '../../../../routes/routes.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -29,8 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     settingController.onInit();
 
-
-     super.initState();
+    super.initState();
   }
 
   @override
@@ -45,15 +45,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(height: Get.height * 0.07),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child:settingController.isUserLoading.value ||
-                      settingController.uid == null ||
-                      settingController.uid!.isEmpty
-                      ? _buildHelloSection()
-                      : settingController.myData.value == null
-                      ? _buildUserInfoLoadingShimmer()
-                      :  _buildUserInfoSection(
-                              userData: settingController.myData.value!),
+                  child: Obx(() {
+                    // Handle the loading state
+                    if (settingController.isUserLoading.value) {
+                      // Show shimmer when loading user data
+                      return _buildUserInfoLoadingShimmer();
+                    }
+
+                    // Check if UID is null or empty
+                    if (settingController.uid == null || settingController.uid!.isEmpty) {
+                      return _buildHelloSection();
+                    }
+
+                    // If user data is being fetched but not yet available
+                    if (settingController.myData.value == null) {
+                      return _buildUserInfoLoadingShimmer();
+                    }
+
+                    // Once data is loaded, show the user info section
+                    return _buildUserInfoSection(userData: settingController.myData.value!);
+                  }),
                 ),
+
                 SizedBox(height: 12),
                 !settingController.isUserLoggedIn()
                     ? ButtonComponent(
@@ -263,26 +276,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         _buildOptionItem(Icons.visibility, 'recently viewed'.tr, () {}),
         // "Recently Viewed"
-        _buildOptionItem(IconBroken.Edit, 'Edit Profile ', () {}),
+        _buildOptionItem(IconBroken.Edit, 'Edit Profile '.tr, () {
+     settingController.myData.value== null? Get.snackbar( '', 'please wait'.tr):     Get.toNamed(Routes.EditProfileScreen,);
+        }),
         // "Saved Searches"
-        GetBuilder<AppSettingController>(
-          builder: (_) {
-            return _buildOptionItem(Icons.language, 'English', () {});
-          },
-        ),
+        GetBuilder<AppSettingController>(builder: (appSettingController) {
+          return _buildOptionItem(Icons.language,
+              appSettingController.langLocal == ara ? 'العربية' : 'English',
+              () {
+            // Switch language directly
+            String newLang = appSettingController.langLocal == ara ? ene : ara;
+            appSettingController.changeLanguage(newLang);
+            Get.updateLocale(Locale(newLang));
+          });
+        }),
+
         // "Language"
 
         // "List of Representatives"
-        _buildOptionItem(Icons.headset_mic, 'الدعم الفني', () {}),
+        _buildOptionItem(Icons.headset_mic, 'Technical Support'.tr, () {}),
         // "Technical Support"
-        _buildOptionItem(Icons.security, 'القواعد والشروط', () {}),
+        _buildOptionItem(Icons.security, 'Terms and Conditions'.tr, () {}),
         GetBuilder<AuthController>(
           builder: (authController) {
             return GetBuilder<AppSettingController>(
               builder: (appSettingController) {
                 return !appSettingController.isUserLoggedIn()
                     ? SizedBox.shrink()
-                    : _buildOptionItem(IconBroken.Logout, 'تسجيل الخروج', () {
+                    : _buildOptionItem(IconBroken.Logout, 'Logout'.tr, () {
                         authController.logout();
                       });
               },

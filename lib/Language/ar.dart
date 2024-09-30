@@ -236,4 +236,12 @@ const Map<String, String> ar = {
   "Edit Profile ": "تعديل الملف الشخصي",
   'Owner: ': 'المالك: ',
   'Ad Details': 'تفاصيل الاعلان',
+  'Technical Support': 'دعم فني',
+  'Terms and Conditions': 'شروط والاحكام',
+  'please wait': 'الرجاء الانتظار',
+  'personal information'  : 'المعلومات الشخصية',
+  'cant be changed' : 'لا يمكن التغيير',
+  "account settings" : "اعدادات الحساب",
+  'change password' : 'تغيير كلمة المرور',
+  'Member since:' : 'تاريخ الانضمام:',
 };

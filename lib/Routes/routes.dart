@@ -5,6 +5,7 @@ import 'package:sell_buy/View/Screens/Authentication/login_screen.dart';
 import '../View/Screens/Authentication/register_screen.dart';
 import '../View/Screens/MainLayoutScreens/CreateAd/category_selection_screen.dart';
 import '../View/Screens/MainLayoutScreens/Home/home_screen.dart';
+import '../View/Screens/MainLayoutScreens/Profile/edit_profile_screen.dart';
 import '../View/Screens/MainLayoutScreens/Search/search_screen.dart';
 import '../View/Screens/MainLayoutScreens/CreateAd/create_ad_screen.dart';
 import '../View/Screens/MainLayoutScreens/Commercial/commercial_screen.dart';
@@ -47,6 +48,10 @@ class AppRoutes {
       transition: Transition.leftToRight,
       transitionDuration: Duration(milliseconds: 500),
     ),
+    GetPage(
+      name: Routes.EditProfileScreen,
+      page: () => EditProfileScreen(),
+    ),
   ];
 }
 
@@ -61,4 +66,5 @@ class Routes {
   static const RegisterScreen = "/RegisterScreen";
   static const LoginScreen = "/LoginScreen";
   static const CategorySelectionScreen = "/CategorySelectionScreen";
+  static const EditProfileScreen = "/EditProfileScreen";
 }
