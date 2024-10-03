@@ -221,42 +221,45 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                     suffixIcon: SizedBox.shrink(),
                   ),
                   SizedBox(height: 10),
-                  CustomTextFromField(
-                    controller: ownerWhatsappNumController,
-                    obscureText: false,
-                    validator: (value) {
-                      if (value!.isEmpty) return 'Please enter phone number'.tr;
-                      if (!RegExp(phonePattern)
-                          .hasMatch(authController.countryCode.value + value))
-                        return 'Please enter a valid phone number'.tr;
-                      return null;
-                    },
-                    hintText: 'whatsapp number'.tr,
-                    textInputType: TextInputType.phone,
-                    prefixIcon: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CountryCodePicker(
-                          padding: EdgeInsets.zero,
-                          flagWidth: Get.width * .045,
-                          onChanged: (code) {
-                            authController.updateCountryCode(code.dialCode!);
-                          },
-                          initialSelection: 'SA',
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
+                  Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: CustomTextFromField(
+                      controller: ownerWhatsappNumController,
+                      obscureText: false,
+                      validator: (value) {
+                        if (value!.isEmpty) return 'Please enter phone number'.tr;
+                        if (!RegExp(phonePattern)
+                            .hasMatch(authController.countryCode.value + value))
+                          return 'Please enter a valid phone number'.tr;
+                        return null;
+                      },
+                      hintText: 'whatsapp number'.tr,
+                      textInputType: TextInputType.phone,
+                      prefixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CountryCodePicker(
+                            padding: EdgeInsets.zero,
+                            flagWidth: Get.width * .045,
+                            onChanged: (code) {
+                              authController.updateCountryCode(code.dialCode!);
+                            },
+                            initialSelection: 'SA',
+                            textStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                        Container(
-                          width: 1,
-                          height: 29,
-                          color: mainColor.withOpacity(.3),
-                        ),
-                        SizedBox(width: 10),
-                      ],
+                          Container(
+                            width: 1,
+                            height: 29,
+                            color: mainColor.withOpacity(.3),
+                          ),
+                          SizedBox(width: 10),
+                        ],
+                      ),
+                      suffixIcon: SizedBox.shrink(),
                     ),
-                    suffixIcon: SizedBox.shrink(),
                   ),
                   const SizedBox(height: 20),
 

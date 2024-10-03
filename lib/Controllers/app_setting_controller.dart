@@ -16,7 +16,7 @@ class AppSettingController extends GetxController {
   @override
   void onInit() async {
     // TODO: implement onInit
-    initUser();
+  myData.value==null?  initUser():null;
     super.onInit();
   }
 

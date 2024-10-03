@@ -253,12 +253,11 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Owner: '.tr + '${widget.ad.ownerName}',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            TextComponent(
+                              text: 'Owner: '.tr + '${widget.ad.ownerName}',
+                              size: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
                             SizedBox(height: 10),
                           ],
@@ -273,89 +272,95 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
               floatingActionButton: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      // homeController.openWhatsAppOrCall(widget.ad.ownerPhoneNum);
-                    },
-                    child: Container(
-                      height: Get.height * .06,
-                      width: Get.width * .4,
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 6,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                        color: Color(0xff00b950),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset("assets/Icons/whatsapp.png"),
+                  widget.ad.ownerWhatsappNum.isEmpty
+                      ? SizedBox.shrink()
+                      : GestureDetector(
+                          onTap: () {
+                            homeController
+                                .openWhatsAppOrCall(widget.ad.ownerWhatsappNum);
+                          },
+                          child: Container(
+                            height: Get.height * .06,
+                            width: Get.width * .4,
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                              color: Color(0xff00b950),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            SizedBox(width: 8),
-                            Text(
-                              "whatsapp".tr,
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image.asset(
+                                        "assets/Icons/whatsapp.png"),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    "whatsapp".tr,
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                   SizedBox(width: 20),
-                  GestureDetector(
-                    onTap: () {
-                      // homeController.openWhatsAppOrCall(widget.ad.ownerPhoneNum);
-                    },
-                    child: Container(
-                      height: Get.height * .06,
-                      width: Get.width * .44,
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 6,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                        color: Colors.blueAccent,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset("assets/Icons/call.png"),
+                  widget.ad.ownerPhoneNum.isEmpty
+                      ? SizedBox.shrink()
+                      : GestureDetector(
+                          onTap: () {
+                            homeController.openCall(widget.ad.ownerPhoneNum);
+                          },
+                          child: Container(
+                            height: Get.height * .06,
+                            width: Get.width * .44,
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                              color: Colors.blueAccent,
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            SizedBox(width: 8),
-                            Text(
-                              "Call Now".tr,
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image.asset("assets/Icons/call.png"),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    "Call Now".tr,
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
               floatingActionButtonLocation:

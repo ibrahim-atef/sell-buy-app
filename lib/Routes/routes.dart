@@ -11,6 +11,7 @@ import '../View/Screens/MainLayoutScreens/CreateAd/create_ad_screen.dart';
 import '../View/Screens/MainLayoutScreens/Commercial/commercial_screen.dart';
 import '../View/Screens/MainLayoutScreens/Profile/profile_screen.dart';
 import '../View/Screens/MainLayoutScreens/main_layout_screen.dart';
+import '../View/Screens/utilites_screen/no_internet_screen.dart';
 import '../view/screens/splash/splash_screen.dart';
 
 class AppRoutes {
@@ -51,6 +52,9 @@ class AppRoutes {
     GetPage(
       name: Routes.EditProfileScreen,
       page: () => EditProfileScreen(),
+    ),    GetPage(
+      name: Routes.noInternetScreen,
+      page: () => NoInternetScreen(),
     ),
   ];
 }
@@ -67,4 +71,5 @@ class Routes {
   static const LoginScreen = "/LoginScreen";
   static const CategorySelectionScreen = "/CategorySelectionScreen";
   static const EditProfileScreen = "/EditProfileScreen";
+  static const noInternetScreen = "/NoInternetScreen";
 }

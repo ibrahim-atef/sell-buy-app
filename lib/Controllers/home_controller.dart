@@ -5,6 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sell_buy/Model/categories_subcategories_model.dart';
 import 'package:sell_buy/Model/ad_model.dart'; // Assuming AdModel is in this file
 import 'package:sell_buy/Routes/routes.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../Services/firestore_methods.dart';
 import '../Utilities/my_strings.dart';
 
@@ -94,5 +95,19 @@ class HomeController extends GetxController {
     return adsList; // Return the list of ads for this category
   }
 
+  ///--------------------->>>>>>>>>>>>>>>>>>>>>>>>>>  flutter lunching whatsapp by url --------------------------------------
 
+  Future<void> openWhatsAppOrCall(String phoneNumber) async {
+    String whatsappUrl = "whatsapp://send?phone=$phoneNumber";
+    String dialUrl = "tel:$phoneNumber";
+
+    // Check if WhatsApp is installed
+    await launch(whatsappUrl);
+  }
+///--------------------->>>>>>>>>>>>>>>>>>>>>>>>>>  flutter lunching call by url --------------------------------------
+
+  Future<void> openCall(String phoneNumber) async {
+    String dialUrl = "tel:$phoneNumber";
+    await launch(dialUrl);
+  }
 }

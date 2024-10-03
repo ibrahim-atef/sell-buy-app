@@ -245,4 +245,10 @@ const Map<String, String> ar = {
   'change password' : 'تغيير كلمة المرور',
   'Member since:' : 'تاريخ الانضمام:',
   'whatsapp number' : 'رقم واتساب',
+  'No ads available in any category' : 'لا يوجد اعلانات في اي قسم',
+  "Free Ad Space": "مساحة الاعلان فارغة",
+  "Warning": 'تحذير',
+  "There's no internet connection": "لا يوجد اتصال بالانترنت",
+  "try again":  'حاول مرة أخرى',
+  "call us": "اتصل بنا",
 };

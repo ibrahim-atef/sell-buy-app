@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       locale: Locale(GetStorage().read<String>('lang') ?? ara),
 
-      /// TODO ::  please complete adding whatsapp number to ad model and its functionality and then go to commerce ad model
+
 
       translations: LocaliztionApp(),
       fallbackLocale: Locale(ara),
