@@ -74,7 +74,7 @@ class HomeController extends GetxController {
       // Assuming you have a collection for ads per category
       final adsSnapshot = await FirebaseFirestore.instance
           .collection(
-              categoryId) // Adjust 'ads' if the sub-collection name is different
+              categoryId).doc(usersAddsCollectionKey).collection(usersAddsCollectionKey) // Adjust 'ads' if the sub-collection name is different
           .get();
 
       // Loop through ads in the snapshot

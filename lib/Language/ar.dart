@@ -251,4 +251,6 @@ const Map<String, String> ar = {
   "There's no internet connection": "لا يوجد اتصال بالانترنت",
   "try again":  'حاول مرة أخرى',
   "call us": "اتصل بنا",
+"Create Commercials Ad" : "رفع اعلان سريع",
+
 };

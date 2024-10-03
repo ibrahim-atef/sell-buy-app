@@ -9,6 +9,7 @@ import '../../View/Screens/MainLayoutScreens/Commercial/commercial_screen.dart';
 import '../../View/Screens/MainLayoutScreens/Profile/profile_screen.dart';
 import '../Routes/routes.dart';
 import '../Utilities/my_strings.dart';
+import '../View/Screens/MainLayoutScreens/CreateAd/select_type_of_screen.dart';
 
 class MainLayoutController extends GetxController {
   int currentIndex = 0;
@@ -17,7 +18,7 @@ class MainLayoutController extends GetxController {
   final List<Widget> children = [
     HomeScreen(),
     SearchScreen(),
-    CreateAdScreen(),
+    SelectTypeOfAdScreen(),
     CommercialScreen(),
     ProfileScreen(),
   ];
@@ -28,7 +29,7 @@ class MainLayoutController extends GetxController {
       if (authValue == null) {
         Get.toNamed(Routes.LoginScreen,);
       } else {
-        Get.toNamed(Routes.CreateAdScreen);
+        Get.toNamed(Routes.selectTypeOfAdScreen);
         update();
       }
     } else {

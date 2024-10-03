@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sell_buy/Controllers/create_ad_controller.dart';
 import 'package:sell_buy/Controllers/home_controller.dart';
+import 'package:sell_buy/View/Widgets/utilities_widgets/custom_loader_component.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/custom_shimmer_widget.dart';
 import 'package:sell_buy/view/widgets/utilities_widgets/text_Component.dart';
 
@@ -52,12 +53,14 @@ class HomeGridViewComponent extends StatelessWidget {
                             }
                             // Show circular progress indicator until the image loads
                             return Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
+                              child:
+                             LoaderComponent(color: Colors.black54,),
+                              // CircularProgressIndicator(
+                              //   value: loadingProgress.expectedTotalBytes != null
+                              //       ? loadingProgress.cumulativeBytesLoaded /
+                              //       loadingProgress.expectedTotalBytes!
+                              //       : null,
+                              // ),
                             );
                           },
                           errorBuilder: (BuildContext context, Object error,

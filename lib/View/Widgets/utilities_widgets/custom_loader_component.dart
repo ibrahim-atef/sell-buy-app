@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:math'; // For generating random numbers
 import 'package:flutter/material.dart';
 
 class LoaderComponent extends StatefulWidget {
-  const LoaderComponent({super.key});
+  LoaderComponent({this.color = Colors.white});
+
+  Color? color;
 
   @override
   State<LoaderComponent> createState() => _LoaderComponentState();
@@ -19,6 +22,7 @@ class _LoaderComponentState extends State<LoaderComponent> {
 
   int _currentIndex = 0;
   late Timer _timer;
+  final Random _random = Random(); // Random number generator
 
   @override
   void initState() {
@@ -35,7 +39,7 @@ class _LoaderComponentState extends State<LoaderComponent> {
   void _startIconLoop() {
     _timer = Timer.periodic(Duration(milliseconds: 600), (timer) {
       setState(() {
-        _currentIndex = (_currentIndex + 1) % icons.length;
+        _currentIndex = _random.nextInt(icons.length); // Pick a random index
       });
     });
   }
@@ -54,7 +58,8 @@ class _LoaderComponentState extends State<LoaderComponent> {
           );
         },
         child: Image.asset(
-          icons[_currentIndex],color: Colors.white,
+          icons[_currentIndex],
+          color: widget.color,
           key: ValueKey<int>(_currentIndex),
           fit: BoxFit.contain,
         ),

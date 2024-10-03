@@ -221,7 +221,7 @@ class CreateAdController extends GetxController {
       }
       // Upload the ad to Firestore
       await FirebaseFirestore.instance
-          .collection(selectedCategoryId!)
+          .collection(selectedCategoryId!).doc(usersAddsCollectionKey).collection(usersAddsCollectionKey)
           .doc(ad.id)
           .set(ad.toJson());
 

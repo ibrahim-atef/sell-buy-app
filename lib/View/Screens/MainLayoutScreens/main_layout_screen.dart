@@ -5,6 +5,7 @@ import 'package:sell_buy/View/Widgets/SearchBar/search_bar_widget.dart';
 
 import '../../../Utilities/icons.dart';
 import '../../../Utilities/themes.dart';
+import 'CreateAd/select_type_of_screen.dart';
 import 'Home/home_screen.dart';
 import 'Search/search_screen.dart';
 import 'CreateAd/create_ad_screen.dart';
@@ -16,7 +17,7 @@ class MainLayoutScreen extends StatelessWidget {
   final List<Widget> _children = [
     HomeScreen(),
     SearchScreen(),
-    CreateAdScreen(),
+    SelectTypeOfAdScreen(),
     CommercialScreen(),
     ProfileScreen(),
   ];

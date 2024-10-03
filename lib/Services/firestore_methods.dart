@@ -143,7 +143,7 @@ class FireStoreMethods {
 
     try {
       await FirebaseFirestore.instance
-          .collection(categoryCollection)
+          .collection(categoryCollection).doc(usersAddsCollectionKey).collection(usersAddsCollectionKey)
           .doc(adId)
           .collection(viewsCollectionKey)
           .doc(uid)
@@ -158,7 +158,7 @@ class FireStoreMethods {
       {required String adId, required String categoryCollection}) async {
     try {
       QuerySnapshot? snapshot = await FirebaseFirestore.instance
-          .collection(categoryCollection)
+          .collection(categoryCollection).doc(usersAddsCollectionKey).collection(usersAddsCollectionKey)
           .doc(adId)
           .collection(viewsCollectionKey)
           .get();
