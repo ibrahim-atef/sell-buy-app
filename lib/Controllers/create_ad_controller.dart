@@ -11,6 +11,7 @@ import 'package:sell_buy/Services/firestore_methods.dart';
 
 import '../Model/ad_model.dart';
 
+import '../Model/commercial_ad_model.dart';
 import '../Utilities/my_strings.dart';
 import '../Utilities/themes.dart';
 
@@ -18,6 +19,7 @@ class CreateAdController extends GetxController {
   final GetStorage storageBox = GetStorage();
   final picker = ImagePicker();
   List<File>? pickedImages = [];
+  File? pickedImage;
   final myData = Rxn<UserDataModel>();
   RxBool isAddingAd = false.obs;
   RxBool isUpdatingAd = false.obs;
@@ -70,12 +72,34 @@ class CreateAdController extends GetxController {
     }
   }
 
+  ///--------------------------------------------------------------------------- Get one image from device
+  Future<void> getOneImageFromDevice() async {
+    final XFile? pickedFile = await picker.pickImage(
+      source: ImageSource.gallery, // Use ImageSource.camera if needed
+      imageQuality: 70, // Adjust the image quality
+    );
+
+    if (pickedFile != null) {
+      pickedImage = File(pickedFile.path); // Save the selected image
+
+      update(); // Update UI or notify listeners
+    } else {
+      print('No image selected.');
+    }
+  }
+
   ///--------------------------------------------------------------------------- Remove an image from the list of picked images
   void removeImageFromImagesList(int index) {
     if (index >= 0 && index < pickedImages!.length) {
       pickedImages!.removeAt(index);
       update(); // Update the UI after removing the image
     }
+  }
+
+  /// ---------------------------------------------------------------------------function to remove the selected img
+  void removePickedImage() {
+    pickedImage = null;
+    update();
   }
 
   /// ---------------------------------------------------------------------------function to set the selected category and subcategory
@@ -221,7 +245,9 @@ class CreateAdController extends GetxController {
       }
       // Upload the ad to Firestore
       await FirebaseFirestore.instance
-          .collection(selectedCategoryId!).doc(usersAddsCollectionKey).collection(usersAddsCollectionKey)
+          .collection(selectedCategoryId!)
+          .doc(usersAddsCollectionKey)
+          .collection(usersAddsCollectionKey)
           .doc(ad.id)
           .set(ad.toJson());
 
@@ -245,4 +271,75 @@ class CreateAdController extends GetxController {
       isAddingAd.value = false;
     }
   }
+
+  Future<void> uploadCommercialAd(CommercialAdModel ad) async {
+    isAddingAd.value = true; // Start the loading state
+    String imageUrl = "";
+
+    try {
+      // Check if any images have been selected
+      if (pickedImage == null) {
+        throw Exception('Please select at least one image.'.tr);
+      }
+
+      // Upload the image to Firebase Storage and store the URL
+      imageUrl = await FireStoreMethods.uploadFileToFirebaseStorage(pickedImage!);
+
+      // Ensure user data is available
+      final userData = myData.value;
+      if (userData == null) {
+        throw Exception("User data not available.".tr);
+      }
+
+      // Set ad details, including owner info from the user data
+      ad
+        ..imagePath = imageUrl
+        ..createdAt = Timestamp.now()
+        ..updatedAt = Timestamp.now()
+        ..ownerName = userData.userName!
+        ..ownerID = userData.uid!
+        ..ownerPhoneNum = userData.phoneNumber!;
+
+      // Ensure category and subcategory are selected
+      if (selectedCategoryId == null || selectedSubcategoryId == null) {
+        Get.snackbar("Error".tr, "Please select category and subcategory".tr);
+        return;
+      }
+
+      // Set category and subcategory details
+      ad
+        ..category = selectedCategoryId!
+        ..subCategory = selectedSubcategoryId!
+        ..categoryNameAr = selectedCategoryArName ?? ""
+        ..selectedSubcategoryArName = selectedSubcategoryArName ?? "";
+
+      // Upload the ad to Firestore (change the path to use commercialsAdsCollectionKey)
+      await FirebaseFirestore.instance
+          .collection(selectedCategoryId!)
+          .doc(commercialsAddsCollectionKey) // Collection for commercial ads
+          .collection(commercialsAddsCollectionKey)
+          .doc(ad.id)
+          .set(ad.toJson());
+
+      // Clear images after successful upload
+      pickedImages?.clear();
+      Get.back();
+
+      // Notify the user of success
+      Get.snackbar(
+        "Success".tr,
+        "Your commercial ad has been uploaded successfully!".tr,
+        snackPosition: SnackPosition.TOP,
+      );
+    } catch (error) {
+      // Handle any errors during the process
+      Get.snackbar("Error".tr, "Failed to upload commercial ad: $error".tr,
+          snackPosition: SnackPosition.TOP);
+      print("Upload Commercial Ad Error: $error");
+    } finally {
+      isAddingAd.value = false;
+    }
+  }
+
+
 }

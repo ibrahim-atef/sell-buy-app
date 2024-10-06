@@ -54,6 +54,7 @@ dependencies:
   photo_view:
   flutter_svg:
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

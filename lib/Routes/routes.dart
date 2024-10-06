@@ -4,6 +4,7 @@ import 'package:sell_buy/View/Screens/Authentication/login_screen.dart';
 
 import '../View/Screens/Authentication/register_screen.dart';
 import '../View/Screens/MainLayoutScreens/CreateAd/category_selection_screen.dart';
+import '../View/Screens/MainLayoutScreens/CreateAd/create_comercial_ad_screen.dart';
 import '../View/Screens/MainLayoutScreens/CreateAd/select_type_of_screen.dart';
 import '../View/Screens/MainLayoutScreens/Home/home_screen.dart';
 import '../View/Screens/MainLayoutScreens/Profile/edit_profile_screen.dart';
@@ -57,9 +58,14 @@ class AppRoutes {
     GetPage(
       name: Routes.noInternetScreen,
       page: () => NoInternetScreen(),
-    ),  GetPage(
+    ),
+    GetPage(
       name: Routes.selectTypeOfAdScreen,
       page: () => SelectTypeOfAdScreen(),
+    ),
+    GetPage(
+      name: Routes.createCommercialAdScreen,
+      page: () => CreateCommercialAdScreen(),
     ),
   ];
 }
@@ -78,4 +84,5 @@ class Routes {
   static const EditProfileScreen = "/EditProfileScreen";
   static const noInternetScreen = "/NoInternetScreen";
   static const selectTypeOfAdScreen = "/SelectTypeOfAdScreen";
+  static const createCommercialAdScreen = "/CreateCommercialAdScreen";
 }

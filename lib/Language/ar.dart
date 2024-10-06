@@ -230,7 +230,7 @@ const Map<String, String> ar = {
   "y": "سنة",
   "view": "مشاهدة",
   "whatsapp": "واتساب",
-  "Call Now": "اتصل الان",
+  "Call": "اتصل",
   "Thank you for using our application.": "شكرا لك على استخدام تطبيقنا.",
   'recently viewed': 'شاهدت مؤخراً',
   "Edit Profile ": "تعديل الملف الشخصي",
@@ -252,5 +252,6 @@ const Map<String, String> ar = {
   "try again":  'حاول مرة أخرى',
   "call us": "اتصل بنا",
 "Create Commercials Ad" : "رفع اعلان سريع",
+  "Your commercial ad has been uploaded successfully!": "تم تحميل أعلانك بنجاح!",
 
 };

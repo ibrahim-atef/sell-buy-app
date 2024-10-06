@@ -32,7 +32,7 @@ class SelectTypeOfAdScreen extends StatelessWidget {
               height: 20,
             ),
             ButtonComponent(
-              onPressed: () {},
+              onPressed: () {Get.toNamed(Routes.createCommercialAdScreen);},
               text: TextComponent(
                   text: "Create Commercials Ad".tr,
                   size: 20,
