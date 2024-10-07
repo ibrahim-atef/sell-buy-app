@@ -18,18 +18,23 @@ class FreeAdSpace extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width,
-      height: height,margin: EdgeInsets.all(8),
-      decoration: BoxDecoration(color: baseColorShimmer,
-      boxShadow: [
+      height: height,
+      margin: EdgeInsets.all(8),
+      decoration: BoxDecoration(color: baseColorShimmer, boxShadow: [
         BoxShadow(
           color: Colors.grey.withOpacity(0.3),
-          spreadRadius: 1,
+          spreadRadius: 2,
           blurRadius: 1,
           offset: Offset(0, 1), // changes position of shadow
         ),
-      ]
+      ]),
+      child: Center(
+        child: TextComponent(
+            text: "Free Ad Space".tr,
+            size: 14,
+            color: Colors.black54,
+            fontWeight: FontWeight.bold),
       ),
-      child: Center(  child: TextComponent(text: "Free Ad Space".tr, size: 14, color: Colors.black54, fontWeight: FontWeight.normal),),
     );
   }
 }

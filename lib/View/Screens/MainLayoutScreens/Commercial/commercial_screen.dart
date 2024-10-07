@@ -7,6 +7,7 @@ import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
 import '../../../../Controllers/home_controller.dart';
 import '../../../../Model/commercial_ad_model.dart';
 import '../../../Widgets/utilities_widgets/custom_loader_component.dart';
+import '../../../Widgets/utilities_widgets/free_ad_space.dart';
 import 'components/shimmer_commercial_ad_screen.dart';
 
 class CommercialScreen extends StatelessWidget {
@@ -71,23 +72,39 @@ class CommercialScreen extends StatelessWidget {
                     ),
                     // Ads Grid
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 4.0,
-                            mainAxisSpacing: 4.0,
-                            childAspectRatio: 0.75,
-                          ),
-                          itemCount: filteredCommercialAds.length,
-                          itemBuilder: (context, index) {
-                            return _buildAdCard(filteredCommercialAds[index],
-                                function: () {Get.to(PgeViewCommercialAds(commercialAds: filteredCommercialAds,));});
-                          },
-                        ),
-                      ),
+                      child: filteredCommercialAds.length == 0
+                          ? Center(
+                              child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: Get.height * 0.1,
+                                  ),
+                                  child: FreeAdSpace(
+                                    width: Get.width,
+                                    height: Get.height * 0.19,
+                                  )),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GridView.builder(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 4.0,
+                                  mainAxisSpacing: 4.0,
+                                  childAspectRatio: 0.75,
+                                ),
+                                itemCount: filteredCommercialAds.length,
+                                itemBuilder: (context, index) {
+                                  return _buildAdCard(
+                                      filteredCommercialAds[index],
+                                      function: () {
+                                    Get.to(() => PgeViewCommercialAds(
+                                          commercialAds: filteredCommercialAds, currentIndex: index,
+                                        ));
+                                  });
+                                },
+                              ),
+                            ),
                     ),
                   ],
                 ),

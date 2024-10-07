@@ -147,7 +147,7 @@ class HomeController extends GetxController {
   }
   ///--------------------->>>>>>>>>>>>>>>>>>>>>>>>>>  flutter lunching whatsapp by url --------------------------------------
 
-  Future<void> openWhatsAppOrCall(String phoneNumber) async {
+  Future<void> openWhatsApp(String phoneNumber) async {
     String whatsappUrl = "whatsapp://send?phone=$phoneNumber";
     String dialUrl = "tel:$phoneNumber";
 

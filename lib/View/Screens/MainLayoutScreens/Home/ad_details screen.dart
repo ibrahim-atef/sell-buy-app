@@ -11,6 +11,7 @@ import '../../../../Controllers/ad_services_controller.dart';
 import '../../../../Controllers/home_controller.dart';
 import '../../../../Model/ad_model.dart';
 import '../../../../Services/number_formater.dart';
+import '../../../../Utilities/my_strings.dart';
 import '../../../../Utilities/themes.dart';
 import '../../../Widgets/utilities_widgets/icon_button_component.dart';
 
@@ -47,7 +48,7 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
       adServicesController.addViewToAd(
         adId: widget.adId,
         userId: homeController.userId!,
-        categoryCollection: widget.ad.category,
+        categoryCollection: widget.ad.category, adCollectionType: usersAddsCollectionKey,
       );
     } else {
       // Log or handle the case where the category or userId is invalid
@@ -56,7 +57,7 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
 
     // Fetch views count asynchronously and set the state
     int count = await adServicesController.getViewsCount(
-            adId: widget.adId, categoryCollection: widget.ad.category) ??
+            adId: widget.adId, categoryCollection: widget.ad.category, adCollectionType: usersAddsCollectionKey,) ??
         0;
 
     setState(() {
@@ -281,7 +282,7 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
                           title: "whatsapp".tr,
                           function: () {
                             homeController
-                                .openWhatsAppOrCall(widget.ad.ownerWhatsappNum);
+                                .openWhatsApp(widget.ad.ownerWhatsappNum);
                           },
                     h : Get.height * .06,
                     w : Get.width * .44,

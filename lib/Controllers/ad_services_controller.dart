@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sell_buy/Model/ad_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Routes/routes.dart';
 import '../Services/firestore_methods.dart';
@@ -49,7 +50,7 @@ class AdServicesController extends GetxController {
   void addViewToAd({
     required String adId,
     required String userId,
-    required String categoryCollection,
+    required String categoryCollection,    required String adCollectionType,
   }) async {
     String tempId = await storageBox.read(KUid) ?? "";
     if (tempId == null || tempId.isEmpty) {
@@ -59,17 +60,25 @@ class AdServicesController extends GetxController {
     }
     try {
       await FireStoreMethods.addViewToAd(
-          adId: adId, uid: userId, categoryCollection: categoryCollection);
+          adId: adId, uid: userId, categoryCollection: categoryCollection, adCollectionType: adCollectionType);
     } catch (e) {
       print("Error adding view to ad: $e");
     }
   }
-
+int viewsCount = 0;
+  void clearViewsCount() {
+    viewsCount = 0;
+    update();
+  }
+ updateViewsCount({required String adId, required String categoryCollection,    required String adCollectionType,}) async {
+   viewsCount = await getViewsCount(adId: adId, categoryCollection: categoryCollection, adCollectionType: adCollectionType)?? 0;
+   update();
+ }
   Future<int> getViewsCount(
-      {required String adId, required String categoryCollection}) async {
+      {required String adId, required String categoryCollection,    required String adCollectionType,}) async {
     try {
       int? snapshot = await FireStoreMethods.getViewsCount(
-          adId: adId, categoryCollection: categoryCollection);
+          adId: adId, categoryCollection: categoryCollection, adCollectionType: adCollectionType);
       return snapshot ?? 0;
     } catch (error) {
       print("Error getting views count: $error");
@@ -145,4 +154,23 @@ class AdServicesController extends GetxController {
   bool isAdFavourite(String adId) {
     return favouriteAds.any((element) => element.id == adId);
   }
+
+  Future<void> openWhatsApp(String phoneNumber) async {
+    String whatsappUrl = "whatsapp://send?phone=$phoneNumber";
+    String dialUrl = "tel:$phoneNumber";
+
+    // Check if WhatsApp is installed
+    await launch(whatsappUrl);
+  }
+  ///--------------------->>>>>>>>>>>>>>>>>>>>>>>>>>  flutter lunching call by url --------------------------------------
+
+  Future<void> openCall(String phoneNumber) async {
+    String dialUrl = "tel:$phoneNumber";
+    await launch(dialUrl);
+  }
+  Future<void> downloadImage(String imageUrl) async {
+
+      Get.snackbar("Error", "Failed to download image");
+   }
+
 }

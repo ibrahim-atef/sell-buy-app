@@ -133,6 +133,7 @@ class FireStoreMethods {
     required String uid,
     required String adId,
     required String categoryCollection,
+    required String adCollectionType,
   }) async {
     debugPrint(
         "Adding view to ad: uid: $uid, adId: $adId, categoryCollection: $categoryCollection");
@@ -143,7 +144,7 @@ class FireStoreMethods {
 
     try {
       await FirebaseFirestore.instance
-          .collection(categoryCollection).doc(usersAddsCollectionKey).collection(usersAddsCollectionKey)
+          .collection(categoryCollection).doc(adCollectionType).collection(adCollectionType)
           .doc(adId)
           .collection(viewsCollectionKey)
           .doc(uid)
@@ -155,10 +156,10 @@ class FireStoreMethods {
   }
 
   static Future<int> getViewsCount(
-      {required String adId, required String categoryCollection}) async {
+      {required String adId, required String categoryCollection,    required String adCollectionType,}) async {
     try {
       QuerySnapshot? snapshot = await FirebaseFirestore.instance
-          .collection(categoryCollection).doc(usersAddsCollectionKey).collection(usersAddsCollectionKey)
+          .collection(categoryCollection).doc(adCollectionType).collection(adCollectionType)
           .doc(adId)
           .collection(viewsCollectionKey)
           .get();
