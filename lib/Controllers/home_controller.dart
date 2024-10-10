@@ -12,7 +12,7 @@ import '../Utilities/my_strings.dart';
 
 class HomeController extends GetxController {
   final GetStorage storageBox = GetStorage();
-  late   String userId;
+  late String userId;
   List<AdModel> favouriteAds = [];
   RxBool isLoadingCommercialAds = false.obs; // Loading state for commercial ads
 
@@ -22,10 +22,22 @@ class HomeController extends GetxController {
 
     userId = storageBox.read(KUid) ?? "";
     getCategoriesAndAds(); // Call function to fetch categories and ads
-
+    searchController.addListener(() {
+      searchText.value = searchController.text;
+      if (searchController.text.isEmpty) {
+        subcategoriesForSelectedCategory
+            .clear(); // Clear subcategories when search is empty
+        update();
+      }
+    });
   }
 
-  List<Category> categoriesList = <Category>[]; // Store categories
+  RxString searchText = ''.obs;
+  TextEditingController searchController = TextEditingController();
+  List<Category> categoriesList = <Category>[]; // S
+  List<Subcategory> subcategoriesForSelectedCategory =
+      <Subcategory>[]; // tore categories
+
   List<List<AdModel>> adsPerCategory =
       <List<AdModel>>[]; // Store ads for each category
   List<List<CommercialAdModel>> commercialAdsPerCategory =
@@ -41,21 +53,26 @@ class HomeController extends GetxController {
       return commercialAdsPerCategory.expand((ads) => ads).toList();
     } else {
       // Return only the ads of the selected category
-      int index = categoriesList.indexWhere((category) => category.id == selectedCategoryId.value);
+      int index = categoriesList
+          .indexWhere((category) => category.id == selectedCategoryId.value);
       if (index != -1) {
         return commercialAdsPerCategory[index];
       }
     }
     return [];
   }
+
   /// Fetches categories and for each category retrieves its ads.
   Future<void> getCategoriesAndAds() async {
-    debugPrint("------- getting categories and their ads -------");
+    debugPrint(
+        "------- getting categories, subcategories, and their ads -------");
     isLoadingCategories.value = true;
+    update();
     try {
       // Get the categories
       final categoriesSnapshot =
           await FireStoreMethods.categoriesCollection.get();
+
       categoriesList.clear(); // Clear previous categories
       adsPerCategory.clear(); // Clear previous ads lists
       commercialAdsPerCategory.clear(); // Clear previous commercial ads lists
@@ -66,14 +83,33 @@ class HomeController extends GetxController {
           Category category = Category.fromMap(categoryDoc.data());
           categoriesList.add(category);
 
-          // Now fetch ads for this category
+          // Fetch the subcategories for this category
+          final subcategoriesSnapshot = await FireStoreMethods
+              .categoriesCollection
+              .doc(category.id)
+              .collection('subcategories')
+              .get();
+
+          List<Subcategory> subcategories = [];
+          for (var subcategoryDoc in subcategoriesSnapshot.docs) {
+            Subcategory subcategory =
+                Subcategory.fromMap(subcategoryDoc.data());
+            subcategories.add(subcategory);
+          }
+
+          // Add the subcategories to the category object
+          category.subcategories = subcategories;
+
+          // Fetch ads for this category
           List<AdModel> adsList = await getAdsForCategory(category.id);
           adsPerCategory.add(adsList); // Add ads to the corresponding category
 
-          List<CommercialAdModel> commercialAdsList = await getCommercialAdsForCategory(category.id);
-          commercialAdsPerCategory.add(commercialAdsList); // Add commercial ads to the corresponding category
+          // Fetch commercial ads for this category
+          List<CommercialAdModel> commercialAdsList =
+              await getCommercialAdsForCategory(category.id);
+          commercialAdsPerCategory.add(commercialAdsList); // Add commercial ads
         } catch (e) {
-          print('Error parsing category or fetching ads: $e');
+          print('Error parsing category, subcategories, or fetching ads: $e');
         }
       }
 
@@ -96,8 +132,10 @@ class HomeController extends GetxController {
     try {
       // Assuming you have a collection for ads per category
       final adsSnapshot = await FirebaseFirestore.instance
+          .collection(categoryId)
+          .doc(usersAddsCollectionKey)
           .collection(
-              categoryId).doc(usersAddsCollectionKey).collection(usersAddsCollectionKey) // Adjust 'ads' if the sub-collection name is different
+              usersAddsCollectionKey) // Adjust 'ads' if the sub-collection name is different
           .get();
 
       // Loop through ads in the snapshot
@@ -117,21 +155,25 @@ class HomeController extends GetxController {
 
     return adsList; // Return the list of ads for this category
   }
+
   /// Fetches commercial ads for a given categoryId.
-  Future<List<CommercialAdModel>> getCommercialAdsForCategory(String categoryId) async {
+  Future<List<CommercialAdModel>> getCommercialAdsForCategory(
+      String categoryId) async {
     isLoadingCommercialAds.value = true; // Start loading commercial ads
     List<CommercialAdModel> commercialAdsList = [];
 
     try {
       final commercialAdsSnapshot = await FirebaseFirestore.instance
           .collection(categoryId)
-          .doc(commercialsAddsCollectionKey) // Assuming there's a sub-collection for commercial ads
+          .doc(
+              commercialsAddsCollectionKey) // Assuming there's a sub-collection for commercial ads
           .collection(commercialsAddsCollectionKey)
           .get();
 
       for (var commercialAdDoc in commercialAdsSnapshot.docs) {
         try {
-          CommercialAdModel commercialAd = CommercialAdModel.fromJson(commercialAdDoc.data());
+          CommercialAdModel commercialAd =
+              CommercialAdModel.fromJson(commercialAdDoc.data());
           commercialAdsList.add(commercialAd); // Add commercial ad to the list
         } catch (e) {
           print("Error parsing commercial ad: $e");
@@ -145,6 +187,7 @@ class HomeController extends GetxController {
 
     return commercialAdsList; // Return the list of commercial ads for this category
   }
+
   ///--------------------->>>>>>>>>>>>>>>>>>>>>>>>>>  flutter lunching whatsapp by url --------------------------------------
 
   Future<void> openWhatsApp(String phoneNumber) async {
@@ -154,10 +197,45 @@ class HomeController extends GetxController {
     // Check if WhatsApp is installed
     await launch(whatsappUrl);
   }
-///--------------------->>>>>>>>>>>>>>>>>>>>>>>>>>  flutter lunching call by url --------------------------------------
+
+  ///--------------------->>>>>>>>>>>>>>>>>>>>>>>>>>  flutter lunching call by url --------------------------------------
 
   Future<void> openCall(String phoneNumber) async {
     String dialUrl = "tel:$phoneNumber";
     await launch(dialUrl);
+  }
+
+  ///--------------------->>>>>>>>>>>>>>>>>>>>>>>>>>  search bar logic --------------------------------------
+  void setSearchQuery(Category category) {
+    // Set the search query in the search controller (if needed)
+    searchController.text =
+        Get.locale!.languageCode == 'ar' ? category.arName : category.name;
+
+    // Assign a **copy** of the subcategories to subcategoriesForSelectedCategory
+    if (category.subcategories != null && category.subcategories!.isNotEmpty) {
+      subcategoriesForSelectedCategory = List.from(category.subcategories!);
+      debugPrint(
+          "subcategoriesForSelectedCategory: $subcategoriesForSelectedCategory");
+    } else {
+      // If the category has no subcategories, clear the list
+      subcategoriesForSelectedCategory = <Subcategory>[];
+      debugPrint("No subcategories found for the selected category.");
+    }
+
+    // Ensure searchText is set so the UI reflects the correct state
+    searchText.value = category.id;
+
+    // Update the state to reflect changes
+    update();
+  }
+
+  // Method to clear the search query
+  void clearSearchQuery() {
+    searchController.clear();
+
+    // Clear the copied list, without affecting the original list in categories
+    subcategoriesForSelectedCategory.clear();
+
+    update();
   }
 }

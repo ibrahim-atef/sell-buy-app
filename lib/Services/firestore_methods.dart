@@ -17,6 +17,7 @@ class FireStoreMethods {
   static final CollectionReference categoriesCollection =
       FirebaseFirestore.instance.collection(categoriesCollectionKey);
 
+
   /// Create a new user document in Firestore
   static Future<void> createUser({required UserDataModel userDataModel}) async {
     try {

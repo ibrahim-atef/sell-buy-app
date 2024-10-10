@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       fallbackLocale: Locale(ara),
       title: 'بيع واشتر',
       theme: ThemeData(
-        backgroundColor: white,
+        // backgroundColor: white,
         useMaterial3: true,
       ),
       initialRoute: Routes.SplashScreen,
