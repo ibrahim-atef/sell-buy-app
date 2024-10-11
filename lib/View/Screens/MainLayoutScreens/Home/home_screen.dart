@@ -64,28 +64,55 @@ class _HomeScreenState extends State<HomeScreen> {
                                       height: Get.height * 0.19,
                                     )),
                               )
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: homeController.adsPerCategory.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final category =
-                                      homeController.categoriesList[index];
-                                  final ads =
-                                      homeController.adsPerCategory[index];
+                            : homeController.searchText.value.isNotEmpty
+                                ? homeController
+                                            .filteredAdsPerCategory.length ==
+                                        0
+                                    ? Center(
+                                        child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: Get.height * 0.1,
+                                            ),
+                                            child: FreeAdSpace(
+                                              width: Get.width,
+                                              height: Get.height * 0.19,
+                                            )),
+                                      )
+                                    : CategoryListView(
+                                        categoryName: homeController
+                                            .filteredAdsPerCategory[0].category,
+                                        // Pass category name
+                                        items: homeController
+                                            .filteredAdsPerCategory,
+                                        // Pass list of ads for this category
+                                        categoryArName: homeController
+                                            .filteredAdsPerCategory[0]
+                                            .categoryNameAr,
+                                      )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount:
+                                        homeController.adsPerCategory.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      final category =
+                                          homeController.categoriesList[index];
+                                      final ads =
+                                          homeController.adsPerCategory[index];
 
-                                  // If ads for the category are empty, don't show anything
-                                  return ads.isEmpty
-                                      ? const SizedBox.shrink()
-                                      : CategoryListView(
-                                          categoryName: category
-                                              .name, // Pass category name
-                                          items:
-                                              ads, // Pass list of ads for this category
-                                          categoryArName: category.arName,
-                                        );
-                                },
-                              ),
+                                      // If ads for the category are empty, don't show anything
+                                      return ads.isEmpty
+                                          ? const SizedBox.shrink()
+                                          : CategoryListView(
+                                              categoryName: category
+                                                  .name, // Pass category name
+                                              items:
+                                                  ads, // Pass list of ads for this category
+                                              categoryArName: category.arName,
+                                            );
+                                    },
+                                  ),
                       ],
                     ),
                   ),
