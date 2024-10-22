@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -109,6 +111,7 @@ class HomeController extends GetxController {
           List<CommercialAdModel> commercialAdsList =
               await getCommercialAdsForCategory(category.id);
           commercialAdsPerCategory.add(commercialAdsList); // Add commercial ads
+          fetchRandomAds();
         } catch (e) {
           print('Error parsing category, subcategories, or fetching ads: $e');
         }
@@ -260,6 +263,29 @@ class HomeController extends GetxController {
     update();  // Notify UI of the changes
   }
 
+/// --------------------->>>>>>>>>>>>>>>>>>>>>>>>>>  search screen logic --------------------------------------
 
+  List<AdModel> randomAds = []; // Store random ads
+  List<CommercialAdModel> randomCommercialAds = []; // Store random commercial ads
 
+  // Method to fetch random ads
+  void fetchRandomAds() {
+    final random = Random();
+
+    // Get a sample of random ads
+    randomAds = adsPerCategory.expand((ads) => ads).toList();
+    randomCommercialAds = commercialAdsPerCategory.expand((ads) => ads).toList();
+
+    if (randomAds.isNotEmpty) {
+      randomAds.shuffle(); // Shuffle to get random ads
+      randomAds = randomAds.take(5).toList(); // Take 5 random ads
+    }
+
+    if (randomCommercialAds.isNotEmpty) {
+      randomCommercialAds.shuffle();
+      randomCommercialAds = randomCommercialAds.take(5).toList(); // Take 5 random commercial ads
+    }
+
+    update(); // Notify UI
+  }
 }

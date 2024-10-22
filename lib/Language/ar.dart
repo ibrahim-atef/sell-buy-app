@@ -253,5 +253,6 @@ const Map<String, String> ar = {
   "call us": "اتصل بنا",
 "Create Commercials Ad" : "رفع اعلان سريع",
   "Your commercial ad has been uploaded successfully!": "تم تحميل أعلانك بنجاح!",
-
+  "Exit App":"اغلاق التطبيق",
+  'Press back again to exit': 'اضغط مرة أخرى للخروج',
 };
