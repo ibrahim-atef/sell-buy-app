@@ -37,7 +37,7 @@ class SearchBarWidget extends StatelessWidget {
             : IconButton(
                 onPressed: () {
                   // Clear the text when the close icon is pressed
-                  homeController.clearSearchQuery();
+                  homeController.clearSearchQuery();     FocusScope.of(context).unfocus();
                 },
                 icon: const Icon(IconBroken.Close_Square),
               ),
