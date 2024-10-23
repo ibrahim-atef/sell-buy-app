@@ -8,7 +8,7 @@ import '../utilities/my_strings.dart';
 
 class AppSettingController extends GetxController {
   GetStorage storage = GetStorage();
-  var langLocal = ara;
+  var langLocal = ara.obs;
   late String? uid = null;
   final myData = Rxn<UserDataModel>();
   RxBool isUserLoading = false.obs;
@@ -16,7 +16,8 @@ class AppSettingController extends GetxController {
   @override
   void onInit() async {
     // TODO: implement onInit
-  myData.value==null?  initUser():null;
+    myData.value == null ? initUser() : null;
+    langLocal.value = await getLanguage;
     super.onInit();
   }
 
@@ -62,6 +63,7 @@ class AppSettingController extends GetxController {
 
     update(); // Update UI with new user data
   }
+
   ///add localization logic
   void saveLanguage(String lang) async {
     await storage.write("lang", lang);
@@ -77,21 +79,13 @@ class AppSettingController extends GetxController {
   }
 
   void changeLanguage(String typeLang) {
-    saveLanguage(typeLang);
-    update();
-    if (langLocal == typeLang) {
-      return;
+    if (langLocal.value == typeLang) {
+      return; // No change if the same language is selected
     }
+    langLocal.value = typeLang; // Update observable
+    saveLanguage(typeLang); // Save new language to storage
+    Get.updateLocale(Locale(typeLang)); // Update locale directly
 
-    if (typeLang == ara) {
-      langLocal = ara;
-      saveLanguage(ara);
-    } else {
-      langLocal = ene;
-      saveLanguage(ene);
-    }
-    update();
+    update(); // Notify the UI about changes
   }
-
-
 }

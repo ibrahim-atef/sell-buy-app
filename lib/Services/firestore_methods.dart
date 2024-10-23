@@ -55,6 +55,19 @@ class FireStoreMethods {
     }
   }
 
+  // add to recently viewed
+  static Future<void> addAdToRecentlyViewed(
+      {required String uid, required AdModel recentlyViewedItem}) async {
+    try {
+      await usersCollection
+          .doc(uid)
+          .collection(recentlyViewedCollectionKey)
+          .doc(recentlyViewedItem.id)
+          .set(recentlyViewedItem.toJson());
+    } catch (error) {
+      throw Exception("Failed to add recently viewed : $error");
+    }}
+
   // Remove a favorite item from the user subcollection
   static Future<void> removeAdFromFavourites(
       {required String uid, required String adId}) async {

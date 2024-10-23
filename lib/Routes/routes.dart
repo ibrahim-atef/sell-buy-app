@@ -8,6 +8,8 @@ import '../View/Screens/MainLayoutScreens/CreateAd/create_comercial_ad_screen.da
 import '../View/Screens/MainLayoutScreens/CreateAd/select_type_of_screen.dart';
 import '../View/Screens/MainLayoutScreens/Home/home_screen.dart';
 import '../View/Screens/MainLayoutScreens/Profile/edit_profile_screen.dart';
+import '../View/Screens/MainLayoutScreens/Profile/favourite_ads_screen.dart';
+import '../View/Screens/MainLayoutScreens/Profile/recently_viewed_ads.dart';
 import '../View/Screens/MainLayoutScreens/Search/search_screen.dart';
 import '../View/Screens/MainLayoutScreens/CreateAd/create_ad_screen.dart';
 import '../View/Screens/MainLayoutScreens/Commercial/commercial_screen.dart';
@@ -67,6 +69,18 @@ class AppRoutes {
       name: Routes.createCommercialAdScreen,
       page: () => CreateCommercialAdScreen(),
     ),
+    GetPage(
+      name: Routes.recentlyViewedAds,
+      page: () => RecentlyViewedAds(),
+      transition: Transition.rightToLeft,
+      transitionDuration: Duration(milliseconds: 500),
+    ),   GetPage(
+      name: Routes.favoriteAdsScreen,
+      page: () => FavouriteAdsScreen(),
+      transition: Transition.rightToLeft,
+      transitionDuration: Duration(milliseconds: 500),
+    ),
+
   ];
 }
 
@@ -85,4 +99,6 @@ class Routes {
   static const noInternetScreen = "/NoInternetScreen";
   static const selectTypeOfAdScreen = "/SelectTypeOfAdScreen";
   static const createCommercialAdScreen = "/CreateCommercialAdScreen";
+  static const recentlyViewedAds = "/RecentlyViewedAds";
+  static const favoriteAdsScreen = "/FavouriteAdsScreen";
 }

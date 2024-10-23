@@ -53,7 +53,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     }
 
                     // Check if UID is null or empty
-                    if (settingController.uid == null || settingController.uid!.isEmpty) {
+                    if (settingController.uid == null ||
+                        settingController.uid!.isEmpty) {
                       return _buildHelloSection();
                     }
 
@@ -63,10 +64,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     }
 
                     // Once data is loaded, show the user info section
-                    return _buildUserInfoSection(userData: settingController.myData.value!);
+                    return _buildUserInfoSection(
+                        userData: settingController.myData.value!);
                   }),
                 ),
-
                 SizedBox(height: 12),
                 !settingController.isUserLoggedIn()
                     ? ButtonComponent(
@@ -75,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Get.toNamed(Routes.LoginScreen);
                         },
                         text: TextComponent(
-                            text: "تسجيل الدخول".tr,
+                            text: "sign in".tr,
                             size: 16,
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
@@ -186,13 +187,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextComponent(
-                text: "مرحباً بك",
+                text: "Welcome".tr,
                 size: 16,
                 color: mainColor,
                 fontWeight: FontWeight.bold),
             TextComponent(
                 text:
-                    "قم بتسجيل الدخول أو إنشاء حساب جديد\n لشراء و بيع كل شيء",
+                    "Please login or create an account\n to purchase and sell everything",
                 size: 12,
                 color: Colors.grey,
                 fontWeight: FontWeight.normal),
@@ -274,21 +275,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildOptionsSection() {
     return Column(
       children: [
-        _buildOptionItem(Icons.visibility, 'recently viewed'.tr, () {}),
+        _buildOptionItem(Icons.visibility, 'recently viewed'.tr, () {
+          Get.toNamed(
+            Routes.recentlyViewedAds,
+          );
+        }),
         // "Recently Viewed"
+        _buildOptionItem(
+          Icons.favorite,
+          'My Favorites'.tr,
+          () {
+            Get.toNamed(
+              Routes.favoriteAdsScreen,
+            );
+          },
+        ),
         _buildOptionItem(IconBroken.Edit, 'Edit Profile '.tr, () {
-     settingController.myData.value== null? Get.snackbar( '', 'please wait'.tr):     Get.toNamed(Routes.EditProfileScreen,);
+          settingController.myData.value == null
+              ? Get.snackbar('', 'please wait'.tr)
+              : Get.toNamed(
+                  Routes.EditProfileScreen,
+                );
         }),
         // "Saved Searches"
         GetBuilder<AppSettingController>(builder: (appSettingController) {
-          return _buildOptionItem(Icons.language,
-              appSettingController.langLocal == ara ? 'العربية' : 'English',
-              () {
-            // Switch language directly
-            String newLang = appSettingController.langLocal == ara ? ene : ara;
-            appSettingController.changeLanguage(newLang);
-            Get.updateLocale(Locale(newLang));
-          });
+          return _buildOptionItem(
+            Icons.language,
+            appSettingController.langLocal.value == ara ? 'العربية' : 'English',
+            () {
+              // Switch language directly
+              String newLang =
+                  appSettingController.langLocal.value == ara ? ene : ara;
+              appSettingController
+                  .changeLanguage(newLang); // This will now update immediately
+            },
+          );
         }),
 
         // "Language"
