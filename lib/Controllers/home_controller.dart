@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,15 +24,8 @@ class HomeController extends GetxController {
 
     userId = storageBox.read(KUid) ?? "";
     getCategoriesAndAds(); // Call function to fetch categories and ads
-    searchController.addListener(() {
-      searchText.value = searchController.text;
-      if (searchController.text.isEmpty) {
-        subcategoriesForSelectedCategory
-            .clear(); // Clear subcategories when search is empty
-        filterAds();
-        update();
-      }
-    });
+
+    searchListener();
   }
 
   RxString searchText = ''.obs;
@@ -62,7 +57,166 @@ class HomeController extends GetxController {
     }
     return [];
   }
+  /// --------------------->>>>>>>>>>>>>>>>>>>>>>>>>>  search screen logic --------------------------------------
+  RxList<AdModel> searchFilteredAds = <AdModel>[].obs;
 
+  void searchFilterAds(String query) {
+    if (query.isEmpty) {
+      searchFilteredAds.clear();
+      update();  // Notify UI to refresh
+      return;
+    }
+
+    searchFilteredAds.value = adsPerCategory.expand((ads) => ads).where((ad) {
+      final titleMatches = (ad.title?.toLowerCase() ?? '').contains(query.toLowerCase());
+      final descriptionMatches = (ad.description?.toLowerCase() ?? '').contains(query.toLowerCase());
+
+      // Add checks for category and subcategory
+      final categoryMatches = selectedCategoryId.isNotEmpty &&
+          (ad.category?.toLowerCase() == selectedCategoryId.value.toLowerCase());
+
+      final subcategoryMatches = subcategoriesForSelectedCategory.isNotEmpty &&
+          (ad.subCategory?.toLowerCase() == selectedSubcategoryId.value.toLowerCase());
+
+      return titleMatches || descriptionMatches || categoryMatches || subcategoryMatches;
+    }).toList();
+
+    update(); // Notify UI of the changes
+  }
+  RxString selectedSubcategoryId = ''.obs;
+
+  void setSelectedSubcategory(String subcategoryId) {
+    selectedSubcategoryId.value = subcategoryId;
+    searchFilterAds(searchController.text);
+  }
+
+
+  RxList<CommercialAdModel> filteredCommercialAds = <CommercialAdModel>[].obs;
+
+  void searchFilterCommercialAds(String query) {
+    if (query.isEmpty) {
+      filteredCommercialAds.clear();
+      update(); // Notify UI to refresh
+      return;
+    }
+
+    // Flatten the nested list using expand
+    filteredCommercialAds.value = commercialAdsPerCategory
+        .expand((ads) => ads) // Flatten the list of lists
+        .where((ad) {
+      // Since CommercialAdModel doesn't have title or description fields,
+      // you might want to filter based on other fields like category, subcategory, or owner name.
+      final ownerNameMatches = (ad.ownerName.toLowerCase()).contains(query.toLowerCase());
+      final categoryMatches = (ad.category.toLowerCase()).contains(query.toLowerCase());
+      final subcategoryMatches = (ad.subCategory.toLowerCase()).contains(query.toLowerCase());
+      final selectedSubcategoryMatches = (ad.selectedSubcategoryArName.toLowerCase()).contains(query.toLowerCase());
+
+      // Add checks for category and subcategory if needed
+      final categoryCheck = selectedCategoryId.isNotEmpty &&
+          (ad.category.toLowerCase() == selectedCategoryId.value.toLowerCase());
+
+      final subcategoryCheck = selectedSubcategoryId.isNotEmpty &&
+          (ad.subCategory.toLowerCase() == selectedSubcategoryId.value.toLowerCase());
+
+      return ownerNameMatches || categoryMatches || subcategoryMatches || selectedSubcategoryMatches || categoryCheck || subcategoryCheck;
+    }).toList();
+
+    update(); // Notify UI of the changes
+  }
+
+
+
+  void searchListener() {
+    searchController.addListener(() {
+      searchText.value = searchController.text;
+
+      searchFilterAds(searchText.value); // Filter for regular ads
+      searchFilterCommercialAds(searchText.value); // Filter for commercial ads
+
+      if (searchController.text.isEmpty) {
+        subcategoriesForSelectedCategory.clear(); // Clear subcategories when search is empty
+        filterAds();
+        filteredCommercialAds.clear(); // Clear commercial ads
+        update(); // Notify UI to refresh
+      }
+    });
+  }
+  ///--------------------->>>>>>>>>>>>>>>>>>>>>>>>>>  search bar logic --------------------------------------
+  void setSearchQuery(Category category) {
+    searchController.text = Get.locale!.languageCode == 'ar' ? category.arName : category.name;
+
+    // Set the selected category ID to filter ads for that category
+    selectedCategoryId.value = category.id;
+
+    // Clear or update subcategories list based on the selected category
+    if (category.subcategories != null && category.subcategories!.isNotEmpty) {
+      subcategoriesForSelectedCategory = List.from(category.subcategories!);
+    } else {
+      subcategoriesForSelectedCategory = <Subcategory>[];
+    }
+    filterAds();  // Trigger filtering logic
+
+
+    // Trigger UI update
+    update();
+  }
+
+
+  // Method to clear the search query
+  void clearSearchQuery() {
+    searchController.clear();
+    selectedCategoryId.value = '';  // Clear category selection
+    filteredAdsPerCategory.clear();  // Clear filtered list
+    update();
+  }
+
+  void filterAds() {
+    if (selectedCategoryId.isEmpty) {
+      filteredAdsPerCategory.clear();
+      update();  // Notify UI to refresh
+      return;
+    }
+
+    // Get the index of the selected category
+    int categoryIndex = categoriesList.indexWhere((category) => category.id == selectedCategoryId.value);
+
+    if (categoryIndex == -1) {
+      filteredAdsPerCategory.clear();
+    } else {
+      // Filter ads based on search text and selected category
+      List<AdModel> categoryAds =List.from(adsPerCategory[categoryIndex]) ;
+
+
+      // No search text, so show all ads for the selected category
+      filteredAdsPerCategory = categoryAds;
+      debugPrint("${filteredAdsPerCategory.length} ads filtered");
+
+    }
+    update();  // Notify UI of the changes
+  }
+  List<AdModel> randomAds = []; // Store random ads
+  List<CommercialAdModel> randomCommercialAds = []; // Store random commercial ads
+
+  // Method to fetch random ads
+  void fetchRandomAds() {
+    final random = Random();
+
+    // Get a sample of random ads
+    randomAds = adsPerCategory.expand((ads) => ads).toList();
+    randomCommercialAds = commercialAdsPerCategory.expand((ads) => ads).toList();
+
+    if (randomAds.isNotEmpty) {
+      randomAds.shuffle(); // Shuffle to get random ads
+      randomAds = randomAds.take(5).toList(); // Take 5 random ads
+    }
+
+    if (randomCommercialAds.isNotEmpty) {
+      randomCommercialAds.shuffle();
+      randomCommercialAds = randomCommercialAds.take(5).toList(); // Take 5 random commercial ads
+    }
+
+    update(); // Notify UI
+  }
   /// Fetches categories and for each category retrieves its ads.
   Future<void> getCategoriesAndAds() async {
     debugPrint(
@@ -109,6 +263,7 @@ class HomeController extends GetxController {
           List<CommercialAdModel> commercialAdsList =
               await getCommercialAdsForCategory(category.id);
           commercialAdsPerCategory.add(commercialAdsList); // Add commercial ads
+          fetchRandomAds();
         } catch (e) {
           print('Error parsing category, subcategories, or fetching ads: $e');
         }
@@ -206,59 +361,6 @@ class HomeController extends GetxController {
     await launch(dialUrl);
   }
 
-  ///--------------------->>>>>>>>>>>>>>>>>>>>>>>>>>  search bar logic --------------------------------------
-  void setSearchQuery(Category category) {
-    searchController.text = Get.locale!.languageCode == 'ar' ? category.arName : category.name;
-
-    // Set the selected category ID to filter ads for that category
-    selectedCategoryId.value = category.id;
-
-    // Clear or update subcategories list based on the selected category
-    if (category.subcategories != null && category.subcategories!.isNotEmpty) {
-      subcategoriesForSelectedCategory = List.from(category.subcategories!);
-    } else {
-      subcategoriesForSelectedCategory = <Subcategory>[];
-    }
-    filterAds();  // Trigger filtering logic
-
-
-    // Trigger UI update
-    update();
-  }
-
-
-  // Method to clear the search query
-  void clearSearchQuery() {
-    searchController.clear();
-    selectedCategoryId.value = '';  // Clear category selection
-    filteredAdsPerCategory.clear();  // Clear filtered list
-    update();
-  }
-
-  void filterAds() {
-    if (selectedCategoryId.isEmpty) {
-      filteredAdsPerCategory.clear();
-      update();  // Notify UI to refresh
-      return;
-    }
-
-    // Get the index of the selected category
-    int categoryIndex = categoriesList.indexWhere((category) => category.id == selectedCategoryId.value);
-
-    if (categoryIndex == -1) {
-      filteredAdsPerCategory.clear();
-    } else {
-      // Filter ads based on search text and selected category
-      List<AdModel> categoryAds =List.from(adsPerCategory[categoryIndex]) ;
-
-
-        // No search text, so show all ads for the selected category
-        filteredAdsPerCategory = categoryAds;
-        debugPrint("${filteredAdsPerCategory.length} ads filtered");
-
-    }
-    update();  // Notify UI of the changes
-  }
 
 
 

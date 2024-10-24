@@ -11,6 +11,7 @@ class AdServicesController extends GetxController {
   final GetStorage storageBox = GetStorage();
   late String userId = "";
   List<AdModel> favouriteAds = [];
+  List<AdModel> recentlyViewedAds = [];
 
   @override
   void onInit() {
@@ -21,6 +22,7 @@ class AdServicesController extends GetxController {
   initUser() async {
     userId = storageBox.read(KUid) ?? "";
     getFavouriteAds();
+    getRecentlyViewedAds();
   }
 
   /// Receive a time stamp and return how much time passed in minutes, hours or days
@@ -50,7 +52,8 @@ class AdServicesController extends GetxController {
   void addViewToAd({
     required String adId,
     required String userId,
-    required String categoryCollection,    required String adCollectionType,
+    required String categoryCollection,
+    required String adCollectionType,
   }) async {
     String tempId = await storageBox.read(KUid) ?? "";
     if (tempId == null || tempId.isEmpty) {
@@ -60,25 +63,45 @@ class AdServicesController extends GetxController {
     }
     try {
       await FireStoreMethods.addViewToAd(
-          adId: adId, uid: userId, categoryCollection: categoryCollection, adCollectionType: adCollectionType);
+          adId: adId,
+          uid: userId,
+          categoryCollection: categoryCollection,
+          adCollectionType: adCollectionType);
     } catch (e) {
       print("Error adding view to ad: $e");
     }
   }
-int viewsCount = 0;
+
+  int viewsCount = 0;
+
   void clearViewsCount() {
     viewsCount = 0;
     update();
   }
- updateViewsCount({required String adId, required String categoryCollection,    required String adCollectionType,}) async {
-   viewsCount = await getViewsCount(adId: adId, categoryCollection: categoryCollection, adCollectionType: adCollectionType)?? 0;
-   update();
- }
-  Future<int> getViewsCount(
-      {required String adId, required String categoryCollection,    required String adCollectionType,}) async {
+
+  updateViewsCount({
+    required String adId,
+    required String categoryCollection,
+    required String adCollectionType,
+  }) async {
+    viewsCount = await getViewsCount(
+            adId: adId,
+            categoryCollection: categoryCollection,
+            adCollectionType: adCollectionType) ??
+        0;
+    update();
+  }
+
+  Future<int> getViewsCount({
+    required String adId,
+    required String categoryCollection,
+    required String adCollectionType,
+  }) async {
     try {
       int? snapshot = await FireStoreMethods.getViewsCount(
-          adId: adId, categoryCollection: categoryCollection, adCollectionType: adCollectionType);
+          adId: adId,
+          categoryCollection: categoryCollection,
+          adCollectionType: adCollectionType);
       return snapshot ?? 0;
     } catch (error) {
       print("Error getting views count: $error");
@@ -129,25 +152,84 @@ int viewsCount = 0;
     }
   }
 
-  /// get user favourite ads
-  getFavouriteAds() async {
+  /// add to recently viewed
+  void addAdToRecentlyViewed({required AdModel adModel}) async {
     String tempId = await storageBox.read(KUid) ?? "";
     if (tempId == null || tempId.isEmpty) {
-      favouriteAds.clear();
+      recentlyViewedAds.clear();
       update();
       return;
     }
-    FireStoreMethods.usersCollection
-        .doc(userId)
-        .collection(favoritesCollectionKey)
-        .snapshots()
-        .listen((event) {
+    try {
+      await FireStoreMethods.addAdToRecentlyViewed(
+          uid: tempId, recentlyViewedItem: adModel);
+    } catch (e) {
+      print("Error adding ad to recently viewed: $e");
+    } finally {
+      update();
+    }
+  }
+
+  /// get user recently viewed ads
+  RxBool isGettingRecentlyViewed = false.obs;
+
+  getRecentlyViewedAds() async {
+    isGettingRecentlyViewed.value = true;
+    String tempId = await storageBox.read(KUid) ?? "";
+    if (tempId == null || tempId.isEmpty) {
+      recentlyViewedAds.clear();
+      isGettingRecentlyViewed.value = false;
+      update();
+      return;
+    }
+
+    try {
+      final event = await FireStoreMethods.usersCollection
+          .doc(tempId)
+          .collection(recentlyViewedCollectionKey)
+          .get();
+
+      recentlyViewedAds.clear();
+      for (var doc in event.docs) {
+        recentlyViewedAds.add(AdModel.fromJson(doc.data()));
+      }
+    } catch (e) {
+      print("Error getting recently viewed ads: $e");
+    } finally {
+      isGettingRecentlyViewed.value = false;
+      update();
+    }
+  }
+
+  /// get user favourite ads
+  RxBool isGettingFavouritesAds = false.obs;
+
+  getFavouriteAds() async {
+    isGettingFavouritesAds.value = true;
+    String tempId = await storageBox.read(KUid) ?? "";
+    if (tempId == null || tempId.isEmpty) {
+      favouriteAds.clear();
+      isGettingFavouritesAds.value = false;
+      update();
+      return;
+    }
+
+    try {
+      final event = await FireStoreMethods.usersCollection
+          .doc(tempId)
+          .collection(favoritesCollectionKey)
+          .get(); // get favourites collection
+
       favouriteAds.clear();
       for (var doc in event.docs) {
         favouriteAds.add(AdModel.fromJson(doc.data()));
       }
+    } catch (e) {
+      print("Error getting favourites ads: $e");
+    } finally {
+      isGettingFavouritesAds.value = false;
       update();
-    });
+    }
   }
 
   /// function to check if ad is favourite
@@ -162,15 +244,15 @@ int viewsCount = 0;
     // Check if WhatsApp is installed
     await launch(whatsappUrl);
   }
+
   ///--------------------->>>>>>>>>>>>>>>>>>>>>>>>>>  flutter lunching call by url --------------------------------------
 
   Future<void> openCall(String phoneNumber) async {
     String dialUrl = "tel:$phoneNumber";
     await launch(dialUrl);
   }
+
   Future<void> downloadImage(String imageUrl) async {
-
-      Get.snackbar("Error", "Failed to download image");
-   }
-
+    Get.snackbar("Error", "Failed to download image");
+  }
 }

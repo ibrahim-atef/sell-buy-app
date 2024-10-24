@@ -50,6 +50,7 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
         userId: homeController.userId!,
         categoryCollection: widget.ad.category, adCollectionType: usersAddsCollectionKey,
       );
+      adServicesController.addAdToRecentlyViewed(adModel: widget.ad);
     } else {
       // Log or handle the case where the category or userId is invalid
       print('Error: categoryCollection or userId is null/empty');
