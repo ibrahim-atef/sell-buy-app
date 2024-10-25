@@ -88,4 +88,6 @@ class AppSettingController extends GetxController {
 
     update(); // Notify the UI about changes
   }
+
+
 }

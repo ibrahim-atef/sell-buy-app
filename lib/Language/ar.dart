@@ -232,7 +232,7 @@ const Map<String, String> ar = {
   "whatsapp": "واتساب",
   "Call": "اتصل",
   "Thank you for using our application.": "شكرا لك على استخدام تطبيقنا.",
-  'recently viewed': 'شاهدت مؤخراً',
+  'Recently viewed': 'شاهدت مؤخراً',
   "Edit Profile ": "تعديل الملف الشخصي",
   'Owner: ': 'المالك: ',
   'Ad Details': 'تفاصيل الاعلان',
@@ -258,6 +258,6 @@ const Map<String, String> ar = {
   'Press back again to exit': 'اضغط مرة أخرى للخروج',
   "Please login or create an account\n to purchase and sell everything":
       "قم بتسجيل الدخول أو إنشاء حساب جديد\n لشراء و بيع كل شيء",
-  'My Favorites': 'المفضلة',
+  'Favorites': 'المفضلة',
   'No Ads Found': 'لا يوجد اعلانات',
 };

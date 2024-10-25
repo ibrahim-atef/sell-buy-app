@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
         if (!isLoading) {
           // Once loading is finished, navigate based on authValue
           if (authValue == null) {
-            Get.offNamed(Routes.LoginScreen);
+            Get.offNamed(Routes.MainLayoutScreen);
           } else {
             Get.offNamed(Routes.MainLayoutScreen);
           }

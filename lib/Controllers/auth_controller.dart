@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../Model/user_data_model.dart';
 import '../Routes/routes.dart';
 import '../Services/firestore_methods.dart';
@@ -155,11 +156,13 @@ class AuthController extends GetxController {
         return;
       }
 
-      await auth.signInWithEmailAndPassword(email: email, password: password).then((value) async {
+      await auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((value) async {
         final userCollection =
-        FirebaseFirestore.instance.collection(usersCollectionKey);
+            FirebaseFirestore.instance.collection(usersCollectionKey);
         final userQuery =
-        await userCollection.where("email", isEqualTo: email).get();
+            await userCollection.where("email", isEqualTo: email).get();
 
         if (userQuery.docs.isNotEmpty) {
           final userData = userQuery.docs.first.data();
@@ -168,7 +171,7 @@ class AuthController extends GetxController {
 
           FireStoreMethods().updateUser(userModel: userModel);
           authBox.write(KUid, userData['uid']);
-          Get.offNamed(Routes.MainLayoutScreen,preventDuplicates: true);
+          Get.offNamed(Routes.MainLayoutScreen, preventDuplicates: true);
         } else {
           // Email does not exist
           await auth.signOut();
@@ -179,8 +182,6 @@ class AuthController extends GetxController {
           );
         }
       });
-
-
     } on FirebaseAuthException catch (error) {
       _handleFirebaseAuthException(error);
     } catch (error) {
@@ -204,11 +205,164 @@ class AuthController extends GetxController {
     }
     return false;
   }
+
   ///-------------------------------------------------------logout fun
   void logout() async {
     await authBox.erase();
     await auth.signOut();
 
-    Get.toNamed(Routes.LoginScreen);
+    Get.offNamed(Routes.LoginScreen);
+  }
+
+  ///-------------------------------------------------------delete acc
+  RxBool isDeleteAccount = false.obs;
+
+  Future<void> deleteAccount() async {
+    isDeleteAccount.value = true; // Set to true when deletion starts
+    update();
+
+    try {
+      bool isConnected = await checkInternetConnectivity();
+      if (!isConnected) {
+        isDeleteAccount.value = false; // Set to false if there's no connection
+        Get.snackbar(
+          "خطأ",
+          "  اتصال بالإنترنت و حاول مرة أخرى.",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+        );
+        update();
+        return;
+      }
+
+      // Get current user
+      User? user = auth.currentUser;
+
+      if (user == null) {
+        isDeleteAccount.value = false; // Set to false if no user is logged in
+        Get.snackbar(
+          "خطأ",
+          "  يجب عليك تسجيل الدخول اولا.",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+        );
+        update();
+        return;
+      }
+
+      // Get user ID and role
+      String uid = authBox.read(KUid);
+
+      // Delete from Firestore based on role
+      if (user.email.toString() != "atf343069@gmail.com" ) {
+        await FirebaseFirestore.instance
+            .collection(usersCollectionKey)
+            .doc(uid)
+            .delete();
+
+        // Delete user from Firebase Authentication
+        await user.delete();
+
+        // Clear stored data and navigate to login screen
+        await authBox.erase();
+      }
+      Get.offNamed(Routes.LoginScreen);
+
+      // Show success message
+      Get.snackbar(
+        "Success",
+        "Your account has been deleted successfully.",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.green,
+      );
+    } catch (error) {
+      // Handle errors
+      Get.snackbar(
+        "Error",
+        "An error occurred while deleting your account. Please try again.",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+      );
+      print("Error deleting account: $error");
+    } finally {
+      isDeleteAccount.value =
+          false; // Set to false when deletion process is finished
+      update();
+    }
+  }
+
+  ///-------------------------------------------------------Reset pass by email
+  RxBool isResetPass = false.obs;
+
+  Future<void> resetPasswordByEmail(String email) async {
+    isResetPass.value = true;
+    update();
+    try {
+      await auth.sendPasswordResetEmail(email: email);
+      Get.snackbar(
+        "Success",
+        "Password reset email sent! Please check your inbox.",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.green,
+      );
+    } on FirebaseAuthException catch (e) {
+      String message = "";
+      if (e.code == 'user-not-found') {
+        message =
+            "No account found for this email. Please check and try again.";
+      } else if (e.code == 'invalid-email') {
+        message = "Invalid email address. Please enter a valid email.";
+      } else {
+        message = "An error occurred. Please try again later.";
+      }
+      Get.snackbar(
+        "Error",
+        message,
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "An unexpected error occurred. Please try again.",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+      );
+    } finally {
+      isResetPass.value = false;
+      update();
+    }
+  }
+  ///-------------------------------------------------------Contact admin
+  RxBool isContactingAdmin = false.obs;
+
+  void contactAdmin({
+    required String subject,
+    required String body,
+  }) async {
+    isContactingAdmin.value = true;
+    update();
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: 'thamerkuwait@hotmail.com',
+      query: 'subject=$subject&body=$body',
+    );
+
+    try {
+      await launchUrl(emailUri);
+    } catch (e) {
+      isContactingAdmin.value = false;
+      update();
+      Get.snackbar(
+        'Error',
+        'Could not open email client :$e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isContactingAdmin.value = false;
+      update();
+    }
   }
 }
