@@ -57,18 +57,18 @@ class _PgeViewCommercialAdsState extends State<PgeViewCommercialAds> {
               },
             ),
             actions: [
-              IconButton(
-                icon: Icon(IconBroken.Download, color: Colors.white),
-                onPressed: () async {
-                  // Get current image URL and download it
-                  int currentPage = widget._pageController.page?.toInt() ?? 0;
-                  String imageUrl = widget.commercialAds[currentPage].imagePath ?? '';
-
-                  if (imageUrl.isNotEmpty) {
-                    await adServicesController.downloadImage(imageUrl);
-                  }
-                },
-              ),
+              // IconButton(
+              //   icon: Icon(IconBroken.Download, color: Colors.white),
+              //   onPressed: () async {
+              //     // Get current image URL and download it
+              //     int currentPage = widget._pageController.page?.toInt() ?? 0;
+              //     String imageUrl = widget.commercialAds[currentPage].imagePath ?? '';
+              //
+              //     if (imageUrl.isNotEmpty) {
+              //       await adServicesController.downloadImage(imageUrl);
+              //     }
+              //   },
+              // ),
             ],
           ),
           backgroundColor: Colors.black,
