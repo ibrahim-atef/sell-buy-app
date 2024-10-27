@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
 
       translations: LocaliztionApp(),
       fallbackLocale: Locale(ara),
-      title: 'بيع واشتر',
+      title: 'Sell Buy',
       theme: ThemeData(
         // backgroundColor: white,
         useMaterial3: true,
