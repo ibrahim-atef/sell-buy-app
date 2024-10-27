@@ -193,8 +193,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 fontWeight: FontWeight.bold),
             TextComponent(
                 text:
-                    "Please login or create an account\n to purchase and sell everything",
+                    "Please login or create an account\n to purchase and sell everything"
+                        .tr,
                 size: 12,
+                maxLines: 2,
                 color: Colors.grey,
                 fontWeight: FontWeight.normal),
           ],
@@ -273,66 +275,87 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildOptionsSection() {
-    return Column(
-      children: [
-        _buildOptionItem(Icons.visibility, 'recently viewed'.tr, () {
-          Get.toNamed(
-            Routes.recentlyViewedAds,
-          );
-        }),
-        // "Recently Viewed"
-        _buildOptionItem(
-          Icons.favorite,
-          'My Favorites'.tr,
-          () {
-            Get.toNamed(
-              Routes.favoriteAdsScreen,
-            );
-          },
-        ),
-        _buildOptionItem(IconBroken.Edit, 'Edit Profile '.tr, () {
-          settingController.myData.value == null
-              ? Get.snackbar('', 'please wait'.tr)
-              : Get.toNamed(
-                  Routes.EditProfileScreen,
+    return GetBuilder<AppSettingController>(
+      builder: (_) {
+        return Column(
+          children: [
+            _buildOptionItem(Icons.visibility, 'Recently viewed'.tr, () {
+              settingController.myData.value == null ||
+                  !settingController.isUserLoggedIn()
+                  ? Get.toNamed(Routes.LoginScreen)
+                  :   Get.toNamed(
+                Routes.recentlyViewedAds,
+              );
+            }),
+            // "Recently Viewed"
+            _buildOptionItem(
+              Icons.favorite,
+              'Favorites'.tr,
+              () {
+                settingController.myData.value == null ||
+                    !settingController.isUserLoggedIn()
+                    ? Get.toNamed(Routes.LoginScreen)
+                    :    Get.toNamed(
+                  Routes.favoriteAdsScreen,
                 );
-        }),
-        // "Saved Searches"
-        GetBuilder<AppSettingController>(builder: (appSettingController) {
-          return _buildOptionItem(
-            Icons.language,
-            appSettingController.langLocal.value == ara ? 'العربية' : 'English',
-            () {
-              // Switch language directly
-              String newLang =
-                  appSettingController.langLocal.value == ara ? ene : ara;
-              appSettingController
-                  .changeLanguage(newLang); // This will now update immediately
-            },
-          );
-        }),
-
-        // "Language"
-
-        // "List of Representatives"
-        _buildOptionItem(Icons.headset_mic, 'Technical Support'.tr, () {}),
-        // "Technical Support"
-        _buildOptionItem(Icons.security, 'Terms and Conditions'.tr, () {}),
-        GetBuilder<AuthController>(
-          builder: (authController) {
-            return GetBuilder<AppSettingController>(
-              builder: (appSettingController) {
-                return !appSettingController.isUserLoggedIn()
-                    ? SizedBox.shrink()
-                    : _buildOptionItem(IconBroken.Logout, 'Logout'.tr, () {
-                        authController.logout();
-                      });
               },
-            );
-          },
-        ),
-        // "Rules and Terms"
-      ],
+            ),
+            _buildOptionItem(IconBroken.Edit, 'Edit Profile '.tr,
+                () {
+              settingController.myData.value == null ||
+                      !settingController.isUserLoggedIn()
+                  ? Get.toNamed(Routes.LoginScreen)
+                  : Get.toNamed(
+                      Routes.EditProfileScreen,
+                    );
+            }),
+            // "Saved Searches"
+            _buildOptionItem(
+              Icons.language,
+              settingController.langLocal.value == ara
+                  ? 'العربية'
+                  : 'English',
+                  () {
+                // Switch language directly
+                String newLang =
+                settingController.langLocal.value == ara ? ene : ara;
+                settingController.changeLanguage(
+                    newLang); // This will now update immediately
+              },
+            ),
+
+            // "Language"
+
+            // "List of Representatives"
+            GetBuilder<AuthController>(
+              builder: (_) {
+                return _buildOptionItem(
+                    Icons.headset_mic, 'Technical Support'.tr, () {
+                  authController.contactAdmin(
+                      subject: "Technical Support",
+                      body: "I wanna contact technical support");
+                });
+              },
+            ),
+            // "Technical Support"
+            _buildOptionItem(Icons.security, 'Terms and Conditions'.tr, () {}),
+            GetBuilder<AuthController>(
+              builder: (authController) {
+                return GetBuilder<AppSettingController>(
+                  builder: (appSettingController) {
+                    return !appSettingController.isUserLoggedIn()
+                        ? SizedBox.shrink()
+                        : _buildOptionItem(IconBroken.Logout, 'Logout'.tr, () {
+                            authController.logout();
+                          });
+                  },
+                );
+              },
+            ),
+            // "Rules and Terms"
+          ],
+        );
+      },
     );
   }
 

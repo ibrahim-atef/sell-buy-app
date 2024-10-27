@@ -6,10 +6,13 @@ import 'package:sell_buy/Utilities/icons.dart';
 import 'package:sell_buy/Utilities/themes.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
 
+import '../../../../Controllers/auth_controller.dart';
+
 class EditProfileScreen extends StatelessWidget {
   EditProfileScreen({super.key});
 
   final settingController = Get.put(AppSettingController());
+  final authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +53,64 @@ class EditProfileScreen extends StatelessWidget {
                         fontWeight: FontWeight.normal))),
             SizedBox(height: 20),
             _buildSectionTitle('account settings'.tr, () {}),
-            ListTile(
-              leading: Icon(IconBroken.Lock),
-              title: Text('change password'.tr),
-              trailing: Icon(IconBroken.Arrow___Left_2),
-              onTap: () {
-                // Navigate to change password screen
+            // ListTile(
+            //   leading: Icon(IconBroken.Lock),
+            //   title: Text('change password'.tr),
+            //   trailing: Icon(IconBroken.Arrow___Left_2),
+            //   onTap: () {
+            //
+            //
+            //
+            //   },
+            // ),
+
+            GetBuilder<AuthController>(
+              builder: (_) {
+                return ListTile(
+                  leading: Icon(Icons.delete_forever, color: Colors.red),
+                  title: Text(
+                    'Delete my information and account'.tr,
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  onTap: () { Get.defaultDialog(
+                    title: "Delete".tr,
+                    textConfirm: "Yes".tr,
+
+                    confirmTextColor: Colors.white,
+                    textCancel: "No".tr,
+                    buttonColor: mainColor,
+                    cancelTextColor: mainColor,
+                    backgroundColor: white,
+                    onConfirm: () {
+                      if (!authController.isDeleteAccount.value) {
+                        // Call deleteAccount function
+                        authController.deleteAccount();
+                      }
+                    },
+                    onCancel: () {
+                      // Optional: Handle cancel action if needed
+                    },
+                    barrierDismissible: false,
+                    // Optional: Show a loading indicator if isDeleteAccount is true
+                    content: Obx(() {
+                      if (authController.isDeleteAccount.value) {
+                        return Center(
+                          child: LinearProgressIndicator(color: mainColor,),
+                        );
+                      }
+                      return SizedBox(child: Center(
+                        child: Text(
+                          'are you sure u want to delete ur account'.tr + "!!",textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Amiri',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17),
+                        ),
+                      ),); // Empty widget if not deleting
+                    }),
+                  );},
+                );
               },
             ),
             ListTile(
@@ -63,25 +118,17 @@ class EditProfileScreen extends StatelessWidget {
               title: Text('Logout'.tr),
               trailing: Icon(IconBroken.Arrow___Left_2),
               onTap: () {
-                // Handle logout logic
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.delete_forever, color: Colors.red),
-              title: Text(
-                'Delete my information and account'.tr,
-                style: TextStyle(color: Colors.red),
-              ),
-              onTap: () {
-                // Handle account deletion
+                authController.logout();
               },
             ),
             Spacer(),
+
             Center(
               child: Text(
-                  'Member since:'.tr +" "+
-                      _formatDate(settingController.myData
-                              .value?.registerDate!.millisecondsSinceEpoch ??
+                  'Member since:'.tr +
+                      " " +
+                      _formatDate(settingController.myData.value?.registerDate!
+                              .millisecondsSinceEpoch ??
                           0),
                   style: TextStyle(color: Colors.grey.shade600)),
             ),
@@ -132,8 +179,9 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 }
- _formatDate(int timestamp) {
-    DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-    String formattedDate = '${date.day}/${date.month}/${date.year}';
-    return formattedDate;
-  }
+
+_formatDate(int timestamp) {
+  DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+  String formattedDate = '${date.day}/${date.month}/${date.year}';
+  return formattedDate;
+}
