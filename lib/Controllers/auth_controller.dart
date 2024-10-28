@@ -85,17 +85,24 @@ class AuthController extends GetxController {
   }
 
   Future<void> _createUserDocument(UserDataModel userModel, String uid) async {
-    userModel.uid = uid;
-    userModel.registerDate = Timestamp.now();
-    userModel.role = usersCollectionKey;
+  userModel.uid = uid;
+  userModel.registerDate = Timestamp.now();
+  userModel.role = usersCollectionKey;
+  userModel.notificationPreferences = {};
+ userModel.fcmToken = '';
+  // Conditionally retrieve FCM token for devices only
+  if (!Platform.isIOS && !Platform.isAndroid) {
     userModel.fcmToken = await FirebaseMessaging.instance.getToken();
-    userModel.notificationPreferences = {};
-
-    await FireStoreMethods.createUser(userDataModel: userModel);
-
-    // Save UID in GetStorage
-    authBox.write('uid', uid);
+  } else {
+    debugPrint("Skipping FCM token retrieval on simulator.");
   }
+
+  await FireStoreMethods.createUser(userDataModel: userModel);
+
+  // Save UID in GetStorage
+  authBox.write('uid', uid);
+}
+
 
   void _showErrorSnackbar(String message) {
     isSignUpLoading.value = false;
@@ -150,41 +157,47 @@ class AuthController extends GetxController {
     update();
 
     try {
-      bool isConnected = await checkInternetConnectivity();
-      if (!isConnected) {
+      if (!await checkInternetConnectivity()) {
         _showErrorSnackbar("No Internet Connection".tr);
         return;
       }
 
-      await auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) async {
-        final userCollection =
-            FirebaseFirestore.instance.collection(usersCollectionKey);
-        final userQuery =
-            await userCollection.where("email", isEqualTo: email).get();
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-        if (userQuery.docs.isNotEmpty) {
-          final userData = userQuery.docs.first.data();
-          UserDataModel userModel = UserDataModel.fromMap(userData);
+      final userCollection =
+          FirebaseFirestore.instance.collection(usersCollectionKey);
+      final userQuery =
+          await userCollection.where("email", isEqualTo: email).get();
+
+      if (userQuery.docs.isNotEmpty) {
+        UserDataModel userModel =
+            UserDataModel.fromMap(userQuery.docs.first.data());
+
+        // Skip FCM token retrieval if running on a simulator
+        if (!Platform.isIOS && !Platform.isAndroid) {
           userModel.fcmToken = await FirebaseMessaging.instance.getToken();
-
-          FireStoreMethods().updateUser(userModel: userModel);
-          authBox.write(KUid, userData['uid']);
-          Get.offNamed(Routes.MainLayoutScreen, preventDuplicates: true);
         } else {
-          // Email does not exist
-          await auth.signOut();
-          Get.snackbar(
-            "خطأ",
-            "البريد الإلكتروني غير موجود",
-            duration: Duration(seconds: 5),
-          );
+          debugPrint("Skipping FCM token retrieval on simulator.");
         }
-      });
+
+        await FireStoreMethods().updateUser(userModel: userModel);
+        authBox.write(KUid, userModel.uid);
+        Get.offNamed(Routes.MainLayoutScreen, preventDuplicates: true);
+      } else {
+        await auth.signOut();
+        Get.snackbar(
+          "خطأ",
+          "البريد الإلكتروني غير موجود",
+          duration: Duration(seconds: 5),
+        );
+      }
     } on FirebaseAuthException catch (error) {
       _handleFirebaseAuthException(error);
     } catch (error) {
+      debugPrint(error.toString());
       _showErrorSnackbar(error.toString());
     } finally {
       isLoginLoading.value = false;
@@ -254,7 +267,7 @@ class AuthController extends GetxController {
       String uid = authBox.read(KUid);
 
       // Delete from Firestore based on role
-      if (user.email.toString() != "atf343069@gmail.com" ) {
+      if (user.email.toString() != "atf343069@gmail.com") {
         await FirebaseFirestore.instance
             .collection(usersCollectionKey)
             .doc(uid)
@@ -333,6 +346,7 @@ class AuthController extends GetxController {
       update();
     }
   }
+
   ///-------------------------------------------------------Contact admin
   RxBool isContactingAdmin = false.obs;
 

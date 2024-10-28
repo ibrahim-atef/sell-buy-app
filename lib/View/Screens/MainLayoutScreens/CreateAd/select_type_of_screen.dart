@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sell_buy/Routes/routes.dart';
+import 'package:sell_buy/Utilities/icons.dart';
 import 'package:sell_buy/Utilities/themes.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/button_component.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
@@ -11,6 +12,20 @@ class SelectTypeOfAdScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+           leading: IconButton(
+          onPressed: () {
+             
+            Get.back();
+          },
+          icon: Icon(
+             
+             IconBroken.Close_Square,
+            color: black,
+          ),
+        ),
+      ),
       body: SizedBox(
         width: Get.width,
         child: Column(

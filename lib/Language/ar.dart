@@ -260,4 +260,10 @@ const Map<String, String> ar = {
       "قم بتسجيل الدخول أو إنشاء حساب جديد\n لشراء و بيع كل شيء",
   'Favorites': 'المفضلة',
   'No Ads Found': 'لا يوجد اعلانات',
+  "Permission Denied": "تم رفض الاذن",
+  "Please allow photo access in settings to select images.":
+      "الرجاء تفعيل صلاحيات الصور في الاعدادات لتحديد الصور.",
+"Open Settings":"افتح الاعدادات",
+"Cancel":"الغاء",      
+'No image selected.': 'لم يتم تحديد صورة.',
 };

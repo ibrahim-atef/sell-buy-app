@@ -14,6 +14,8 @@ import '../Model/ad_model.dart';
 import '../Model/commercial_ad_model.dart';
 import '../Utilities/my_strings.dart';
 import '../Utilities/themes.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 class CreateAdController extends GetxController {
   final GetStorage storageBox = GetStorage();
@@ -55,12 +57,20 @@ class CreateAdController extends GetxController {
   }
 
   ///--------------------------------------------------------------------------- Get images from device
-  Future<void> getImageFromDevice() async {
-    final List<XFile>? pickedFiles =
-        await picker.pickMultiImage(imageQuality: 70);
+ Future<void> getImageFromDevice() async {
+  // Check and request permission for photo access
+  final permissionStatus = await Permission.photos.status;
+
+  if (permissionStatus.isDenied || permissionStatus.isPermanentlyDenied) {
+    _showPermissionDeniedDialog(); // Show dialog if permission is denied
+    return;
+  }
+
+  // Request permission if not granted
+  if (permissionStatus.isGranted || await Permission.photos.request().isGranted) {
+    final List<XFile>? pickedFiles = await picker.pickMultiImage(imageQuality: 70);
     if (pickedFiles != null) {
-      List<File> newImages =
-          pickedFiles.map((file) => File(file.path)).toList();
+      List<File> newImages = pickedFiles.map((file) => File(file.path)).toList();
       if (pickedImages != null) {
         pickedImages!.addAll(newImages);
       } else {
@@ -68,25 +78,50 @@ class CreateAdController extends GetxController {
       }
       update(); // Update the UI to reflect the picked images
     } else {
-      print('No images selected.');
+      print('No images selected.'.tr);
     }
   }
+}
+
 
   ///--------------------------------------------------------------------------- Get one image from device
-  Future<void> getOneImageFromDevice() async {
+Future<void> getOneImageFromDevice() async {
+  final permissionStatus = await Permission.photos.status;
+
+  if (permissionStatus.isDenied || permissionStatus.isPermanentlyDenied) {
+    _showPermissionDeniedDialog();
+    return;
+  }
+
+  if (permissionStatus.isGranted || await Permission.photos.request().isGranted) {
     final XFile? pickedFile = await picker.pickImage(
-      source: ImageSource.gallery, // Use ImageSource.camera if needed
-      imageQuality: 70, // Adjust the image quality
+      source: ImageSource.gallery,
+      imageQuality: 70,
     );
 
     if (pickedFile != null) {
-      pickedImage = File(pickedFile.path); // Save the selected image
-
-      update(); // Update UI or notify listeners
+      pickedImage = File(pickedFile.path);
+      update();
     } else {
-      print('No image selected.');
+      print('No image selected.'.tr);
     }
   }
+}
+  void _showPermissionDeniedDialog() {
+  Get.defaultDialog(
+    title: "Permission Denied".tr,
+    middleText: "Please allow photo access in settings to select images.".tr,
+    textConfirm: "Open Settings".tr,
+    textCancel: "Cancel".tr,
+    onConfirm: () async {
+      // Open app settings for the user to enable permissions manually
+      await openAppSettings();
+      Get.back(); // Close the dialog after navigating to settings
+    },
+    onCancel: () => Get.back(),
+  );
+}
+
 
   ///--------------------------------------------------------------------------- Remove an image from the list of picked images
   void removeImageFromImagesList(int index) {
