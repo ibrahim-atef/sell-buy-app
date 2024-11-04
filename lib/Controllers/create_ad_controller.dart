@@ -30,8 +30,10 @@ class CreateAdController extends GetxController {
   final Map<String, bool> _categoryExpansionStates = {};
   String? selectedCategoryId;
   String? selectedSubcategoryId;
+  String? selectedLastSubcategoryId;
   String? selectedCategoryArName;
   String? selectedSubcategoryArName;
+  String? selectedLastSubcategoryArName;
 
   late final String userId;
 
@@ -44,17 +46,17 @@ class CreateAdController extends GetxController {
   }
 
   ///--------------------------------------------------------------------------- Function to check if a category is expanded
-  bool isCategoryExpanded(String categoryId) {
-    return _categoryExpansionStates[categoryId] ?? false;
-  }
+  // bool isCategoryExpanded(String categoryId) {
+  //   return _categoryExpansionStates[categoryId] ?? false;
+  // }
 
   ///--------------------------------------------------------------------------- Function to toggle category expansion
-  void toggleCategoryExpansion(int index) {
-    // Assuming you have a list of categories
-    final categoryId = categoriesList[index].id;
-    _categoryExpansionStates[categoryId] = !isCategoryExpanded(categoryId);
-    update(); // Notify the UI to rebuild
-  }
+  // void toggleCategoryExpansion(int index) {
+  //   // Assuming you have a list of categories
+  //   final categoryId = categoriesList[index].id;
+  //   _categoryExpansionStates[categoryId] = !isCategoryExpanded(categoryId);
+  //   update(); // Notify the UI to rebuild
+  // }
 
   ///--------------------------------------------------------------------------- Get images from device
   Future<void> getImageFromDevice() async {
@@ -134,6 +136,7 @@ class CreateAdController extends GetxController {
   void setSelectedCategoryAndSubcategory(
     String categoryId,
     String subcategoryId,
+      String lastSubcategoryId
   ) {
     selectedCategoryId = categoryId;
     selectedSubcategoryId = subcategoryId;
@@ -145,20 +148,44 @@ class CreateAdController extends GetxController {
   String getCategoryAndSubcategoryNames() {
     debugPrint("------- getting category and subcategory names");
 
+    // Check if selectedCategoryId or selectedSubcategoryId is null
     if (selectedCategoryId == null || selectedSubcategoryId == null) {
-      return 'choose category'.tr;
+      return 'choose category'.tr; // Return the translation if any ID is null
     }
-    final category = categoriesList
-        .firstWhere((category) => category.id == selectedCategoryId);
-    final subcategory = category.subcategories!
-        .firstWhere((subcategory) => subcategory.id == selectedSubcategoryId);
-    selectedCategoryArName = category.arName;
-    selectedSubcategoryArName = subcategory.arName;
 
+    // Get the category using the selectedCategoryId
+    final category = categoriesList
+        .firstWhere((category) => category.id == selectedCategoryId) as Category;
+
+    // Get the subcategory using the selectedSubcategoryId
+    final subcategory = category.subcategories!
+        .firstWhere((subcategory) => subcategory.id == selectedSubcategoryId) as Subcategory;
+
+    // Initialize lastSubcategory to null
+    Subcategory? lastSubcategory;
+
+    // Only look for the last subcategory if selectedLastSubcategoryId is not empty
+    if (selectedLastSubcategoryId != null && selectedLastSubcategoryId!.isNotEmpty) {
+      lastSubcategory = subcategory.subcategories != null
+          ? subcategory.subcategories!.firstWhere(
+              (subcategory) => subcategory.id == selectedLastSubcategoryId,
+
+          orElse: () => Subcategory(id: "", arName: "", name: "", imagePath: '', categoryId: '', createdAt: Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch) , updatedAt: Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch)) // Return a default Subcategory
+      )
+          : null;
+    }
+
+    // Set the AR names or default to empty string if they are null
+    selectedCategoryArName = category.arName;
+    selectedSubcategoryArName = subcategory.arName ?? "";
+    selectedLastSubcategoryArName = lastSubcategory?.arName ?? ""; // Use null-aware operator
+
+    // Return names based on the current locale
     return Get.locale!.languageCode == "ar"
-        ? '${category.arName} - ${subcategory.arName}'
-        : '${category.name} - ${subcategory.name}';
+        ? '${category.arName} - ${subcategory.arName} - ${selectedLastSubcategoryArName}'
+        : '${category.name} - ${subcategory.name} - ${lastSubcategory?.name ?? ""}';
   }
+
 
   /// ---------------------------------------------------------------------------function to get user data
   void getUserData() async {
@@ -182,63 +209,70 @@ class CreateAdController extends GetxController {
   List<Category> categoriesList = <Category>[];
   RxBool isLoadingCategories = false.obs;
 
+  // Map to track expanded state of categories and subcategories
+  Map<String, bool> categoryExpandedMap = {};
+  Map<String, bool> subcategoryExpandedMap = {};
+
+  // Method to get categories and their subcategories (up to 3 levels)
   Future<void> getCategoriesAndSubcategories() async {
-    debugPrint("------- getting categories and subcategories");
     isLoadingCategories.value = true;
     try {
-      // Get the categories collection
-      final categoriesSnapshot =
-          await FireStoreMethods.categoriesCollection.get();
-      categoriesList.clear(); // Clear the previous list
+      final categoriesSnapshot = await FireStoreMethods.categoriesCollection.get();
+      categoriesList.clear();
 
-      // Loop through each category document
       for (var categoryDoc in categoriesSnapshot.docs) {
-        // Debug log for category document
+        Category category = Category.fromMap(categoryDoc.data());
+        final subcategoriesSnapshot = await categoryDoc.reference
+            .collection(subcategoriesCollectionKey)
+            .get();
 
-        // Try-catch to handle specific category parsing issues
-        try {
-          // Create a category object
-          Category category = Category.fromMap(categoryDoc.data());
+        List<Subcategory> subcategories = [];
+        for (var subcategoryDoc in subcategoriesSnapshot.docs) {
+          Subcategory subcategory = Subcategory.fromMap(subcategoryDoc.data());
 
-          // Fetch subcategories for each category document
-          final subcategoriesSnapshot = await categoryDoc.reference
+          // Fetch last-level subcategories
+          final lastLevelSnapshot = await subcategoryDoc.reference
               .collection(subcategoriesCollectionKey)
               .get();
 
-          // List to store subcategories for this category
-          List<Subcategory> subcategories = [];
-          for (var subcategoryDoc in subcategoriesSnapshot.docs) {
-            // Debug log for subcategory document
-
-            // Try-catch to handle subcategory parsing issues
-            try {
-              Subcategory subcategory =
-                  Subcategory.fromMap(subcategoryDoc.data());
-              subcategories.add(subcategory);
-            } catch (e) {
-              print('Error: $e');
-            }
+          List<Subcategory> lastLevelSubcategories = [];
+          for (var lastLevelDoc in lastLevelSnapshot.docs) {
+            Subcategory lastLevelSubcategory = Subcategory.fromMap(lastLevelDoc.data());
+            lastLevelSubcategories.add(lastLevelSubcategory);
           }
 
-          // Assign subcategories to the category object
-          category.subcategories = subcategories;
-
-          // Add the category (with subcategories) to the list
-          categoriesList.add(category);
-        } catch (e) {
-          print('Error: $e');
+          subcategory.subcategories = lastLevelSubcategories;
+          subcategories.add(subcategory);
         }
+
+        category.subcategories = subcategories;
+        categoriesList.add(category);
       }
 
-      update(); // Update UI after fetching categories
+      update();
     } catch (error) {
       print("Error getting categories: $error");
-      Get.snackbar("Error", "Failed to load categories: $error",
+      Get.snackbar("Error", "Failed to load categories",
           snackPosition: SnackPosition.TOP);
     } finally {
       isLoadingCategories.value = false;
     }
   }
+
+  // Methods to toggle expanded state
+  void toggleCategoryExpansion(String categoryId) {
+    categoryExpandedMap[categoryId] = !(categoryExpandedMap[categoryId] ?? false);
+    update();
+  }
+
+  void toggleSubcategoryExpansion(String subcategoryId) {
+    subcategoryExpandedMap[subcategoryId] = !(subcategoryExpandedMap[subcategoryId] ?? false);
+    update();
+  }
+
+  // Method to check expansion state
+  bool isCategoryExpanded(String categoryId) => categoryExpandedMap[categoryId] ?? false;
+  bool isSubcategoryExpanded(String subcategoryId) => subcategoryExpandedMap[subcategoryId] ?? false;
 
   Future<void> uploadAd(AdModel ad) async {
     isAddingAd.value = true; // Start the loading state

@@ -266,4 +266,5 @@ const Map<String, String> ar = {
 "Open Settings":"افتح الاعدادات",
 "Cancel":"الغاء",      
 'No image selected.': 'لم يتم تحديد صورة.',
+  "No further subcategories available": "لا توجد تحديثات فرعية",
 };
