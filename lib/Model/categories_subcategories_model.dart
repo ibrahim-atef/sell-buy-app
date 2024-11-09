@@ -55,7 +55,7 @@ class Subcategory {
   String categoryId;
   Timestamp createdAt;
   Timestamp updatedAt;
-  List<Subcategory>? subcategories; // Add third-level subcategories
+  List<LastSubcategory>? subcategories; // Add third-level subcategories
 
   Subcategory({
     required this.id,
@@ -93,8 +93,56 @@ class Subcategory {
       createdAt: map['createdAt'],
       updatedAt: map['updatedAt'],
       subcategories: (map['subcategories'] as List?)
-          ?.map((item) => Subcategory.fromMap(item))
+          ?.map((item) => LastSubcategory.fromMap(item))
           .toList(), // Convert list of maps to list of Subcategory objects
+    );
+  }
+}
+class LastSubcategory {
+  String id;
+  String name;
+  String arName; // Arabic name field
+  String imagePath;
+  String categoryId;
+  String subcategoryId;
+  Timestamp createdAt;
+  Timestamp updatedAt;
+
+  LastSubcategory({
+    required this.id,
+    required this.name,
+    required this.arName, // Initialize Arabic name
+    required this.imagePath,
+    required this.categoryId,
+    required this.subcategoryId,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  // Convert LastSubcategory to a Firestore-compatible map
+  toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'arName': arName,
+      'imageURL': imagePath,
+      'categoryId': categoryId,
+      'subcategoryId': subcategoryId,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+    };
+  }
+
+  factory LastSubcategory.fromMap(map) {
+    return LastSubcategory(
+      id: map['id'],
+      name: map['name'],
+      arName: map['arName'],
+      imagePath: map['imageURL'],
+      categoryId: map['categoryId'],
+      subcategoryId: map['subcategoryId'],
+      createdAt: map['createdAt'],
+      updatedAt: map['updatedAt'],
     );
   }
 }

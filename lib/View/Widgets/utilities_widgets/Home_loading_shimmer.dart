@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'custom_shimmer_widget.dart';
 
 class HomeLoadingShimmer extends StatelessWidget {
-  const HomeLoadingShimmer({super.key});
+  final bool isOnlyCategories;
 
-  @override
+  const HomeLoadingShimmer({Key? key, this.isOnlyCategories = false})
+      : super(key: key);
+
   Widget build(BuildContext context) {
     return SizedBox(
       child: SingleChildScrollView(
@@ -36,40 +38,42 @@ class HomeLoadingShimmer extends StatelessWidget {
                     );
                   }),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  contentPadding: EdgeInsets.all(0),
-                  leading: CustomShimmer(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        color: const Color(0xFFE5E5EA),
-                      ),
-                      width: 50,
-                      height: 50,
-                    ),
-                    baseColor: const Color(0xFFE5E5EA),
-                    highlightColor: const Color(0xFFF5F5F5),
+            isOnlyCategories
+                ? SizedBox.shrink()
+                : ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        contentPadding: EdgeInsets.all(0),
+                        leading: CustomShimmer(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              color: const Color(0xFFE5E5EA),
+                            ),
+                            width: 50,
+                            height: 50,
+                          ),
+                          baseColor: const Color(0xFFE5E5EA),
+                          highlightColor: const Color(0xFFF5F5F5),
+                        ),
+                        title: CustomShimmer(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              color: const Color(0xFFE5E5EA),
+                            ),
+                            width: 150,
+                            height: 50,
+                          ),
+                          baseColor: const Color(0xFFE5E5EA),
+                          highlightColor: const Color(0xFFF5F5F5),
+                        ),
+                      );
+                    },
                   ),
-                  title: CustomShimmer(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        color: const Color(0xFFE5E5EA),
-                      ),
-                      width: 150,
-                      height: 50,
-                    ),
-                    baseColor: const Color(0xFFE5E5EA),
-                    highlightColor: const Color(0xFFF5F5F5),
-                  ),
-                );
-              },
-            ),
           ],
         ),
       ),

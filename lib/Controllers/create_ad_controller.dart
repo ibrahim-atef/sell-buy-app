@@ -140,6 +140,7 @@ class CreateAdController extends GetxController {
   ) {
     selectedCategoryId = categoryId;
     selectedSubcategoryId = subcategoryId;
+    selectedLastSubcategoryId = lastSubcategoryId;
     Get.back();
     update();
   }
@@ -162,7 +163,7 @@ class CreateAdController extends GetxController {
         .firstWhere((subcategory) => subcategory.id == selectedSubcategoryId) as Subcategory;
 
     // Initialize lastSubcategory to null
-    Subcategory? lastSubcategory;
+    LastSubcategory? lastSubcategory;
 
     // Only look for the last subcategory if selectedLastSubcategoryId is not empty
     if (selectedLastSubcategoryId != null && selectedLastSubcategoryId!.isNotEmpty) {
@@ -170,7 +171,7 @@ class CreateAdController extends GetxController {
           ? subcategory.subcategories!.firstWhere(
               (subcategory) => subcategory.id == selectedLastSubcategoryId,
 
-          orElse: () => Subcategory(id: "", arName: "", name: "", imagePath: '', categoryId: '', createdAt: Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch) , updatedAt: Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch)) // Return a default Subcategory
+          orElse: () => LastSubcategory(id: "", arName: "", name: "", imagePath: '', categoryId: '', createdAt: Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch) , updatedAt: Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch), subcategoryId:  subcategory.id ) // Return a default Subcategory
       )
           : null;
     }
@@ -235,9 +236,9 @@ class CreateAdController extends GetxController {
               .collection(subcategoriesCollectionKey)
               .get();
 
-          List<Subcategory> lastLevelSubcategories = [];
+          List<LastSubcategory> lastLevelSubcategories = [];
           for (var lastLevelDoc in lastLevelSnapshot.docs) {
-            Subcategory lastLevelSubcategory = Subcategory.fromMap(lastLevelDoc.data());
+            LastSubcategory lastLevelSubcategory = LastSubcategory.fromMap(lastLevelDoc.data());
             lastLevelSubcategories.add(lastLevelSubcategory);
           }
 

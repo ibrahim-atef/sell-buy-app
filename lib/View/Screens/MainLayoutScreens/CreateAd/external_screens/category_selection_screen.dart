@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/custom_shimmer_widget.dart';
-import '../../../../Controllers/create_ad_controller.dart';
-import '../../../../Model/categories_subcategories_model.dart';
-import '../../../../Utilities/themes.dart';
+import '../../../../../Controllers/create_ad_controller.dart';
+import '../../../../../Model/categories_subcategories_model.dart';
+import '../../../../../Utilities/themes.dart';
 
 class CategorySelectionScreen extends StatelessWidget {
   final controller = Get.put(CreateAdController());

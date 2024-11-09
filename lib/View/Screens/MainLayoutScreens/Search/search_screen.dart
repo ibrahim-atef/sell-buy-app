@@ -131,57 +131,57 @@ class SearchScreen extends StatelessWidget {
   }
 
   // Method to build a commercial ad card
-  Widget _buildCommercialAdCard(CommercialAdModel ad) {
-    return GestureDetector(
-      onTap: () {
-        Get.to(() => PgeViewCommercialAds(
-          commercialAds: [ad], // Pass the selected ad only
-          currentIndex: 0, // Current index set to 0 as we are passing only one ad
-        ));
-      },
-      child: Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Ad Image
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 4.0, right: 4.0, left: 4.0),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                  ),
-                  child: Image.network(
-                    ad.imagePath,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child; // Image is fully loaded
-                      }
-                      // Show circular progress indicator until the image loads
-                      return Center(child: LoaderComponent(color: Colors.black54));
-                    },
-                    errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                      // Fallback widget when image loading fails
-                      return Icon(Icons.image_not_supported);
-                    },
+    Widget _buildCommercialAdCard(CommercialAdModel ad) {
+      return GestureDetector(
+        onTap: () {
+          Get.to(() => PgeViewCommercialAds(
+            commercialAds: [ad], // Pass the selected ad only
+            currentIndex: 0, // Current index set to 0 as we are passing only one ad
+          ));
+        },
+        child: Card(
+          elevation: 3,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Ad Image
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 4.0, right: 4.0, left: 4.0),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                    ),
+                    child: Image.network(
+                      ad.imagePath,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child; // Image is fully loaded
+                        }
+                        // Show circular progress indicator until the image loads
+                        return Center(child: LoaderComponent(color: Colors.black54));
+                      },
+                      errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                        // Fallback widget when image loading fails
+                        return Icon(Icons.image_not_supported);
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
-            // Action Buttons (WhatsApp & Call)
-            _buildAdActionButtons(),
-          ],
+              // Action Buttons (WhatsApp & Call)
+              _buildAdActionButtons(),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
   // Method to build the action buttons for commercial ads
   Widget _buildAdActionButtons() {

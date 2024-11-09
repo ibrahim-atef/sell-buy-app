@@ -21,7 +21,7 @@ class RecentlyViewedAds extends StatelessWidget {
             color: Colors.black,
             fontWeight: FontWeight.bold),
         leading: IconButton(
-            icon: Icon(IconBroken.Arrow___Right_2),
+            icon: Icon(Get.locale?.languageCode == 'en' ? IconBroken.Arrow___Left_2 :IconBroken.Arrow___Right_2),
             onPressed: () => Get.back()),
         elevation: 1,
       ),

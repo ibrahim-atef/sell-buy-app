@@ -17,6 +17,8 @@ class AdModel {
   String categoryNameAr;
   String subCategory;
   String selectedSubcategoryArName;
+   String thirdSubCategory;
+    String thirdSubCategoryArName;
   Timestamp createdAt;
   Timestamp updatedAt;
   bool isSuspended = false;
@@ -38,6 +40,8 @@ class AdModel {
     required this.categoryNameAr,
     required this.subCategory,
     required this.selectedSubcategoryArName,
+    required this.thirdSubCategory,
+    required this.thirdSubCategoryArName,
     required this.createdAt,
     required this.updatedAt,
     this.isSuspended = false,
@@ -62,6 +66,8 @@ class AdModel {
       categoryNameAr: json['categoryNameAr'],
       subCategory: json['subCategory'],
       selectedSubcategoryArName: json['selectedSubcategoryArName'],
+      thirdSubCategory: json['thirdSubCategory'],
+      thirdSubCategoryArName: json['thirdSubCategoryArName'],
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
       isSuspended: json['isSuspended'] ?? false,
@@ -87,6 +93,8 @@ class AdModel {
       'categoryNameAr': categoryNameAr,
       'subCategory': subCategory,
       'selectedSubcategoryArName': selectedSubcategoryArName,
+      'thirdSubCategory': thirdSubCategory,
+      'thirdSubCategoryArName': thirdSubCategoryArName,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'isSuspended': isSuspended,

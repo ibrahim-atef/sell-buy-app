@@ -50,7 +50,7 @@ class _PgeViewCommercialAdsState extends State<PgeViewCommercialAds> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              icon: Icon(IconBroken.Arrow___Right_2, color: Colors.white),
+              icon: Icon(Get.locale?.languageCode == 'en' ? IconBroken.Arrow___Left_2 :IconBroken.Arrow___Right_2, color: Colors.white),
               onPressed: () {
                 Navigator.of(context).pop();
                 adServicesController.clearViewsCount();

@@ -14,6 +14,7 @@ import '../../../../Controllers/create_ad_controller.dart';
 import '../../../../Model/ad_model.dart';
 import '../../../../Utilities/my_strings.dart';
 import '../../../../Utilities/themes.dart';
+import 'external_screens/location_selection_screen.dart';
 
 class CreateAdScreen extends StatefulWidget {
   const CreateAdScreen({Key? key}) : super(key: key);
@@ -44,7 +45,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                 color: Colors.black,
                 fontWeight: FontWeight.bold),
             leading: IconButton(
-                icon: Icon(IconBroken.Arrow___Right_2),
+                icon: Icon(Get.locale?.languageCode == 'en' ? IconBroken.Arrow___Left_2 :IconBroken.Arrow___Right_2),
                 onPressed: () => Get.back()),
           ),
           body: Padding(
@@ -185,7 +186,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                     },
                     hintText: 'title'.tr,
                     textInputType: TextInputType.text,
-                    suffixIcon: Icon(IconBroken.Location),
+                    suffixIcon: Icon(IconBroken.Document),
                   ),
 
                   const SizedBox(height: 20),
@@ -227,7 +228,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       controller: ownerWhatsappNumController,
                       obscureText: false,
                       validator: (value) {
-                        if (value!.isEmpty) return 'Please enter phone number'.tr;
+                        if (value!.isEmpty)
+                          return 'Please enter phone number'.tr;
                         if (!RegExp(phonePattern)
                             .hasMatch(authController.countryCode.value + value))
                           return 'Please enter a valid phone number'.tr;
@@ -265,18 +267,28 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
 
                   // Location Section
 
-                  CustomTextFromField(
-                    controller: addressController,
-                    hintText: 'address'.tr,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter address'.tr;
+                  GestureDetector(
+                    onTap: () async {
+                      final selectedLocation = await Get.to(() => LocationSelectionScreen());
+                      if (selectedLocation != null) {
+                        setState(() {
+                          addressController.text = "${selectedLocation['governorate']} - ${selectedLocation['region']} - ${selectedLocation['district']}";
+                        });
                       }
-                      return null;
                     },
-                    obscureText: false,
-                    textInputType: TextInputType.text,
-                    suffixIcon: Icon(IconBroken.Location),
+                    child: CustomTextFromField(
+                      controller: addressController,
+                      hintText: 'address'.tr,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter address'.tr;
+                        }
+                        return null;
+                      },
+                      obscureText: false,
+                      textInputType: TextInputType.text,
+                      suffixIcon: Icon(IconBroken.Location),    enabled: false,
+                    ),
                   ),
                   const SizedBox(height: 20),
 
@@ -317,6 +329,10 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                             selectedSubcategoryArName:
                                 controller.selectedSubcategoryArName ?? '',
                             ownerWhatsappNum: whatsappPhoneNumber,
+                            thirdSubCategory:
+                                controller.selectedLastSubcategoryId ?? "",
+                            thirdSubCategoryArName:
+                                controller.selectedLastSubcategoryArName ?? "",
                           );
 
                           // Call the controller's method to upload the ad

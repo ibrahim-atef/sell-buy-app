@@ -267,4 +267,10 @@ const Map<String, String> ar = {
 "Cancel":"الغاء",      
 'No image selected.': 'لم يتم تحديد صورة.',
   "No further subcategories available": "لا توجد تحديثات فرعية",
+  "Confirm": "تأكيد",
+  "Select Location": "حدد الموقع",
+  "Governorate": "المحافظة",
+  "Region" : "المنطقة",
+  "District": "المنطقة",
+  "Please select all fields": "الرجاء تحديد جميع الحقول",
 };

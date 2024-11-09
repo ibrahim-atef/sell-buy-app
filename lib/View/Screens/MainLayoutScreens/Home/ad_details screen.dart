@@ -93,7 +93,7 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
                     });
                     if (isClosingPage) Navigator.pop(context);
                   },
-                  icon: Icon(IconBroken.Arrow___Right_2),
+                  icon: Icon(Get.locale?.languageCode == 'en' ? IconBroken.Arrow___Left_2 :IconBroken.Arrow___Right_2),
                 ),
                 actions: [
                   adServicesController.isAddingToFavourites.value

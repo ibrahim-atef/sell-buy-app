@@ -14,14 +14,12 @@ class SelectTypeOfAdScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-           leading: IconButton(
+        leading: IconButton(
           onPressed: () {
-             
             Get.back();
           },
           icon: Icon(
-             
-             IconBroken.Close_Square,
+            IconBroken.Close_Square,
             color: black,
           ),
         ),
@@ -33,7 +31,9 @@ class SelectTypeOfAdScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ButtonComponent(
-              onPressed: () {Get.toNamed(Routes.CreateAdScreen);},
+              onPressed: () {
+                Get.toNamed(Routes.CreateAdScreen);
+              },
               text: TextComponent(
                   text: "Create Ad".tr,
                   size: 20,
@@ -41,20 +41,22 @@ class SelectTypeOfAdScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold),
               width: Get.width * .6,
               backgroundColor: baseColorShimmer,
-              h:  Get.width * .3,
+              h: Get.width * .3,
             ),
             const SizedBox(
               height: 20,
             ),
             ButtonComponent(
-              onPressed: () {Get.toNamed(Routes.createCommercialAdScreen);},
+              onPressed: () {
+                Get.toNamed(Routes.createCommercialAdScreen);
+              },
               text: TextComponent(
                   text: "Create Commercials Ad".tr,
                   size: 20,
                   color: Colors.black54,
                   fontWeight: FontWeight.bold),
               width: Get.width * .6,
-              h:  Get.width * .3,
+              h: Get.width * .3,
               backgroundColor: baseColorShimmer,
             ),
           ],
