@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sell_buy/Model/location_model.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/button_component.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
+
 import '../../../../../Utilities/constants.dart';
 
 class LocationSelectionScreen extends StatefulWidget {
@@ -11,34 +13,14 @@ class LocationSelectionScreen extends StatefulWidget {
 }
 
 class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
-  String? selectedGovernorate;
-  String? selectedRegion;
-  String? selectedDistrict;
+  // Variables to store selected items
+  Governorate? selectedGovernorate;
+  Region? selectedRegion;
+  District? selectedDistrict;
 
-  // This method returns the governorate list based on the locale
-  List<String> get governorates {
-    bool isArabic(String text) {
-      // Check if the text contains any Arabic characters
-      return RegExp(r'[\u0600-\u06FF]').hasMatch(text);
-    }
-
-    if (Get.locale?.languageCode == "ar") {
-      // For Arabic locale, return only Arabic names
-      return saudiLocations.keys
-          .where((k) =>
-              isArabic(k)) // Filters only the keys containing Arabic characters
-          .toList();
-    } else {
-      // For non-Arabic locale, return only non-Arabic names
-      return saudiLocations.keys
-          .where((k) => !isArabic(
-              k)) // Filters only the keys not containing Arabic characters
-          .toList();
-    }
-  }
-
-  List<String> regions = [];
-  List<String> districts = [];
+  // Lists to store regions and districts based on selected Governorate/Region
+  List<Region> regions = [];
+  List<District> districts = [];
 
   @override
   Widget build(BuildContext context) {
@@ -56,18 +38,21 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
         child: Column(
           children: [
             // Governorate Dropdown
-            DropdownButtonFormField<String>(
+            DropdownButtonFormField<Governorate>(
               value: selectedGovernorate,
-              items: governorates.map((gov) {
-                return DropdownMenuItem(value: gov, child: Text(gov));
+              items: saudiLocations.map((gov) {
+                return DropdownMenuItem<Governorate>(
+                  value: gov,
+                  child: Text(Get.locale?.languageCode == 'ar' ? gov.arName : gov.enName),
+                );
               }).toList(),
-              onChanged: (value) {
+              onChanged: (Governorate? value) {
                 setState(() {
                   selectedGovernorate = value;
                   selectedRegion = null;
                   selectedDistrict = null;
-                  regions =
-                      saudiLocations[selectedGovernorate]?.keys.toList() ?? [];
+                  regions = value?.regions ?? [];
+                  districts = [];
                 });
               },
               decoration: InputDecoration(labelText: "Governorate".tr),
@@ -75,18 +60,19 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
             const SizedBox(height: 20),
 
             // Region Dropdown
-            DropdownButtonFormField<String>(
+            DropdownButtonFormField<Region>(
               value: selectedRegion,
               items: regions.map((region) {
-                return DropdownMenuItem(value: region, child: Text(region));
+                return DropdownMenuItem<Region>(
+                  value: region,
+                  child: Text( Get.locale?.languageCode == 'ar' ? region.nameAr : region.nameEn),
+                );
               }).toList(),
-              onChanged: (value) {
+              onChanged: (Region? value) {
                 setState(() {
                   selectedRegion = value;
                   selectedDistrict = null;
-                  districts = (saudiLocations[selectedGovernorate]
-                          ?[selectedRegion] as List<String>?) ??
-                      [];
+                  districts = value?.districts ?? [];
                 });
               },
               decoration: InputDecoration(labelText: "Region".tr),
@@ -94,12 +80,15 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
             const SizedBox(height: 20),
 
             // District Dropdown
-            DropdownButtonFormField<String>(
+            DropdownButtonFormField<District>(
               value: selectedDistrict,
               items: districts.map((district) {
-                return DropdownMenuItem(value: district, child: Text(district));
+                return DropdownMenuItem<District>(
+                  value: district,
+                  child: Text( Get.locale?.languageCode == 'ar' ? district.nameAr : district.nameEn),
+                );
               }).toList(),
-              onChanged: (value) {
+              onChanged: (District? value) {
                 setState(() {
                   selectedDistrict = value;
                 });

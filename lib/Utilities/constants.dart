@@ -1,145 +1,246 @@
-const saudiLocations = {
-  // Riyadh Region (الرياض)
-  "Al Riyadh": {
-    "Al Malaz": ["District 1", "District 2", "District 3"],
-    "Al Nasim": ["District 1", "District 2", "District 3"],
-    "Al Olaya": ["District 1", "District 2", "District 3"],
-    "Al Khaleej": ["District 1", "District 2"],
-    "Al Sulay": ["District 1", "District 2"],
-  },
-  "الرياض": {
-    "الملز": ["الحي الأول", "الحي الثاني", "الحي الثالث"],
-    "النظيم": ["الحي الأول", "الحي الثاني", "الحي الثالث"],
-    "العليا": ["الحي الأول", "الحي الثاني", "الحي الثالث"],
-    "الخليج": ["الحي الأول", "الحي الثاني"],
-    "السلي": ["الحي الأول", "الحي الثاني"],
-  },
+import '../Model/location_model.dart';
 
-  // Makkah Region (مكة)
-  "Makkah": {
-    "Jeddah": ["Al Balad", "Al Khalidiya", "Al Safa", "Al Hamra"],
-    "Makkah City": ["Azizia", "Shara'i", "Al Awali", "Al Nassim"],
-    "Taif": ["Al Shifa", "Al Hada", "Al Salamah"],
-    "Rabigh": ["Central District", "Al Khumrah", "Al Shuaib"],
-  },
-  "مكة": {
-    "جدة": ["البلد", "الخالدية", "الصفا", "الحمرا"],
-    "مكة المكرمة": ["العزيزية", "الشرائع", "العوالي", "النظيم"],
-    "الطائف": ["الشفا", "الهدا", "السلامة"],
-    "رابغ": ["المنطقة المركزية", "الخمرة", "الشعيب"],
-  },
+List<Governorate> saudiLocations = [
+  Governorate(
+    enName: 'Riyadh Region',
+    arName: 'منطقة الرياض',
+    regions: [
+      Region(nameEn: 'Al Malaz', nameAr: 'الملز', districts: [
+        District(nameEn: 'District 1', nameAr: 'الحي الاول'),
+        District(nameEn: 'District 2', nameAr: 'الحي الثاني'),
+        District(nameEn: 'District 3', nameAr: 'الحي الثالث'),
+      ]),
+      Region(nameEn: 'Al Nasim', nameAr: 'النظيم', districts: [
+        District(nameEn: 'District 1', nameAr: 'الحي الاول'),
+        District(nameEn: 'District 2', nameAr: 'الحي الثاني'),
+        District(nameEn: 'District 3', nameAr: 'الحي الثالث'),
+      ]),
+      Region(nameEn: 'Al Olaya', nameAr: 'العليا', districts: [
+        District(nameEn: 'District 1', nameAr: 'الحي الاول'),
+        District(nameEn: 'District 2', nameAr: 'الحي الثاني'),
+        District(nameEn: 'District 3', nameAr: 'الحي الثالث'),
+      ]),
+      Region(nameEn: 'Al Khaleej', nameAr: 'الخليج', districts: [
+        District(nameEn: 'District 1', nameAr: 'الحي الاول'),
+        District(nameEn: 'District 2', nameAr: 'الحي الثاني'),
+      ]),
+      Region(nameEn: 'Al Sulay', nameAr: 'السلي', districts: [
+        District(nameEn: 'District 1', nameAr: 'الحي الاول'),
+        District(nameEn: 'District 2', nameAr: 'الحي الثاني'),
+      ]),
+    ],
+  ),
+  Governorate(
+    enName: 'Makkah Region',
+    arName: 'منطقة مكة',
+    regions: [
+      Region(nameEn: 'Jeddah', nameAr: 'جدة', districts: [
+        District(nameEn: 'Al Balad', nameAr: 'البلد'),
+        District(nameEn: 'Al Khalidiya', nameAr: 'الخالدية'),
+        District(nameEn: 'Al Safa', nameAr: 'الصفي'),
+        District(nameEn: 'Al Hamra', nameAr: 'الحمراء'),
+      ]),
+      Region(nameEn: 'Makkah City', nameAr: 'مكة المكرمة', districts: [
+        District(nameEn: 'Azizia', nameAr: 'العزيزية'),
+        District(nameEn: 'Shara\'i', nameAr: 'الشرائع'),
+        District(nameEn: 'Al Awali', nameAr: 'الأولى'),
+        District(nameEn: 'Al Nassim', nameAr: 'النصيم'),
+      ]),
+      Region(nameEn: 'Taif', nameAr: 'الطائف', districts: [
+        District(nameEn: 'Al Shifa', nameAr: 'الشفاء'),
+        District(nameEn: 'Al Hada', nameAr: 'الحده'),
+        District(nameEn: 'Al Salamah', nameAr: 'السلامة'),
+      ]),
+      Region(nameEn: 'Rabigh', nameAr: 'رابغ', districts: [
+        District(nameEn: 'Central District', nameAr: 'المركز'),
+        District(nameEn: 'Al Khumrah', nameAr: 'الخمرة'),
+        District(nameEn: 'Al Shuaib', nameAr: 'الشعيب'),
+      ]),
+    ],
+  ),
+  Governorate(
+    enName: 'Eastern Province',
+    arName: 'المنطقة الشرقية',
+    regions: [
+      Region(nameEn: 'Dammam', nameAr: 'الدمام', districts: [
+        District(nameEn: 'Al Faisaliyah', nameAr: 'الفيسالية'),
+        District(nameEn: 'Al Shati', nameAr: 'الشاطئ'),
+        District(nameEn: 'Al Rakah', nameAr: 'الرakah'),
+      ]),
+      Region(nameEn: 'Khobar', nameAr: 'الخبر', districts: [
+        District(nameEn: 'Al Khobar North', nameAr: 'الخبر الشمالي'),
+        District(nameEn: 'Al Khobar South', nameAr: 'الخبر الجنوبي'),
+        District(nameEn: 'Al Aqrabiyah', nameAr: 'العقرابية'),
+      ]),
+      Region(nameEn: 'Dhahran', nameAr: 'الظهران', districts: [
+        District(nameEn: 'Dhahran Hills', nameAr: 'تلال الظهران'),
+        District(
+            nameEn: 'Saudi Aramco Compound', nameAr: 'مجمع أرامكو السعودي'),
+      ]),
+      Region(nameEn: 'Jubail', nameAr: 'الجبيل', districts: [
+        District(nameEn: 'Al Fanateer', nameAr: 'الفناتير'),
+        District(
+            nameEn: 'Jubail Industrial City', nameAr: 'مدينة الجبيل الصناعية'),
+        District(nameEn: 'Al Nakheel', nameAr: 'النخيل'),
+      ]),
+    ],
+  ),
+  Governorate(
+    enName: 'Asir Region',
+    arName: 'منطقة عسير',
+    regions: [
+      Region(nameEn: 'Abha', nameAr: 'أبها', districts: [
+        District(nameEn: 'Al Mansak', nameAr: 'المنسك'),
+        District(nameEn: 'Al Khaldiyah', nameAr: 'الخالدية'),
+        District(nameEn: 'Al Namas', nameAr: 'النماص'),
+      ]),
+      Region(nameEn: 'Khamis Mushait', nameAr: 'خميس مشيط', districts: [
+        District(nameEn: 'Al Qadisiyah', nameAr: 'القادسية'),
+        District(nameEn: 'Al Rawdah', nameAr: 'الروضة'),
+        District(nameEn: 'Al Matar', nameAr: 'المطار'),
+      ]),
+      Region(nameEn: 'Al Namas', nameAr: 'النماص', districts: [
+        District(nameEn: 'Al Saddah', nameAr: 'السدة'),
+        District(nameEn: 'Al Qura', nameAr: 'القورة'),
+      ]),
+    ],
+  ),
+  Governorate(
+    enName: 'Madinah Region',
+    arName: 'منطقة المدينة المنورة',
+    regions: [
+      Region(nameEn: 'Madinah City', nameAr: 'المدينة المنورة', districts: [
+        District(nameEn: 'Al Haram', nameAr: 'الحرم'),
+        District(nameEn: 'Al Aqiq', nameAr: 'العقيق'),
+        District(nameEn: 'Al Khalidiyah', nameAr: 'الخالدية'),
+      ]),
+      Region(nameEn: 'Yanbu', nameAr: 'ينبع', districts: [
+        District(nameEn: 'Yanbu Industrial', nameAr: 'الصناعية ينبع'),
+        District(nameEn: 'Yanbu Al Bahr', nameAr: 'ينبع البحر'),
+        District(nameEn: 'Al Sharm', nameAr: 'الشرم'),
+      ]),
+      Region(nameEn: 'Badr', nameAr: 'بدر', districts: [
+        District(nameEn: 'Central Badr', nameAr: 'مركز بدر'),
+        District(nameEn: 'Al Qadimah', nameAr: 'القديمة'),
+      ]),
+    ],
+  ),
+  Governorate(
+    enName: 'Northern Borders Region',
+    arName: 'منطقة الحدود الشمالية',
+    regions: [
+      Region(nameEn: 'Arar', nameAr: 'عرعر', districts: [
+        District(nameEn: 'Al Muhammadiyah', nameAr: 'المحمدية'),
+        District(nameEn: 'Al Faisaliyah', nameAr: 'الفيسالية'),
+        District(nameEn: 'Al Rawdah', nameAr: 'الروضة'),
+      ]),
+      Region(nameEn: 'Rafha', nameAr: 'رفحاء', districts: [
+        District(nameEn: 'Central Rafha', nameAr: 'مركز رفحاء'),
+        District(nameEn: 'Al Mansourah', nameAr: 'المنصورة'),
+      ]),
+      Region(nameEn: 'Turaif', nameAr: 'طريف', districts: [
+        District(nameEn: 'Al Wurud', nameAr: 'الورود'),
+        District(nameEn: 'Al Qadesiyah', nameAr: 'القديسية'),
+      ]),
+    ],
+  ),
+  Governorate(
+    enName: 'Tabuk Region',
+    arName: 'منطقة تبوك',
+    regions: [
+      Region(nameEn: 'Tabuk City', nameAr: 'تبوك', districts: [
+        District(nameEn: 'Al Ammariya', nameAr: 'العمارية'),
+        District(nameEn: 'Al Rabwah', nameAr: 'الربوة'),
+        District(nameEn: 'Al Hamra', nameAr: 'الحمراء'),
+      ]),
+      Region(nameEn: 'Al Wajh', nameAr: 'الوجه', districts: [
+        District(nameEn: 'Central Al Wajh', nameAr: 'المركز الوجه'),
+        District(nameEn: 'Al Khadra', nameAr: 'الخضراء'),
+      ]),
+      Region(nameEn: 'Duba', nameAr: 'ضباء', districts: [
+        District(nameEn: 'Duba Port', nameAr: 'ميناء ضباء'),
+        District(nameEn: 'Al Murjan', nameAr: 'المرجان'),
+      ]),
+    ],
+  ),
+  Governorate(
+    enName: 'Jizan Region',
+    arName: 'منطقة جازان',
+    regions: [
+      Region(nameEn: 'Jizan City', nameAr: 'مدينة جازان', districts: [
+        District(nameEn: 'Al Rawdah', nameAr: 'الروضة'),
+        District(nameEn: 'Al Safa', nameAr: 'الصفا'),
+        District(nameEn: 'Al Shati', nameAr: 'الشاطئ'),
+      ]),
+      Region(nameEn: 'Sabya', nameAr: 'صبيا', districts: [
+        District(nameEn: 'Central Sabya', nameAr: 'مركز صبيا'),
+        District(nameEn: 'Al Qunfudah', nameAr: 'القنفذة'),
+      ]),
+      Region(nameEn: 'Abu Arish', nameAr: 'أبو عريش', districts: [
+        District(nameEn: 'Al Misfirah', nameAr: 'المسفيرة'),
+        District(nameEn: "Al Badiyah", nameAr: 'البادية'),
+      ]),
+    ],
+  ),
+  Governorate(
+    enName: 'Al Baha Region',
+    arName: 'منطقة الباحة',
+    regions: [
+      Region(nameEn: 'Al Baha City', nameAr: 'مدينة الباحة', districts: [
+        District(nameEn: 'Al Mansak', nameAr: 'المنسك'),
+        District(nameEn: 'Al Shariah', nameAr: 'الشرائع'),
+      ]),
+      Region(nameEn: 'Baljurashi', nameAr: 'بلجرشي', districts: [
+        District(nameEn: 'Central Baljurashi', nameAr: 'المركز بلجرشي'),
+        District(nameEn: 'Al Hada', nameAr: 'الحده'),
+      ]),
+    ],
+  ),
+  Governorate(
+    enName: 'Najran Region',
+    arName: 'منطقة نجران',
+    regions: [
+      Region(nameEn: 'Najran City', nameAr: 'مدينة نجران', districts: [
+        District(nameEn: 'Al Okhdood', nameAr: 'العقود'),
+        District(nameEn: 'Al Faisaliyah', nameAr: 'الفيسالية'),
+      ]),
+      Region(nameEn: 'Sharurah', nameAr: 'شرورة', districts: [
+        District(nameEn: 'Sharurah Center', nameAr: 'مركز شرورة'),
+        District(nameEn: 'Al Yasmin', nameAr: 'اليسمن'),
+      ]),
+    ],
+  ),
+  Governorate(
+    enName: 'Hail Region',
+    arName: 'منطقة حائل',
+    regions: [
+      Region(nameEn: 'Hail City', nameAr: 'مدينة حائل', districts: [
+        District(nameEn: 'Al Barzan', nameAr: 'البرزان'),
+        District(nameEn: 'Al Khuzamah', nameAr: 'الخزامة'),
+        District(nameEn: 'Al Muntazah', nameAr: 'المنطقة'),
+      ]),
+      Region(nameEn: 'Baqaa', nameAr: 'بقعاء', districts: [
+        District(nameEn: 'Central Baqaa', nameAr: 'المركز بقعاء'),
+        District(nameEn: 'Al Maghwat', nameAr: 'المغوات'),
+      ]),
+    ],
+  ),
+  Governorate(
+    enName: 'Al Jouf Region',
+    arName: 'منطقة الجوف',
+    regions: [
+      Region(nameEn: 'Sakaka', nameAr: 'سكاكا', districts: [
+        District(nameEn: 'Al Rawdah', nameAr: 'الروضة'),
+        District(nameEn: 'Al Faisaliyah', nameAr: 'الفيسالية'),
+        District(nameEn: 'Al Salam', nameAr: 'السلام'),
+      ]),
+      Region(nameEn: 'Dumat Al Jandal', nameAr: 'دومة الجندل', districts: [
+        District(
+            nameEn: 'Central Dumat Al Jandal', nameAr: 'المركز دومة الجندل'),
+        District(nameEn: 'Al Muntazah', nameAr: 'المنطقة'),
+      ]),
+    ],
+  ),
+];
 
-  // Eastern Province (المنطقة الشرقية)
-  "Eastern Province": {
-    "Dammam": ["Al Faisaliyah", "Al Shati", "Al Rakah"],
-    "Khobar": ["Al Khobar North", "Al Khobar South", "Al Aqrabiyah"],
-    "Dhahran": ["Dhahran Hills", "Saudi Aramco Compound"],
-    "Jubail": ["Al Fanateer", "Jubail Industrial City", "Al Nakheel"],
-  },
-  "المنطقة الشرقية": {
-    "الدمام": ["الفيصلية", "الشاطئ", "الراكه"],
-    "الخبر": ["الخبر الشمالية", "الخبر الجنوبية", "العقربية"],
-    "الظهران": ["تلال الظهران", "مجمع أرامكو السعودية"],
-    "الجبيل": ["الفناتير", "مدينة الجبيل الصناعية", "النخيل"],
-  },
-
-  // Asir Region (عسير)
-  "Asir": {
-    "Abha": ["Al Mansak", "Al Khaldiyah", "Al Namas"],
-    "Khamis Mushait": ["Al Qadisiyah", "Al Rawdah", "Al Matar"],
-    "Al Namas": ["Al Saddah", "Al Qura"],
-  },
-  "عسير": {
-    "أبها": ["المنسك", "الخالدية", "النماص"],
-    "خميس مشيط": ["القادسية", "الروضة", "المطار"],
-    "النماص": ["السدّة", "القرة"],
-  },
-
-  // Madinah Region (المدينة المنورة)
-  "Madinah": {
-    "Madinah City": ["Al Haram", "Al Aqiq", "Al Khalidiyah"],
-    "Yanbu": ["Yanbu Industrial", "Yanbu Al Bahr", "Al Sharm"],
-    "Badr": ["Central Badr", "Al Qadimah"],
-  },
-  "المدينة المنورة": {
-    "المدينة المنورة": ["الحرم", "العقيق", "الخالدية"],
-    "ينبع": ["ينبع الصناعية", "ينبع البحر", "الشرم"],
-    "بدر": ["بدر المركزية", "القديمة"],
-  },
-
-  // Northern Borders Region (الحدود الشمالية)
-  "Northern Borders": {
-    "Arar": ["Al Muhammadiyah", "Al Faisaliyah", "Al Rawdah"],
-    "Rafha": ["Central Rafha", "Al Mansourah"],
-    "Turaif": ["Al Qadesiyah", "Al Wurud"],
-  },
-  "الحدود الشمالية": {
-    "عرعر": ["المحمدية", "الفيصلية", "الروضة"],
-    "رفحاء": ["رفحاء المركزية", "المنصورة"],
-    "طريف": ["القادسية", "الورود"],
-  },
-
-  // Tabuk Region (تبوك)
-  "Tabuk": {
-    "Tabuk City": ["Al Ammariya", "Al Rabwah", "Al Hamra"],
-    "Al Wajh": ["Central Al Wajh", "Al Khadra"],
-    "Duba": ["Duba Port", "Al Murjan"],
-  },
-  "تبوك": {
-    "تبوك": ["العمارية", "الربوة", "الحمرا"],
-    "الوجه": ["الوجه المركزية", "الخضراء"],
-    "ضباء": ["ميناء ضباء", "المرجان"],
-  },
-
-  // Jizan Region (جازان)
-  "Jizan": {
-    "Jizan City": ["Al Rawdah", "Al Safa", "Al Shati"],
-    "Sabya": ["Central Sabya", "Al Qunfudah"],
-    "Abu Arish": ["Al Badiyah", "Al Misfirah"],
-  },
-  "جازان": {
-    "مدينة جازان": ["الروضة", "الصفا", "الشاطئ"],
-    "صبيا": ["صبيا المركزية", "القنفذة"],
-    "أبو عريش": ["البادية", "المسفرة"],
-  },
-
-  // Al Baha Region (الباحة)
-  "Al Baha": {
-    "Al Baha City": ["Al Shariah", "Al Mansak"],
-    "Baljurashi": ["Central Baljurashi", "Al Hada"],
-  },
-  "الباحة": {
-    "مدينة الباحة": ["الشرائع", "المنسك"],
-    "بلجرشي": ["بلجرشي المركزية", "الهدا"],
-  },
-
-  // Najran Region (نجران)
-  "Najran": {
-    "Najran City": ["Al Faisaliyah", "Al Okhdood"],
-    "Sharurah": ["Sharurah Center", "Al Yasmin"],
-  },
-  "نجران": {
-    "مدينة نجران": ["الفيصلية", "الأخدود"],
-    "شرورة": ["مركز شرورة", "الياسمين"],
-  },
-
-  // Hail Region (حائل)
-  "Hail": {
-    "Hail City": ["Al Barzan", "Al Khuzamah", "Al Muntazah"],
-    "Baqaa": ["Central Baqaa", "Al Maghwat"],
-  },
-  "حائل": {
-    "مدينة حائل": ["البرزان", "الخزامى", "المنتزه"],
-    "بقعاء": ["بقعاء المركزية", "المغواة"],
-  },
-
-  // Al Jouf Region (الجوف)
-  "Al Jouf": {
-    "Sakaka": ["Al Rawdah", "Al Faisaliyah", "Al Salam"],
-    "Dumat Al Jandal": ["Central Dumat Al Jandal", "Al Muntazah"],
-  },
-  "الجوف": {
-    "سكاكا": ["الروضة", "الفيصلية", "السلام"],
-    "دومة الجندل": ["دومة الجندل المركزية", "المنتزه"],
-  }
-};
+// Assuming `saudiLocations` is a map with Governorate data.
