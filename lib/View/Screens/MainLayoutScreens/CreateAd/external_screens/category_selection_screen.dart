@@ -17,33 +17,33 @@ class CategorySelectionScreen extends StatelessWidget {
       body: GetBuilder<CreateAdController>(
         builder: (_) => controller.isLoadingCategories.value
             ? ListView.builder(
-          itemCount: 12,
-          itemBuilder: (context, index) => CustomShimmer(
-            child: Container(
-              margin: EdgeInsets.all(4),
-              height: Get.height * 0.07,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE5E5EA),
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            baseColor: baseColorShimmer,
-            highlightColor: highlightColorShimmer,
-          ),
-        )
+                itemCount: 12,
+                itemBuilder: (context, index) => CustomShimmer(
+                  child: Container(
+                    margin: EdgeInsets.all(4),
+                    height: Get.height * 0.07,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE5E5EA),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  baseColor: baseColorShimmer,
+                  highlightColor: highlightColorShimmer,
+                ),
+              )
             : ListView.builder(
-          itemCount: controller.categoriesList.length,
-          itemBuilder: (context, index) {
-            final category = controller.categoriesList[index];
-            return CategoryExpansionTile(
-              category: category,
-              isExpanded: controller.isCategoryExpanded(category.id),
-              onExpansionChanged: (isExpanded) {
-                controller.toggleCategoryExpansion(category.id);
-              },
-            );
-          },
-        ),
+                itemCount: controller.categoriesList.length,
+                itemBuilder: (context, index) {
+                  final category = controller.categoriesList[index];
+                  return CategoryExpansionTile(
+                    category: category,
+                    isExpanded: controller.isCategoryExpanded(category.id),
+                    onExpansionChanged: (isExpanded) {
+                      controller.toggleCategoryExpansion(category.id);
+                    },
+                  );
+                },
+              ),
       ),
     );
   }
@@ -133,63 +133,64 @@ class SubcategoryExpansionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 1,
-      child: (subcategory.subcategories == null || subcategory.subcategories!.isEmpty)
+      child: (subcategory.subcategories == null ||
+              subcategory.subcategories!.isEmpty)
           ? GestureDetector(
-        onTap: () {
-          // Directly set the selected category and subcategory if no further options exist
-          controller.setSelectedCategoryAndSubcategory(
-            categoryId,
-            subcategory.id,
-            "",
-          );
-        },
-        child: ListTile(
-          title: Text(Get.locale!.languageCode == "ar"
-              ? subcategory.arName
-              : subcategory.name),
-        ),
-      )
-          : ExpansionPanelList(
-        elevation: 1,
-        expansionCallback: (int index, bool isExpanded) {
-          onExpansionChanged(!isExpanded);
-        },
-        children: [
-          ExpansionPanel(
-            headerBuilder: (context, isExpanded) {
-              return ListTile(
+              onTap: () {
+                // Directly set the selected category and subcategory if no further options exist
+                controller.setSelectedCategoryAndSubcategory(
+                  categoryId,
+                  subcategory.id,
+                  "",
+                );
+              },
+              child: ListTile(
                 title: Text(Get.locale!.languageCode == "ar"
                     ? subcategory.arName
                     : subcategory.name),
-              );
-            },
-            body: ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: subcategory.subcategories!.length,
-              itemBuilder: (context, index) {
-                final lastLevelSubcategory =
-                subcategory.subcategories![index];
-                return ListTile(
-                  title: Text(Get.locale!.languageCode == "ar"
-                      ? lastLevelSubcategory.arName
-                      : lastLevelSubcategory.name),
-                  onTap: () {
-                    // Handle selection of last-level subcategory
-                    controller.setSelectedCategoryAndSubcategory(
-                      categoryId,
-                      subcategory.id,
-                      lastLevelSubcategory.id,
+              ),
+            )
+          : ExpansionPanelList(
+              elevation: 1,
+              expansionCallback: (int index, bool isExpanded) {
+                onExpansionChanged(!isExpanded);
+              },
+              children: [
+                ExpansionPanel(
+                  headerBuilder: (context, isExpanded) {
+                    return ListTile(
+                      title: Text(Get.locale!.languageCode == "ar"
+                          ? subcategory.arName
+                          : subcategory.name),
                     );
                   },
-                );
-              },
+                  body: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: subcategory.subcategories!.length,
+                    itemBuilder: (context, index) {
+                      final lastLevelSubcategory =
+                          subcategory.subcategories![index];
+                      return ListTile(
+                        title: Text(Get.locale!.languageCode == "ar"
+                            ? lastLevelSubcategory.arName
+                            : lastLevelSubcategory.name),
+                        onTap: () {
+                          // Handle selection of last-level subcategory
+                          controller.setSelectedCategoryAndSubcategory(
+                            categoryId,
+                            subcategory.id,
+                            lastLevelSubcategory.id,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  isExpanded: isExpanded,
+                  canTapOnHeader: true,
+                ),
+              ],
             ),
-            isExpanded: isExpanded,
-            canTapOnHeader: true,
-          ),
-        ],
-      ),
     );
   }
 }

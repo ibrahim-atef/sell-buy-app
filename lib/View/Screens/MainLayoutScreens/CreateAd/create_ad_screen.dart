@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:sell_buy/Routes/routes.dart';
 import 'package:sell_buy/Services/firestore_methods.dart';
 import 'package:sell_buy/Utilities/icons.dart';
+import 'package:sell_buy/View/Screens/MainLayoutScreens/CreateAd/external_screens/add_ad_extra_details.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/button_component.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/custom_text_from_field.dart';
 import 'package:sell_buy/view/widgets/utilities_widgets/text_Component.dart';
@@ -12,6 +13,7 @@ import 'package:sell_buy/view/widgets/utilities_widgets/text_Component.dart';
 import '../../../../Controllers/auth_controller.dart';
 import '../../../../Controllers/create_ad_controller.dart';
 import '../../../../Model/ad_model.dart';
+import '../../../../Model/location_model.dart';
 import '../../../../Utilities/my_strings.dart';
 import '../../../../Utilities/themes.dart';
 import 'external_screens/location_selection_screen.dart';
@@ -32,6 +34,36 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
   final ownerWhatsappNumController = TextEditingController();
   final controller = Get.put(CreateAdController());
   final authController = Get.put(AuthController());
+  late LocationModel _selectedLocationModel;
+
+  Future<void> selectLocation() async {
+    final selectedLocation = await Get.to(() => LocationSelectionScreen());
+    if (selectedLocation != null) {
+      setState(() {
+        final governorate = selectedLocation['governorate'] as Governorate?;
+        final region = selectedLocation['region'] as Region?;
+        final district = selectedLocation['district'] as District?;
+
+        // Display only the name based on locale
+        final locale = Get.locale?.languageCode;
+        addressController.text =
+            "${locale == 'ar' ? governorate?.arName : governorate?.enName} - "
+            "${locale == 'ar' ? region?.nameAr : region?.nameEn} - "
+            "${locale == 'ar' ? district?.nameAr : district?.nameEn}";
+
+        debugPrint(
+            "${governorate!.enName} - ${region!.nameAr} - ${district!.nameAr}");
+        // Store the full objects for saving later
+        _selectedLocationModel = LocationModel(
+            governorateArName: governorate.arName,
+            governorateEnName: governorate.enName,
+            regionArName: region!.nameAr,
+            regionEnName: region.nameEn,
+            districtArName: district!.nameAr,
+            districtEnName: district.nameEn);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +77,9 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                 color: Colors.black,
                 fontWeight: FontWeight.bold),
             leading: IconButton(
-                icon: Icon(Get.locale?.languageCode == 'en' ? IconBroken.Arrow___Left_2 :IconBroken.Arrow___Right_2),
+                icon: Icon(Get.locale?.languageCode == 'en'
+                    ? IconBroken.Arrow___Left_2
+                    : IconBroken.Arrow___Right_2),
                 onPressed: () => Get.back()),
           ),
           body: Padding(
@@ -268,13 +302,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                   // Location Section
 
                   GestureDetector(
-                    onTap: () async {
-                      final selectedLocation = await Get.to(() => LocationSelectionScreen());
-                      if (selectedLocation != null) {
-                        setState(() {
-                          addressController.text = "${selectedLocation['governorate']} - ${selectedLocation['region']} - ${selectedLocation['district']}";
-                        });
-                      }
+                    onTap: () {
+                      selectLocation();
                     },
                     child: CustomTextFromField(
                       controller: addressController,
@@ -287,13 +316,14 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       },
                       obscureText: false,
                       textInputType: TextInputType.text,
-                      suffixIcon: Icon(IconBroken.Location),    enabled: false,
+                      suffixIcon: Icon(IconBroken.Location),
+                      enabled: false,
                     ),
                   ),
                   const SizedBox(height: 20),
 
                   ButtonComponent(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         if (controller.selectedCategoryId == null ||
                             controller.selectedSubcategoryId == null ||
@@ -307,34 +337,38 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                               authController.countryCode.value +
                                   ownerWhatsappNumController.text;
                           AdModel ad = AdModel(
-                            id: FireStoreMethods.usersAddsCollection.doc().id,
-                            title: titleController.text.trim(),
-                            description: descriptionController.text.trim(),
-                            location: addressController.text.trim(),
-                            imagePath: '',
-                            imageUrls: [],
-                            price: priceController.text.trim(),
-                            postedTime: DateTime.now().toString(),
-                            ownerName: 'Owner Name',
-                            ownerID: 'Owner ID',
-                            ownerPhoneNum: "00000000",
-                            category:
-                                controller.selectedCategoryId ?? 'Unknown',
-                            subCategory:
-                                controller.selectedSubcategoryId ?? 'Unknown',
-                            createdAt: Timestamp.now(),
-                            updatedAt: Timestamp.now(),
-                            categoryNameAr:
-                                controller.selectedCategoryArName ?? '',
-                            selectedSubcategoryArName:
-                                controller.selectedSubcategoryArName ?? '',
-                            ownerWhatsappNum: whatsappPhoneNumber,
-                            thirdSubCategory:
-                                controller.selectedLastSubcategoryId ?? "",
-                            thirdSubCategoryArName:
-                                controller.selectedLastSubcategoryArName ?? "",
-                          );
+                              id: FireStoreMethods.usersAddsCollection.doc().id,
+                              title: titleController.text.trim(),
+                              description: descriptionController.text.trim(),
+                              location: addressController.text.trim(),
+                              imagePath: '',
+                              imageUrls: [],
+                              price: priceController.text.trim(),
+                              postedTime: DateTime.now().toString(),
+                              ownerName: 'Owner Name',
+                              ownerID: 'Owner ID',
+                              ownerPhoneNum: "00000000",
+                              category:
+                                  controller.selectedCategoryId ?? 'Unknown',
+                              subCategory:
+                                  controller.selectedSubcategoryId ?? 'Unknown',
+                              createdAt: Timestamp.now(),
+                              updatedAt: Timestamp.now(),
+                              categoryNameAr:
+                                  controller.selectedCategoryArName ?? '',
+                              selectedSubcategoryArName:
+                                  controller.selectedSubcategoryArName ?? '',
+                              ownerWhatsappNum: whatsappPhoneNumber,
+                              thirdSubCategory:
+                                  controller.selectedLastSubcategoryId ?? "",
+                              thirdSubCategoryArName:
+                                  controller.selectedLastSubcategoryArName ??
+                                      "",
+                              locationModel: _selectedLocationModel);
 
+                          controller.selectedSubcategoryId=="Used Cars"?
+                               await Get.to(AddAdExtraDetails())
+                              :null;
                           // Call the controller's method to upload the ad
                           if (controller.isAddingAd.value == false) {
                             controller.uploadAd(ad);

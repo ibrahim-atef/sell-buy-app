@@ -1,7 +1,7 @@
 class Governorate {
-  final String enName;
-  final String arName;
-  final List<Region> regions;
+    String enName;
+    String arName;
+    List<Region> regions;
 
   Governorate({required this.enName, required this.arName, required this.regions});
 
@@ -31,9 +31,9 @@ class Governorate {
 }
 
 class Region {
-  final String nameEn;
-  final String nameAr;
-  final List<District> districts;
+   String nameEn;
+   String nameAr;
+   List<District> districts;
 
   Region({required this.nameEn, required this.nameAr, required this.districts});
 
@@ -63,8 +63,8 @@ class Region {
 }
 
 class District {
-  final String nameEn;
-  final String nameAr;
+   String nameEn;
+   String nameAr;
 
   District({required this.nameEn, required this.nameAr});
 
@@ -83,4 +83,37 @@ class District {
       'nameAr': nameAr,
     };
   }
+}
+class LocationModel{
+  String governorateArName;
+  String governorateEnName;
+  String regionArName;
+  String regionEnName;
+  String districtArName;
+  String districtEnName;
+
+  LocationModel({required this.governorateArName,required this.governorateEnName,required this.regionArName,required this.regionEnName,required this.districtArName,required this.districtEnName});
+
+  factory LocationModel.fromJson(Map  json) {
+    return LocationModel(
+      governorateArName: json['governorateArName'],
+      governorateEnName: json['governorateEnName'],
+      regionArName: json['regionArName'],
+      regionEnName: json['regionEnName'],
+      districtArName: json['districtArName'],
+      districtEnName: json['districtEnName'],
+    );
+  }
+
+  Map  toJson() {
+    return {
+      'governorateArName': governorateArName,
+      'governorateEnName': governorateEnName,
+      'regionArName': regionArName,
+      'regionEnName': regionEnName,
+      'districtArName': districtArName,
+      'districtEnName': districtEnName,
+    };
+  }
+
 }

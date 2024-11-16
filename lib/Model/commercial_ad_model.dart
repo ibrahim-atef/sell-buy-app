@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sell_buy/Model/location_model.dart';
 
 class CommercialAdModel {
   String id;
@@ -8,12 +9,16 @@ class CommercialAdModel {
   String ownerPhoneNum;
   String ownerWhatsappNum;
   String category;
+  String price;
   String categoryNameAr;
   String subCategory;
   String selectedSubcategoryArName;
+  String thirdSubCategory;
+  String thirdSubCategoryArName;
   Timestamp createdAt;
   Timestamp updatedAt;
   bool isSuspended = false;
+  LocationModel? locationModel;
 
   CommercialAdModel({
     required this.id,
@@ -22,13 +27,18 @@ class CommercialAdModel {
     required this.ownerID,
     required this.ownerPhoneNum,
     required this.category,
+    required this.price,
     required this.ownerWhatsappNum,
     required this.categoryNameAr,
     required this.subCategory,
     required this.selectedSubcategoryArName,
+    required this.thirdSubCategory,
+    required this.thirdSubCategoryArName,
     required this.createdAt,
     required this.updatedAt,
     this.isSuspended = false,
+    required this.locationModel,
+
   });
 
   factory CommercialAdModel.fromJson(json) {
@@ -42,10 +52,15 @@ class CommercialAdModel {
       ownerWhatsappNum: json['ownerWhatsappNum'],
       categoryNameAr: json['categoryNameAr'],
       subCategory: json['subCategory'],
+      price: json['price'],
       selectedSubcategoryArName: json['selectedSubcategoryArName'],
+      thirdSubCategory: json['thirdSubCategory'],
+      thirdSubCategoryArName: json['thirdSubCategoryArName'],
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
       isSuspended: json['isSuspended'] ?? false,
+      locationModel: LocationModel.fromJson(json['locationModel']),
+
     );
   }
 
@@ -58,12 +73,17 @@ class CommercialAdModel {
       'ownerPhoneNum': ownerPhoneNum,
       'ownerWhatsappNum': ownerWhatsappNum,
       'category': category,
+      'price': price,
       'categoryNameAr': categoryNameAr,
       'subCategory': subCategory,
       'selectedSubcategoryArName': selectedSubcategoryArName,
+      'thirdSubCategory': thirdSubCategory,
+      'thirdSubCategoryArName': thirdSubCategoryArName,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'isSuspended': isSuspended,
+      'locationModel':   locationModel?.toJson(),
+
     };
   }
 }

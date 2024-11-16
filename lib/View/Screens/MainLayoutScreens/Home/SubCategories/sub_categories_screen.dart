@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sell_buy/Controllers/home_controller.dart';
+import 'package:sell_buy/View/Screens/MainLayoutScreens/Home/components/ad_item.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/free_ad_space.dart';
 
 import '../../../../../Controllers/subcategories_controller.dart';
@@ -27,7 +28,7 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
   @override
   void initState() {
     subCategoriesController.getSubCategories(widget.categoryId);
-    subCategoriesController.getAdsForSubcategory(widget.categoryId);
+    subCategoriesController.getAdsForCategory(widget.categoryId);
     super.initState();
   }
 
@@ -67,7 +68,7 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  subCategoriesController.AdsPerSubcategory.isEmpty
+                  subCategoriesController.AdsPerCategory.isEmpty
                       ? Center(
                           child: Padding(
                               padding: EdgeInsets.symmetric(
@@ -78,20 +79,17 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                                 height: Get.height * 0.19,
                               )),
                         )
-                      : SizedBox(
-                          height: 200,
-                          // You can adjust this height according to your design
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: subCategoriesController
-                                .AdsPerSubcategory.length,
-                            itemBuilder: (context, index) {
-                              final item = subCategoriesController
-                                  .AdsPerSubcategory[index];
-                              return AdCard(item: item);
-                            },
-                          ),
-                        )
+                      : ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                        itemCount: subCategoriesController
+                            .AdsPerCategory.length,
+                        itemBuilder: (context, index) {
+                          final item = subCategoriesController
+                              .AdsPerCategory[index];
+                          return AdItem(item: item);
+                        },
+                      )
                 ],
               ),
             ),

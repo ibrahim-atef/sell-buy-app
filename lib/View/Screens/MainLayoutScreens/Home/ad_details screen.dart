@@ -48,7 +48,8 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
       adServicesController.addViewToAd(
         adId: widget.adId,
         userId: homeController.userId!,
-        categoryCollection: widget.ad.category, adCollectionType: usersAddsCollectionKey,
+        categoryCollection: widget.ad.category,
+        adCollectionType: usersAddsCollectionKey,
       );
       adServicesController.addAdToRecentlyViewed(adModel: widget.ad);
     } else {
@@ -58,7 +59,10 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
 
     // Fetch views count asynchronously and set the state
     int count = await adServicesController.getViewsCount(
-            adId: widget.adId, categoryCollection: widget.ad.category, adCollectionType: usersAddsCollectionKey,) ??
+          adId: widget.adId,
+          categoryCollection: widget.ad.category,
+          adCollectionType: usersAddsCollectionKey,
+        ) ??
         0;
 
     setState(() {
@@ -93,7 +97,9 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
                     });
                     if (isClosingPage) Navigator.pop(context);
                   },
-                  icon: Icon(Get.locale?.languageCode == 'en' ? IconBroken.Arrow___Left_2 :IconBroken.Arrow___Right_2),
+                  icon: Icon(Get.locale?.languageCode == 'en'
+                      ? IconBroken.Arrow___Left_2
+                      : IconBroken.Arrow___Right_2),
                 ),
                 actions: [
                   adServicesController.isAddingToFavourites.value
@@ -222,7 +228,19 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
                             SizedBox(
                               width: Get.width * .7,
                               child: TextComponent(
-                                text: widget.ad.location,
+                                text: Get.locale?.languageCode == "ar"
+                                    ? widget.ad.locationModel!
+                                            .governorateArName +
+                                        "-" +
+                                        widget.ad.locationModel!.regionArName +
+                                        "-" +
+                                        widget.ad.locationModel!.districtArName
+                                    : widget.ad.locationModel!
+                                            .governorateEnName +
+                                        "-" +
+                                        widget.ad.locationModel!.regionEnName +
+                                        "-" +
+                                        widget.ad.locationModel!.districtEnName,
                                 size: 16,
                                 maxLines: 2,
                                 color: Colors.black54,
@@ -278,36 +296,33 @@ class _AdDetailsScreenState extends State<AdDetailsScreen> {
                   widget.ad.ownerWhatsappNum.isEmpty
                       ? SizedBox.shrink()
                       : IconButtonComponent(
-                          iconPath:  "assets/Icons/whatsapp.png",
+                          iconPath: "assets/Icons/whatsapp.png",
                           // Replace with your icon path
                           title: "whatsapp".tr,
                           function: () {
                             homeController
                                 .openWhatsApp(widget.ad.ownerWhatsappNum);
                           },
-                    h : Get.height * .06,
-                    w : Get.width * .44,
-                          shadowColor:
-                          Colors.black12.withOpacity(0.5), color:  Color(0xff00b950), // Optional shadow color
+                          h: Get.height * .06,
+                          w: Get.width * .44,
+                          shadowColor: Colors.black12.withOpacity(0.5),
+                          color: Color(0xff00b950), // Optional shadow color
                         ),
                   SizedBox(width: 20),
                   widget.ad.ownerPhoneNum.isEmpty
                       ? SizedBox.shrink()
-                      :
-                  IconButtonComponent(
-                    iconPath:  "assets/Icons/call.png",
-                    // Replace with your icon path
-                    title: "Call".tr,
-                    function: () {
-                      homeController
-                          .openCall(widget.ad.ownerPhoneNum);
-                    },
-                    h : Get.height * .06,
-                    w : Get.width * .44,
-                    shadowColor:
-                    Colors.black12.withOpacity(0.5), color:  Colors.blueAccent, // Optional shadow color
-                  )
-
+                      : IconButtonComponent(
+                          iconPath: "assets/Icons/call.png",
+                          // Replace with your icon path
+                          title: "Call".tr,
+                          function: () {
+                            homeController.openCall(widget.ad.ownerPhoneNum);
+                          },
+                          h: Get.height * .06,
+                          w: Get.width * .44,
+                          shadowColor: Colors.black12.withOpacity(0.5),
+                          color: Colors.blueAccent, // Optional shadow color
+                        )
                 ],
               ),
               floatingActionButtonLocation:

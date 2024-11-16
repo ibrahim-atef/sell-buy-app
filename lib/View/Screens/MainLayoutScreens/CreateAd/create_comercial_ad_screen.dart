@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:sell_buy/Routes/routes.dart';
 import 'package:sell_buy/Services/firestore_methods.dart';
 import 'package:sell_buy/Utilities/icons.dart';
+import 'package:sell_buy/View/Screens/MainLayoutScreens/CreateAd/external_screens/location_selection_screen.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/button_component.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/custom_text_from_field.dart';
 import 'package:sell_buy/view/widgets/utilities_widgets/text_Component.dart';
@@ -13,6 +14,7 @@ import '../../../../Controllers/auth_controller.dart';
 import '../../../../Controllers/create_ad_controller.dart';
 import '../../../../Model/ad_model.dart';
 import '../../../../Model/commercial_ad_model.dart';
+import '../../../../Model/location_model.dart';
 import '../../../../Utilities/my_strings.dart';
 import '../../../../Utilities/themes.dart';
 
@@ -20,7 +22,8 @@ class CreateCommercialAdScreen extends StatefulWidget {
   const CreateCommercialAdScreen({Key? key}) : super(key: key);
 
   @override
-  State<CreateCommercialAdScreen> createState() => _CreateCommercialAdScreenState();
+  State<CreateCommercialAdScreen> createState() =>
+      _CreateCommercialAdScreenState();
 }
 
 class _CreateCommercialAdScreenState extends State<CreateCommercialAdScreen> {
@@ -29,7 +32,38 @@ class _CreateCommercialAdScreenState extends State<CreateCommercialAdScreen> {
   final ownerWhatsappNumController = TextEditingController();
   final controller = Get.put(CreateAdController());
   final authController = Get.put(AuthController());
+  late LocationModel _selectedLocationModel;
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
 
+  Future<void> selectLocation() async {
+    final selectedLocation = await Get.to(() => LocationSelectionScreen());
+    if (selectedLocation != null) {
+      setState(() {
+        final governorate = selectedLocation['governorate'] as Governorate?;
+        final region = selectedLocation['region'] as Region?;
+        final district = selectedLocation['district'] as District?;
+
+        // Display only the name based on locale
+        final locale = Get.locale?.languageCode;
+        addressController.text =
+        "${locale == 'ar' ? governorate?.arName : governorate?.enName} - "
+            "${locale == 'ar' ? region?.nameAr : region?.nameEn} - "
+            "${locale == 'ar' ? district?.nameAr : district?.nameEn}";
+
+        debugPrint(
+            "${governorate!.enName} - ${region!.nameAr} - ${district!.nameAr}");
+        // Store the full objects for saving later
+        _selectedLocationModel = LocationModel(
+            governorateArName: governorate.arName,
+            governorateEnName: governorate.enName,
+            regionArName: region!.nameAr,
+            regionEnName: region.nameEn,
+            districtArName: district!.nameAr,
+            districtEnName: district.nameEn);
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CreateAdController>(
@@ -42,7 +76,9 @@ class _CreateCommercialAdScreenState extends State<CreateCommercialAdScreen> {
                 color: Colors.black,
                 fontWeight: FontWeight.bold),
             leading: IconButton(
-                icon: Icon(Get.locale?.languageCode == 'en' ? IconBroken.Arrow___Left_2 :IconBroken.Arrow___Right_2),
+                icon: Icon(Get.locale?.languageCode == 'en'
+                    ? IconBroken.Arrow___Left_2
+                    : IconBroken.Arrow___Right_2),
                 onPressed: () => Get.back()),
           ),
           body: Padding(
@@ -108,35 +144,40 @@ class _CreateCommercialAdScreenState extends State<CreateCommercialAdScreen> {
                           ),
                         ),
                         Container(
-                          height: controller.pickedImage == null ? 0 : 200, // Show the container only if there's an image
+                          height: controller.pickedImage == null ? 0 : 200,
+                          // Show the container only if there's an image
                           child: controller.pickedImage != null
                               ? Stack(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  image: DecorationImage(
-                                    image: FileImage(controller.pickedImage!), // Display the single picked image
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 0,
-                                right: 0,
-                                child: IconButton(
-                                  onPressed: () {
-                                    controller.removePickedImage(); // Handle removing the image
-                                  },
-                                  icon: const Icon(Icons.highlight_remove_rounded),
-                                ),
-                              ),
-                            ],
-                          )
-                              : const SizedBox.shrink(), // Empty widget if no image is picked
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        image: DecorationImage(
+                                          image: FileImage(
+                                              controller.pickedImage!),
+                                          // Display the single picked image
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          controller
+                                              .removePickedImage(); // Handle removing the image
+                                        },
+                                        icon: const Icon(
+                                            Icons.highlight_remove_rounded),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox
+                                  .shrink(), // Empty widget if no image is picked
                         )
-
                       ],
                     ),
                   ),
@@ -144,14 +185,14 @@ class _CreateCommercialAdScreenState extends State<CreateCommercialAdScreen> {
 
                   // Title Field
 
-
                   Directionality(
                     textDirection: TextDirection.ltr,
                     child: CustomTextFromField(
                       controller: ownerWhatsappNumController,
                       obscureText: false,
                       validator: (value) {
-                        if (value!.isEmpty) return 'Please enter phone number'.tr;
+                        if (value!.isEmpty)
+                          return 'Please enter phone number'.tr;
                         if (!RegExp(phonePattern)
                             .hasMatch(authController.countryCode.value + value))
                           return 'Please enter a valid phone number'.tr;
@@ -186,8 +227,39 @@ class _CreateCommercialAdScreenState extends State<CreateCommercialAdScreen> {
                     ),
                   ),
 
+                  const SizedBox(height: 20),     CustomTextFromField(
+                    controller: priceController,
+                    obscureText: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the price'.tr;
+                      }
+                    },
+                    hintText: 'price'.tr,
+                    textInputType: TextInputType.number,
+                    suffixIcon: Icon(IconBroken.Discount),
+                  ),
                   const SizedBox(height: 20),
-
+                  GestureDetector(
+                    onTap: () {
+                      selectLocation();
+                    },
+                    child: CustomTextFromField(
+                      controller: addressController,
+                      hintText: 'address'.tr,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter address'.tr;
+                        }
+                        return null;
+                      },
+                      obscureText: false,
+                      textInputType: TextInputType.text,
+                      suffixIcon: Icon(IconBroken.Location),
+                      enabled: false,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   ButtonComponent(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
@@ -204,24 +276,26 @@ class _CreateCommercialAdScreenState extends State<CreateCommercialAdScreen> {
                                   ownerWhatsappNumController.text;
                           CommercialAdModel commercialAd = CommercialAdModel(
                             id: FireStoreMethods.usersAddsCollection.doc().id,
-
                             imagePath: '',
-
-
                             ownerName: 'Owner Name',
                             ownerID: 'Owner ID',
                             ownerPhoneNum: "00000000",
                             category:
-                            controller.selectedCategoryId ?? 'Unknown',
+                                controller.selectedCategoryId ?? 'Unknown',
                             subCategory:
-                            controller.selectedSubcategoryId ?? 'Unknown',
+                                controller.selectedSubcategoryId ?? 'Unknown',
                             createdAt: Timestamp.now(),
                             updatedAt: Timestamp.now(),
                             categoryNameAr:
-                            controller.selectedCategoryArName ?? '',
+                                controller.selectedCategoryArName ?? '',
                             selectedSubcategoryArName:
-                            controller.selectedSubcategoryArName ?? '',
+                                controller.selectedSubcategoryArName ?? '',
                             ownerWhatsappNum: whatsappPhoneNumber,
+                              thirdSubCategory:
+                              controller.selectedLastSubcategoryId ?? "",
+                              price:  priceController.text.trim(),
+                              thirdSubCategoryArName:
+                              controller.selectedLastSubcategoryArName ?? "",    locationModel: _selectedLocationModel
                           );
 
                           // Call the controller's method to upload the ad
@@ -235,18 +309,18 @@ class _CreateCommercialAdScreenState extends State<CreateCommercialAdScreen> {
                     text: Obx(() {
                       return controller.isAddingAd.value
                           ? Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: const LinearProgressIndicator(
-                          color: Colors.white,
-                          semanticsLabel: 'جاري المعالجة',
-                        ),
-                      )
+                              padding: const EdgeInsets.all(20.0),
+                              child: const LinearProgressIndicator(
+                                color: Colors.white,
+                                semanticsLabel: 'جاري المعالجة',
+                              ),
+                            )
                           : TextComponent(
-                        text: "Create AD".tr,
-                        size: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      );
+                              text: "Create AD".tr,
+                              size: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            );
                     }),
                   ),
                   SizedBox(height: 20),

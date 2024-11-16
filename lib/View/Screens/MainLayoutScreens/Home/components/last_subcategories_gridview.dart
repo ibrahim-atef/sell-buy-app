@@ -4,19 +4,19 @@ import 'package:get/get.dart';
 import 'package:sell_buy/Controllers/create_ad_controller.dart';
 import 'package:sell_buy/Controllers/home_controller.dart';
 import 'package:sell_buy/Model/categories_subcategories_model.dart';
-import 'package:sell_buy/View/Screens/MainLayoutScreens/Home/SubCategories/last_sub_categories_screen.dart';
+import 'package:sell_buy/View/Screens/MainLayoutScreens/Home/SubCategories/ads_screen_per_last_sub_category.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/custom_loader_component.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/custom_shimmer_widget.dart';
 import 'package:sell_buy/view/widgets/utilities_widgets/text_Component.dart';
 
 import '../SubCategories/sub_categories_screen.dart';
 
-class GridviewSubcategories extends StatelessWidget {
-  List<Subcategory> subcategoryList;
-  HomeController homeController = Get.put(HomeController());
+class LastGridviewSubcategories extends StatelessWidget {
+  List<LastSubcategory> lastSubcategoryList;
 
-  GridviewSubcategories({Key? key, required this.subcategoryList})
+  LastGridviewSubcategories({Key? key, required this.lastSubcategoryList})
       : super(key: key);
+  HomeController homeController = Get.put(HomeController());
 
   Widget build(BuildContext context) {
     return SizedBox(
@@ -29,21 +29,26 @@ class GridviewSubcategories extends StatelessWidget {
               mainAxisSpacing: 7,
               crossAxisSpacing: 7,
             ),
-            itemCount: subcategoryList.length,
+            itemCount: lastSubcategoryList.length,
             itemBuilder: (context, index) {
               // Check if we're showing categories or subcategories
 
               // Display category item
-              final subcategory = subcategoryList[index];
+              final lastSubcategory = lastSubcategoryList[index];
 
-              return GestureDetector(
+               return GestureDetector(
                 onTap: () {
-                  debugPrint('Subcategory tapped: ${subcategory.name.tr}');
-         
-                  homeController.searchController.text = Get.locale!.languageCode == 'ar' ? subcategory.arName : subcategory.name;
-                  Get.to(() => LastSubCategoriesScreen(
-                      categoryId: subcategory.categoryId,
-                      subCategoryId: subcategory.id));
+                  homeController.searchController.text =
+                      Get.locale!.languageCode == 'ar'
+                          ? lastSubcategory.arName
+                          : lastSubcategory.name;
+                  debugPrint(
+                      'LastSubcategory  tapped: ${lastSubcategory.name.tr}');
+                  Get.to(() => AdsScreenPerLastSubCategory(
+                        lastSubcategoryId: lastSubcategory.id,
+                        categoryId: lastSubcategory.categoryId,
+                        subcategoryId: lastSubcategory.subcategoryId,
+                      ));
                 },
                 child: Card(
                   elevation: .6,
@@ -58,7 +63,7 @@ class GridviewSubcategories extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
-                              subcategory.imagePath,
+                              lastSubcategory.imagePath,
                               fit: BoxFit.cover,
                               loadingBuilder:
                                   (context, child, loadingProgress) {
@@ -88,8 +93,8 @@ class GridviewSubcategories extends StatelessWidget {
                             horizontal: 4, vertical: 4),
                         child: TextComponent(
                           text: Get.locale!.languageCode == "ar"
-                              ? subcategory.arName
-                              : subcategory.name,
+                              ? lastSubcategory.arName
+                              : lastSubcategory.name,
                           size: 12,
                           color: Colors.black,
                           fontWeight: FontWeight.bold,

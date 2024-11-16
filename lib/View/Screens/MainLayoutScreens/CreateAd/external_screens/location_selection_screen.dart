@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:sell_buy/Model/location_model.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/button_component.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
-
 import '../../../../../Utilities/constants.dart';
+import '../../../../../Utilities/icons.dart';
 
 class LocationSelectionScreen extends StatefulWidget {
   @override
@@ -32,18 +32,32 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
           color: Colors.black,
           fontWeight: FontWeight.bold,
         ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.black),
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(Get.locale?.languageCode == 'en'
+              ? IconBroken.Arrow___Left_2
+              : IconBroken.Arrow___Right_2),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             // Governorate Dropdown
-            DropdownButtonFormField<Governorate>(
+            _buildDropdownButtonFormField<Governorate>(
+              label: "Governorate".tr,
               value: selectedGovernorate,
               items: saudiLocations.map((gov) {
                 return DropdownMenuItem<Governorate>(
                   value: gov,
-                  child: Text(Get.locale?.languageCode == 'ar' ? gov.arName : gov.enName),
+                  child: Text(Get.locale?.languageCode == 'ar'
+                      ? gov.arName
+                      : gov.enName),
                 );
               }).toList(),
               onChanged: (Governorate? value) {
@@ -55,17 +69,19 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                   districts = [];
                 });
               },
-              decoration: InputDecoration(labelText: "Governorate".tr),
             ),
             const SizedBox(height: 20),
 
             // Region Dropdown
-            DropdownButtonFormField<Region>(
+            _buildDropdownButtonFormField<Region>(
+              label: "Region".tr,
               value: selectedRegion,
               items: regions.map((region) {
                 return DropdownMenuItem<Region>(
                   value: region,
-                  child: Text( Get.locale?.languageCode == 'ar' ? region.nameAr : region.nameEn),
+                  child: Text(Get.locale?.languageCode == 'ar'
+                      ? region.nameAr
+                      : region.nameEn),
                 );
               }).toList(),
               onChanged: (Region? value) {
@@ -75,17 +91,19 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                   districts = value?.districts ?? [];
                 });
               },
-              decoration: InputDecoration(labelText: "Region".tr),
             ),
             const SizedBox(height: 20),
 
             // District Dropdown
-            DropdownButtonFormField<District>(
+            _buildDropdownButtonFormField<District>(
+              label: "District".tr,
               value: selectedDistrict,
               items: districts.map((district) {
                 return DropdownMenuItem<District>(
                   value: district,
-                  child: Text( Get.locale?.languageCode == 'ar' ? district.nameAr : district.nameEn),
+                  child: Text(Get.locale?.languageCode == 'ar'
+                      ? district.nameAr
+                      : district.nameEn),
                 );
               }).toList(),
               onChanged: (District? value) {
@@ -93,12 +111,12 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                   selectedDistrict = value;
                 });
               },
-              decoration: InputDecoration(labelText: "District".tr),
             ),
             const SizedBox(height: 20),
 
-            // Confirm Button
             Spacer(),
+
+            // Confirm Button
             ButtonComponent(
               onPressed: () {
                 if (selectedGovernorate == null ||
@@ -126,6 +144,50 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  // Custom method to build styled DropdownButtonFormField
+  Widget _buildDropdownButtonFormField<T>({
+    required String label,
+    required T? value,
+    required List<DropdownMenuItem<T>> items,
+    required ValueChanged<T?> onChanged,
+  }) {
+    return DropdownButtonFormField<T>(
+      value: value,
+      items: items,
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(
+          fontSize: 16,
+          color: Colors.grey[800],
+          fontWeight: FontWeight.w500,
+        ),
+        filled: true,
+        fillColor: Colors.grey[100],
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.transparent),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.transparent),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.black87, width: 1.5),
+        ),
+      ),
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.black,
+      ),
+      iconEnabledColor: Colors.black87,
+      dropdownColor: Colors.white,
+      elevation: 3,
     );
   }
 }

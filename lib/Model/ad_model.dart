@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'location_model.dart';
+
 class AdModel {
   String id;
   String title;
@@ -17,11 +19,12 @@ class AdModel {
   String categoryNameAr;
   String subCategory;
   String selectedSubcategoryArName;
-   String thirdSubCategory;
-    String thirdSubCategoryArName;
+  String thirdSubCategory;
+  String thirdSubCategoryArName;
   Timestamp createdAt;
   Timestamp updatedAt;
   bool isSuspended = false;
+  LocationModel? locationModel;
 
   AdModel({
     required this.id,
@@ -45,8 +48,8 @@ class AdModel {
     required this.createdAt,
     required this.updatedAt,
     this.isSuspended = false,
+    required this.locationModel,
   });
-
 
   factory AdModel.fromJson(json) {
     return AdModel(
@@ -71,9 +74,9 @@ class AdModel {
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
       isSuspended: json['isSuspended'] ?? false,
+      locationModel: LocationModel.fromJson(json['locationModel']),
     );
   }
-
 
   Map<String, dynamic> toJson() {
     return {
@@ -98,6 +101,7 @@ class AdModel {
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'isSuspended': isSuspended,
+      'locationModel':   locationModel?.toJson(),
     };
   }
 }

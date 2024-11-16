@@ -279,29 +279,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (_) {
         return Column(
           children: [
-            _buildOptionItem(Icons.visibility, 'Recently viewed'.tr, () {
+            buildOptionItem(Icons.visibility, 'Recently viewed'.tr, () {
               settingController.myData.value == null ||
-                  !settingController.isUserLoggedIn()
+                      !settingController.isUserLoggedIn()
                   ? Get.toNamed(Routes.LoginScreen)
-                  :   Get.toNamed(
-                Routes.recentlyViewedAds,
-              );
+                  : Get.toNamed(
+                      Routes.recentlyViewedAds,
+                    );
             }),
             // "Recently Viewed"
-            _buildOptionItem(
+            buildOptionItem(
               Icons.favorite,
               'Favorites'.tr,
               () {
                 settingController.myData.value == null ||
-                    !settingController.isUserLoggedIn()
+                        !settingController.isUserLoggedIn()
                     ? Get.toNamed(Routes.LoginScreen)
-                    :    Get.toNamed(
-                  Routes.favoriteAdsScreen,
-                );
+                    : Get.toNamed(
+                        Routes.favoriteAdsScreen,
+                      );
               },
             ),
-            _buildOptionItem(IconBroken.Edit, 'Edit Profile '.tr,
-                () {
+            buildOptionItem(IconBroken.Edit, 'Edit Profile '.tr, () {
               settingController.myData.value == null ||
                       !settingController.isUserLoggedIn()
                   ? Get.toNamed(Routes.LoginScreen)
@@ -310,15 +309,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
             }),
             // "Saved Searches"
-            _buildOptionItem(
+            buildOptionItem(
               Icons.language,
-              settingController.langLocal.value == ara
-                  ? 'العربية'
-                  : 'English',
-                  () {
+              settingController.langLocal.value == ara ? 'العربية' : 'English',
+              () {
                 // Switch language directly
                 String newLang =
-                settingController.langLocal.value == ara ? ene : ara;
+                    settingController.langLocal.value == ara ? ene : ara;
                 settingController.changeLanguage(
                     newLang); // This will now update immediately
               },
@@ -329,7 +326,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // "List of Representatives"
             GetBuilder<AuthController>(
               builder: (_) {
-                return _buildOptionItem(
+                return buildOptionItem(
                     Icons.headset_mic, 'Technical Support'.tr, () {
                   authController.contactAdmin(
                       subject: "Technical Support",
@@ -338,14 +335,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
             ),
             // "Technical Support"
-            _buildOptionItem(Icons.security, 'Terms and Conditions'.tr, () {}),
+            buildOptionItem(Icons.security, 'Terms and Conditions'.tr, () {}),
             GetBuilder<AuthController>(
               builder: (authController) {
                 return GetBuilder<AppSettingController>(
                   builder: (appSettingController) {
                     return !appSettingController.isUserLoggedIn()
                         ? SizedBox.shrink()
-                        : _buildOptionItem(IconBroken.Logout, 'Logout'.tr, () {
+                        : buildOptionItem(IconBroken.Logout, 'Logout'.tr, () {
                             authController.logout();
                           });
                   },
@@ -358,34 +355,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
     );
   }
+}
 
-  Widget _buildOptionItem(
-      IconData icon, String title, final Function() onPressed) {
-    return Column(
-      children: [
-        ListTile(
-          leading: Icon(icon, color: mainColor, size: 28),
-          title: TextComponent(
-            text: title,
-            size: 16,
-            color: mainColor,
-            fontWeight: FontWeight.bold,
-          ),
-          trailing: const Icon(
-            Icons.chevron_right,
-            size: 28,
-          ),
-          onTap: onPressed,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          tileColor: white,
+Widget buildOptionItem(icon, String title, final Function() onPressed,
+    {bool? hasDivider = true, double? height}) {
+  return Column(
+    children: [
+      ListTile(
+        minTileHeight: height ?? Get.height * .06,
+        leading:icon==null ?null: Icon(icon ?? null, color: mainColor, size:  28),
+        title: TextComponent(
+          text: title,
+          size: 16,
+          color: mainColor,
+          fontWeight: FontWeight.bold,
         ),
-        Divider(
-          color: baseColorShimmer,
-        )
-      ],
-    );
-  }
+        trailing: const Icon(
+          Icons.chevron_right,
+          size: 28,
+        ),
+        onTap: onPressed,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        tileColor: white,
+      ),
+      hasDivider == true
+          ? Divider(
+              color: baseColorShimmer,
+            )
+          : SizedBox.shrink()
+    ],
+  );
 }

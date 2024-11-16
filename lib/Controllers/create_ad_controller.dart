@@ -41,7 +41,7 @@ class CreateAdController extends GetxController {
   void onInit() {
     super.onInit();
     userId = storageBox.read(KUid) ?? "";
-    getCategoriesAndSubcategories();
+    categoriesList.length == 0 ? getCategoriesAndSubcategories() :  debugPrint("categoriesList is not empty");
     getUserData();
   }
 
