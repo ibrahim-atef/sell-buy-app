@@ -6,12 +6,8 @@ import 'package:sell_buy/View/Screens/MainLayoutScreens/Home/SubCategories/Filte
 import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
 
 import '../../../../../Controllers/subcategories_controller.dart';
-import '../../../../../utilities/themes.dart';
-import '../../../../Widgets/utilities_widgets/button_component.dart';
-import '../../../../Widgets/utilities_widgets/custom_text_from_field.dart';
-import '../SubCategories/FiltersScreens/all_filters_screen.dart';
-import '../SubCategories/FiltersScreens/brand_filters_screen.dart';
-import '../SubCategories/FiltersScreens/vehicle_type_screen.dart';
+  import '../SubCategories/FiltersScreens/all_filters_screen.dart';
+ import '../SubCategories/FiltersScreens/vehicle_type_screen.dart';
 
 class RentalCarFiltersBarSection extends StatefulWidget {
   RentalCarFiltersBarSection({super.key});

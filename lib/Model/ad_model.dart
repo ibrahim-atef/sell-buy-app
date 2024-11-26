@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'location_model.dart';
 
 class AdModel {
@@ -23,8 +22,9 @@ class AdModel {
   String thirdSubCategoryArName;
   Timestamp createdAt;
   Timestamp updatedAt;
-  bool isSuspended = false;
+  bool isSuspended;
   LocationModel? locationModel;
+  Map<String, dynamic>? adExtraDetails; // New field for additional details
 
   AdModel({
     required this.id,
@@ -49,9 +49,10 @@ class AdModel {
     required this.updatedAt,
     this.isSuspended = false,
     required this.locationModel,
+     this.adExtraDetails = const {}, // Initialize the new field
   });
 
-  factory AdModel.fromJson(json) {
+  factory AdModel.fromJson(Map<String, dynamic> json) {
     return AdModel(
       id: json['id'],
       title: json['title'],
@@ -74,7 +75,12 @@ class AdModel {
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
       isSuspended: json['isSuspended'] ?? false,
-      locationModel: LocationModel.fromJson(json['locationModel']),
+      locationModel: json['locationModel'] != null
+          ? LocationModel.fromJson(json['locationModel'])
+          : null,
+      adExtraDetails: json['adExtraDetails'] != null
+          ? Map<String, dynamic>.from(json['adExtraDetails'])
+          : null, // Deserialize the new field
     );
   }
 
@@ -101,7 +107,8 @@ class AdModel {
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'isSuspended': isSuspended,
-      'locationModel':   locationModel?.toJson(),
+      'locationModel': locationModel?.toJson(),
+      'adExtraDetails': adExtraDetails, // Serialize the new field
     };
   }
 }

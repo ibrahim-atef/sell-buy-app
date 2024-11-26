@@ -4,7 +4,9 @@ import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
 import '../../../../../../Utilities/icons.dart';
 
 class YearOfProductionScreen extends StatefulWidget {
-  const YearOfProductionScreen({super.key});
+  final bool allowMultipleSelection;
+
+  const YearOfProductionScreen({super.key, required this.allowMultipleSelection});
 
   @override
   State<YearOfProductionScreen> createState() => _YearOfProductionScreenState();
@@ -48,7 +50,8 @@ class _YearOfProductionScreenState extends State<YearOfProductionScreen> {
             Get.back();
           },
         ),
-        actions: [
+        actions: widget.allowMultipleSelection
+            ? [
           TextButton(
             onPressed: () {
               setState(() {
@@ -62,7 +65,8 @@ class _YearOfProductionScreenState extends State<YearOfProductionScreen> {
               size: 16,
             ),
           ),
-        ],
+        ]
+            : null,
       ),
       body: Column(
         children: [
@@ -96,9 +100,19 @@ class _YearOfProductionScreenState extends State<YearOfProductionScreen> {
                     child: CheckboxListTile(
                       value: selectedYears[index],
                       onChanged: (value) {
-                        setState(() {
-                          selectedYears[index] = value!;
-                        });
+                        if (widget.allowMultipleSelection) {
+                          setState(() {
+                            selectedYears[index] = value!;
+                          });
+                        } else {
+                          // For single selection, reset all other selections
+                          setState(() {
+                            for (int i = 0; i < selectedYears.length; i++) {
+                              selectedYears[i] = false;
+                            }
+                            selectedYears[index] = value!;
+                          });
+                        }
                       },
                       title: Text(
                         years[index],
@@ -128,10 +142,24 @@ class _YearOfProductionScreenState extends State<YearOfProductionScreen> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pop(context, years[0]);
+                  // Get the selected years
+                  List<String> selectedYearsList = [];
+                  for (int i = 0; i < selectedYears.length; i++) {
+                    if (selectedYears[i]) {
+                      selectedYearsList.add(years[i]);
+                    }
+                  }
+
+                  // Return based on selection mode
+                  if (widget.allowMultipleSelection) {
+                    Navigator.pop(context, selectedYearsList);
+                  } else {
+                    String? singleYear = selectedYearsList.isNotEmpty ? selectedYearsList.first : null;
+                    Navigator.pop(context, singleYear);
+                  }
                 },
                 child: Text(
-                  "إظهار النتائج",
+                  widget.allowMultipleSelection ? "Show Results".tr : "Select Year".tr,
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),

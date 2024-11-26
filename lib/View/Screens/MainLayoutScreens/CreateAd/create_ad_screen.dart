@@ -111,11 +111,13 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          TextComponent(
-                            text: controller.getCategoryAndSubcategoryNames(),
-                            size: 16,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
+                          Expanded(
+                            child: TextComponent(
+                              text: controller.getCategoryAndSubcategoryNames(),
+                              size: 16,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           Icon(IconBroken.Arrow___Left_2),
                         ],
@@ -331,6 +333,9 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                             controller.selectedSubcategoryArName == null) {
                           Get.snackbar("Error".tr,
                               "Please select category and subcategory".tr);
+                        } else if (controller.pickedImages!.isEmpty) {
+                          Get.snackbar("Error".tr,
+                              'Please select at least one image.'.tr);
                         } else {
                           // Create the ad object with the form data
                           String whatsappPhoneNumber =
@@ -365,11 +370,23 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                                   controller.selectedLastSubcategoryArName ??
                                       "",
                               locationModel: _selectedLocationModel);
-
-                          controller.selectedSubcategoryId=="Used Cars"?
-                               await Get.to(AddAdExtraDetails())
-                              :null;
+                          debugPrint(
+                              "selectedSubcategoryId: ${controller.selectedSubcategoryId}");
+                          controller.extraAdDetails.keys.isEmpty
+                              ? await Get.to(() => AddAdExtraDetails(
+                                    subCategoryId:
+                                        controller.selectedSubcategoryId!,
+                                  ))
+                              : null;
                           // Call the controller's method to upload the ad
+                          if (controller.extraAdDetails.keys.isEmpty) {
+                            Get.snackbar(
+                              "Error".tr,
+                              "Please enter additional details".tr,
+                            );
+                            return;
+                          }
+                          ad.adExtraDetails = controller.extraAdDetails;
                           if (controller.isAddingAd.value == false) {
                             controller.uploadAd(ad);
                           }

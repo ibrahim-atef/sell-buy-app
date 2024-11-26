@@ -229,7 +229,7 @@ class _UsedCarsFiltersBarSectionState extends State<UsedCarsFiltersBarSection> {
             Get.to(AllFiltersScreen(), transition: Transition.rightToLeft),
         (context) =>  Get.to(BrandFiltersScreen(), transition: Transition.rightToLeft),
         (context)  => _openPriceModal(context),
-        (context) => Get.to(YearOfProductionScreen(),
+        (context) => Get.to(YearOfProductionScreen(allowMultipleSelection: true,),
             transition: Transition.rightToLeft),
         (context) => _openCounterModal(context),
         (context) {},

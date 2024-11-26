@@ -6,7 +6,7 @@ import '../../../../../Model/categories_subcategories_model.dart';
 import '../../../../../Utilities/themes.dart';
 
 class CategorySelectionScreen extends StatelessWidget {
-  final controller = Get.put(CreateAdController());
+
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class CategorySelectionScreen extends StatelessWidget {
         title: Text('Select Category'),
       ),
       body: GetBuilder<CreateAdController>(
-        builder: (_) => controller.isLoadingCategories.value
+        builder: (controller) => controller.isLoadingCategories.value
             ? ListView.builder(
                 itemCount: 12,
                 itemBuilder: (context, index) => CustomShimmer(

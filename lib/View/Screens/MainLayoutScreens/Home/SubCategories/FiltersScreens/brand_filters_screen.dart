@@ -150,10 +150,12 @@ class _BrandFiltersScreenState extends State<BrandFiltersScreen> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pop(context, brands[0]["ename"]);
+                  if (selectedBrands.contains(true)) {
+                    Navigator.pop(context, selectedBrands);
+                  }
                 },
                 child: Text(
-                  "إظهار النتائج",
+                  "done".tr,
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),

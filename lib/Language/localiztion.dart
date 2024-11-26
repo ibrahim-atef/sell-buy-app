@@ -10,7 +10,5 @@ class LocaliztionApp extends Translations {
   Map<String, Map<String, String>> get keys => {
         ene: en,
         ara: ar,
-
-       };
-
+      };
 }

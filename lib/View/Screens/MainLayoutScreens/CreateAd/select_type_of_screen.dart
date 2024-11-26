@@ -6,6 +6,8 @@ import 'package:sell_buy/Utilities/themes.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/button_component.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
 
+import 'external_screens/add_ad_extra_details.dart';
+
 class SelectTypeOfAdScreen extends StatelessWidget {
   const SelectTypeOfAdScreen({super.key});
 
@@ -32,7 +34,9 @@ class SelectTypeOfAdScreen extends StatelessWidget {
           children: [
             ButtonComponent(
               onPressed: () {
-                Get.toNamed(Routes.CreateAdScreen);
+                  Get.toNamed(Routes.CreateAdScreen);
+                //// Get.to(() => VehiclesAddAdExtraDetails(subCategoryId: 'Rentals',));
+                //// Get.to(() => BrandFiltersScreen;
               },
               text: TextComponent(
                   text: "Create Ad".tr,

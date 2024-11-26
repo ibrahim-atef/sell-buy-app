@@ -274,7 +274,7 @@ class CreateAdController extends GetxController {
   // Method to check expansion state
   bool isCategoryExpanded(String categoryId) => categoryExpandedMap[categoryId] ?? false;
   bool isSubcategoryExpanded(String subcategoryId) => subcategoryExpandedMap[subcategoryId] ?? false;
-
+  Map<String , dynamic> extraAdDetails = {};
   Future<void> uploadAd(AdModel ad) async {
     isAddingAd.value = true; // Start the loading state
     List<String> imageUrls = [];
@@ -327,7 +327,7 @@ class CreateAdController extends GetxController {
     } catch (error) {
       // Handle any errors during the process
       isAddingAd.value = false;
-      Get.snackbar("Error", "Failed to upload ad: $error",
+      Get.snackbar("Error".tr, "Failed to upload ad: ".tr+"$error",
           snackPosition: SnackPosition.TOP);
       print("Upload Ad Error: $error");
     } finally {

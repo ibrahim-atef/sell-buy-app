@@ -72,7 +72,7 @@ class AllFiltersScreen extends StatelessWidget {
               buildSB(),
               _buildPriceSection(),
               buildSB(),
-              buildOptionItem(null, "YearOfProduction".tr, () { Get.to(YearOfProductionScreen(), transition: Transition.rightToLeft);},
+              buildOptionItem(null, "YearOfProduction".tr, () { Get.to(YearOfProductionScreen(allowMultipleSelection: true,), transition: Transition.rightToLeft);},
                   hasDivider: false, height: Get.height * .05),
               buildSB(),
               _buildRoofHatchSection(),
