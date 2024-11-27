@@ -13,10 +13,234 @@ class SubCategoriesController extends GetxController {
   List<LastSubcategory> lastSubcategoryList = <LastSubcategory>[];
   List<AdModel> AdsPerCategory = [];
   List<AdModel> AdsPerSubcategory = [];
+
   RxBool isLoadingSubCategories = false.obs;
   RxBool isLoadingAds = false.obs;
   RxBool isLoadingLastSubCategories = false.obs;
   RxBool isLoadingAdsByLastSubcategory = false.obs;
+
+  /// --------------------------------------------- filters logic ---------------------------------------------
+  final TextEditingController minPriceController = TextEditingController();
+  final TextEditingController maxPriceController = TextEditingController();
+  RxDouble minPrice = 0.0.obs;
+  RxDouble maxPrice = 100000000.0.obs;
+
+  // Applied filters map
+  final RxMap<String, dynamic> appliedFilters = <String, dynamic>{}.obs;
+  List<AdModel> FilteredAdsPerSubcategory = [];
+
+  /// Filters the ads based on selected criteria
+  void filterAds(Map<String, String> filters) {
+    isLoadingAds.value = true;
+
+    // Debugging: Log the applied filters
+    print("Applied Filters: $filters");
+
+    // Mapping to normalize filter keys
+    final Map<String, String> filterKeyMapping = {
+      'year of production': 'Year of Production',
+      'brand': 'Brand',
+      'price': 'price',
+      'counter': 'Counter',
+      'type': 'type',
+      'full specifications': 'Full Specifications',
+      'boatcustomtype': 'boatCustomType',
+      'accessoriescustomtype': 'accessoriesCustomType',
+      'sparepartstype': 'sparePartsType',
+      'storagecapacity': 'storageCapacity',
+      'devicestatus': 'deviceStatus',
+      'jobtype': 'jobType',
+      'fueltype': 'FuelType',
+      'rooms_count': 'rooms_count',
+    };
+
+    // Filter ads based on selected criteria
+    FilteredAdsPerSubcategory = AdsPerSubcategory.where((ad) {
+      // Debug: Log ad details for troubleshooting
+      print("Ad Details: ${ad.adExtraDetails}");
+
+      for (var entry in filters.entries) {
+        String filterKey = entry.key.toLowerCase().trim();
+        String filterValue = entry.value.toLowerCase().trim();
+
+        // Map filter key to the actual ad key
+        String actualAdKey = filterKeyMapping[filterKey] ?? filterKey;
+
+        // Handle numeric filters: Price and Counter
+        if (actualAdKey == 'price' || actualAdKey == 'Counter') {
+          if (!_matchesNumericFilter(ad, actualAdKey, filterValue)) {
+            print("Ad skipped (Numeric mismatch for $actualAdKey): ${ad.id}");
+            return false;
+          }
+          continue; // Skip to next filter
+        }
+
+        // Check if the ad details contain the key
+        if (ad.adExtraDetails == null ||
+            !ad.adExtraDetails!.containsKey(actualAdKey)) {
+          print("Ad skipped (Missing key: $actualAdKey): ${ad.id}");
+          return false;
+        }
+
+        // Normalize and compare values
+        String adValue =
+            ad.adExtraDetails![actualAdKey]?.toLowerCase()?.trim() ?? '';
+        if (adValue != filterValue) {
+          print("Ad skipped (Value mismatch for $actualAdKey): ${ad.id}");
+          return false;
+        }
+      }
+
+      // If all filters match
+      print("Ad passed filters: ${ad.id}");
+      return true;
+    }).toList();
+
+    isLoadingAds.value = false;
+
+    update();
+
+    FilteredAdsPerSubcategory.length == 0
+        ? Get.snackbar(
+            'No Changes'.tr,
+            'Please try with different filters'.tr,
+            snackPosition: SnackPosition.BOTTOM,
+          )
+        : null;
+    // Debug: Log the number of ads after filtering
+    print("Filtered Ads Count: ${FilteredAdsPerSubcategory.length}");
+  }
+
+  void applySorting(String? sortOption) {
+    if (sortOption == null) return;
+
+    FilteredAdsPerSubcategory = List.from(AdsPerSubcategory);
+    switch (sortOption) {
+      case "lowest_price":
+        debugPrint("lowest_price");
+        FilteredAdsPerSubcategory.sort((a, b) {
+          final priceA = double.tryParse(a.price.toString() ?? '0') ?? 0;
+          final priceB = double.tryParse(b.price.toString() ?? '0') ?? 0;
+          return priceA.compareTo(priceB); // Ascending order
+        });
+        debugPrint("lowest_price sorted: ${FilteredAdsPerSubcategory.length}");
+        break;
+
+      case "highest_price":
+        debugPrint("highest_price");
+        FilteredAdsPerSubcategory.sort((a, b) {
+          final priceA = double.tryParse(a.price.toString() ?? '0') ?? 0;
+          final priceB = double.tryParse(b.price.toString() ?? '0') ?? 0;
+          return priceB.compareTo(priceA); // Descending order
+        });
+        debugPrint("highest_price sorted: ${FilteredAdsPerSubcategory.length}");
+        break;
+
+      case "latest":
+        debugPrint("latest");
+        FilteredAdsPerSubcategory.sort((a, b) {
+          final dateA =
+              DateTime.tryParse(a.createdAt.toDate().toString() ?? '') ??
+                  DateTime(0);
+          final dateB =
+              DateTime.tryParse(b.createdAt.toDate().toString() ?? '') ??
+                  DateTime(0);
+          return dateB.compareTo(dateA); // Latest first
+        });
+        debugPrint("latest sorted: ${FilteredAdsPerSubcategory.length}");
+        break;
+
+      case "oldest":
+        debugPrint("oldest");
+        FilteredAdsPerSubcategory.sort((a, b) {
+          final dateA =
+              DateTime.tryParse(a.createdAt.toDate().toString() ?? '') ??
+                  DateTime(0);
+          final dateB =
+              DateTime.tryParse(b.createdAt.toDate().toString() ?? '') ??
+                  DateTime(0);
+          return dateA.compareTo(dateB); // Oldest first
+        });
+        debugPrint("oldest sorted: ${FilteredAdsPerSubcategory.length}");
+        break;
+
+      case "most_matching":
+        debugPrint("most_matching");
+        FilteredAdsPerSubcategory.sort((a, b) {
+          int scoreA = _calculateRelevanceScore(a);
+          int scoreB = _calculateRelevanceScore(b);
+          return scoreB.compareTo(scoreA); // Higher relevance first
+        });
+        debugPrint("most_matching sorted: ${FilteredAdsPerSubcategory.length}");
+        break;
+
+      default:
+        break;
+    }
+
+    update(); // Notify UI of changes
+  }
+
+  // Filter the ads by selected governorate, region, and district
+  void filterAdsByLocation(
+    String? governorate,
+  ) {
+    FilteredAdsPerSubcategory =
+        List<AdModel>.from(AdsPerSubcategory).where((ad) {
+      final location = ad.locationModel;
+
+      bool matchesGovernorate = governorate == null ||
+          location!.governorateArName == governorate ||
+          location.governorateEnName == governorate;
+
+      return matchesGovernorate;
+    }).toList();
+    FilteredAdsPerSubcategory.length == 0
+        ? Get.snackbar(
+      'No Changes'.tr,
+      'Please try with different filters'.tr,
+      snackPosition: SnackPosition.BOTTOM,
+    )
+        : null;
+
+
+    update(); // Notify the UI
+  }
+
+  int _calculateRelevanceScore(AdModel ad) {
+    int score = 0;
+    appliedFilters.forEach((key, value) {
+      String adValue =
+          ad.adExtraDetails?[key]?.toString().toLowerCase().trim() ?? '';
+      if (adValue == value.toString().toLowerCase().trim()) {
+        score++;
+      }
+    });
+    return score;
+  }
+
+  clearFilters() {
+    FilteredAdsPerSubcategory.clear();
+
+    update();
+  }
+
+  /// Helper to match numeric filters (e.g., price and counter)
+  bool _matchesNumericFilter(dynamic ad, String key, String filterValue) {
+    final range = filterValue.split('-'); // e.g., "1000-5000"
+    if (range.length != 2) return false; // Invalid range
+
+    final minValue = double.tryParse(range[0]) ?? 0.0;
+    final maxValue = double.tryParse(range[1]) ?? double.infinity;
+
+    final adValue = double.tryParse(ad.adExtraDetails?[key] ?? '');
+    if (adValue == null) {
+      print("Ad skipped (Invalid numeric value for $key): ${ad.id}");
+      return false; // If ad value is not a valid number
+    }
+
+    return adValue >= minValue && adValue <= maxValue;
+  }
 
   void getSubCategories(String categoryId) async {
     try {
@@ -191,12 +415,4 @@ class SubCategoriesController extends GetxController {
       update();
     }
   }
-
-
-  /// --------------------------------------------- filters logic ---------------------------------------------
-  final TextEditingController minPriceController = TextEditingController();
-  final TextEditingController maxPriceController = TextEditingController();
-  RxDouble minPrice = 0.0.obs;
-  RxDouble maxPrice = 100000000.0.obs;
-
 }

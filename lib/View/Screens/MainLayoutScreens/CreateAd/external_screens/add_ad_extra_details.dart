@@ -23,8 +23,8 @@ class AddAdExtraDetails extends StatefulWidget {
 class _AddAdExtraDetailsState extends State<AddAdExtraDetails> {
   final _formKey = GlobalKey<FormState>();
 
-  String? selectedYear, selectedBrand, selectedFuel, selectedType, selectedOuterColor,selectedStorage,deviceStatus,jobType ;
-  String? selectedCylinders, boatCustomType, accessoriesCustomType, sparePartsType;
+  String? selectedYear, selectedBrand, selectedFuel, selectedType,  selectedStorage,deviceStatus,jobType ;
+  String?    boatCustomType, accessoriesCustomType, sparePartsType,rooms_count;
 
 
   final adController = Get.put(CreateAdController());
@@ -34,7 +34,7 @@ class _AddAdExtraDetailsState extends State<AddAdExtraDetails> {
 
   // Filters for subcategories
   final Map<String, List<String>> subCategoryFilters = {
-    'Used Cars': ['brand', 'price', 'year', 'counter', "more_specifications"],
+    'Used Cars': ['brand', 'price', 'year', 'counter', "more_specifications","FuelType"],
     'Classic Cars': ["more_specifications"],
     // No additional filters
     'Scrap Cars': ["more_specifications"],
@@ -43,6 +43,7 @@ class _AddAdExtraDetailsState extends State<AddAdExtraDetails> {
       'price',
       'year',
       'counter',
+      "FuelType",
       "more_specifications"
     ],
     'Motorcycles': ["more_specifications","price"],
@@ -67,6 +68,7 @@ class _AddAdExtraDetailsState extends State<AddAdExtraDetails> {
       'price',
       'year',
       'counter',
+      "FuelType",
       "more_specifications"
     ],
     "Car Offices": [ "more_specifications", "brand", "price", "year", "counter"],
@@ -174,6 +176,18 @@ class _AddAdExtraDetailsState extends State<AddAdExtraDetails> {
           textInputType: TextInputType.number,
           suffixIcon: null,
         );
+        case "FuelType":
+        return buildOptionField(
+          label: 'FuelType'.tr,
+          selectedValue: selectedFuel,
+          onTap: () async {
+            selectedFuel = await Get.to(() => CustomFilterScreen(
+                  title: 'FuelType',
+                  options: ["gasoline", "diesel", "mixed", "electrical", "Flexible fuel", "Hydrogen fuel cell", "natural gas"],
+                ));
+            setState(() {});
+          },
+        ) ;
       case 'year':
         return buildOptionField(
           label: 'Year of Production'.tr,
@@ -275,10 +289,10 @@ class _AddAdExtraDetailsState extends State<AddAdExtraDetails> {
       case "rooms_count":
         return buildOptionField(
           label: 'rooms_count'.tr,
-          selectedValue: selectedType,
+          selectedValue: rooms_count,
           onTap: () async {
-            selectedType = await Get.to(() => CustomFilterScreen(
-                  title: 'type',
+            rooms_count = await Get.to(() => CustomFilterScreen(
+                  title: 'rooms_count',
                   options: [
                     "1",
                     "2",
@@ -449,10 +463,16 @@ class _AddAdExtraDetailsState extends State<AddAdExtraDetails> {
                       if (carCounterController.text.isNotEmpty) 'Counter': carCounterController.text,
                       if (selectedType != null && selectedType!.isNotEmpty) 'type': selectedType,
                       if (fullSpecificationsController.text.isNotEmpty) 'Full Specifications': fullSpecificationsController.text,
-                      if (boatCustomType != null && boatCustomType!.isNotEmpty) 'type': boatCustomType,
+                      if (boatCustomType != null && boatCustomType!.isNotEmpty) 'boatCustomType': boatCustomType,
+                      if (accessoriesCustomType != null && accessoriesCustomType!.isNotEmpty) 'accessoriesCustomType': accessoriesCustomType,
+                      if (sparePartsType != null && sparePartsType!.isNotEmpty) 'sparePartsType': sparePartsType,
                       if (selectedStorage != null && selectedStorage!.isNotEmpty) 'storageCapacity': selectedStorage,
                       if (deviceStatus != null && deviceStatus!.isNotEmpty) 'deviceStatus': deviceStatus,
                       if (jobType != null && jobType!.isNotEmpty) 'jobType': jobType,
+                      if (selectedFuel != null && selectedFuel!.isNotEmpty) 'FuelType': selectedFuel,
+                      if (rooms_count != null && rooms_count!.isNotEmpty) 'rooms_count': rooms_count
+
+
                     };
 
                     debugPrint(adController.extraAdDetails.toString());

@@ -47,7 +47,9 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                         Get.back();
                         homeController.clearSearchQuery();
                       },
-                      icon: Icon(Get.locale?.languageCode == 'en' ? IconBroken.Arrow___Left_2 :IconBroken.Arrow___Right_2),
+                      icon: Icon(Get.locale?.languageCode == 'en'
+                          ? IconBroken.Arrow___Left_2
+                          : IconBroken.Arrow___Right_2),
                     )
                   : null,
             ),
@@ -80,16 +82,16 @@ class _SubCategoriesScreenState extends State<SubCategoriesScreen> {
                               )),
                         )
                       : ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                        itemCount: subCategoriesController
-                            .AdsPerCategory.length,
-                        itemBuilder: (context, index) {
-                          final item = subCategoriesController
-                              .AdsPerCategory[index];
-                          return AdItem(item: item);
-                        },
-                      )
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount:
+                              subCategoriesController.AdsPerCategory.length,
+                          itemBuilder: (context, index) {
+                            final item =
+                                subCategoriesController.AdsPerCategory[index];
+                            return AdItem(item: item);
+                          },
+                        )
                 ],
               ),
             ),

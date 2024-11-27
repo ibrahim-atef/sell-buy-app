@@ -35,8 +35,7 @@ class SelectTypeOfAdScreen extends StatelessWidget {
             ButtonComponent(
               onPressed: () {
                   Get.toNamed(Routes.CreateAdScreen);
-                //// Get.to(() => VehiclesAddAdExtraDetails(subCategoryId: 'Rentals',));
-                //// Get.to(() => BrandFiltersScreen;
+
               },
               text: TextComponent(
                   text: "Create Ad".tr,

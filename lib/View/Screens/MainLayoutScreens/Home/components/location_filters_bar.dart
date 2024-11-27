@@ -17,8 +17,14 @@ class LocationFiltersBar extends StatefulWidget {
 
 class _LocationFiltersBarState extends State<LocationFiltersBar> {
   final subCategoriesController = Get.put(SubCategoriesController());
+  String? selectedGovernorate;
+  String? selectedRegion;
+  String? selectedDistrict;
 
-  List<Function(BuildContext)> get tabFunctions => [];
+  List<Function(BuildContext)> get tabFunctions => [
+   ... List.generate(saudiLocations.length, (index) => (context) => _filterByGovernorate(index)),
+       
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +48,14 @@ class _LocationFiltersBarState extends State<LocationFiltersBar> {
     );
   }
 
+  // Filters by Governorate
+  void _filterByGovernorate(int index) {
+    final governorate = saudiLocations[index].enName; // Example value, use selected governorate.
+    selectedGovernorate = governorate;
+    subCategoriesController.filterAdsByLocation(governorate,  );
+  }
+
+ 
   Widget _buildFilterItem({
     required BuildContext context,
     required String title,
@@ -65,7 +79,6 @@ class _LocationFiltersBarState extends State<LocationFiltersBar> {
               size: 14,
               fontWeight: FontWeight.w600,
             ),
-
           ],
         ),
       ),

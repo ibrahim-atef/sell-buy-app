@@ -13,7 +13,8 @@ import '../../Widgets/utilities_widgets/custom_text_from_field.dart';
 import '../../Widgets/utilities_widgets/button_component.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+  final bool isSignedOut;
+  LoginScreen({Key? key, required this.isSignedOut}) : super(key: key);
   final formKey = GlobalKey<FormState>();
   final authController = Get.put(AuthController());
   final settingController = Get.put(AppSettingController());
@@ -27,7 +28,7 @@ class LoginScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: white,
-        leading: IconButton(
+        leading:isSignedOut?SizedBox.shrink(): IconButton(
           onPressed: () {
             settingController.onInit();
             Get.back();
@@ -88,7 +89,7 @@ class LoginScreen extends StatelessWidget {
                             if (value!.isEmpty)
                               return 'Please enter your password'.tr;
                             if (!RegExp(passwordPattern).hasMatch(value))
-                              return 'The password must be at least 8 characters long and contain one letter and one number'
+                              return 'The password must be at least 8 characters\n long and contain one letter and one number'
                                   .tr;
                             return null;
                           },

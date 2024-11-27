@@ -21,7 +21,7 @@ class AdServicesController extends GetxController {
 
   initUser() async {
     userId = storageBox.read(KUid) ?? "";
-    getFavouriteAds();
+    getFavouriteAds("0");
     getRecentlyViewedAds();
   }
 
@@ -123,6 +123,7 @@ class AdServicesController extends GetxController {
     }
     try {
       isAddingToFavourites.value = true;
+      update();
       await FireStoreMethods.addAdToFavourites(
           favoriteItem: adModel, uid: tempId);
     } catch (e) {
@@ -132,6 +133,42 @@ class AdServicesController extends GetxController {
       isAddingToFavourites.value = false;
       update();
     }
+  }
+  /// get user favourite ads
+  RxBool isGettingFavouritesAds = false.obs;
+
+  getFavouriteAds(String adId) async {
+    isGettingFavouritesAds.value = true;
+    String tempId = await storageBox.read(KUid) ?? "";
+    if (tempId == null || tempId.isEmpty) {
+      favouriteAds.clear();
+      isGettingFavouritesAds.value = false;
+      update();
+      return;
+    }
+
+    try {
+      final event = await FireStoreMethods.usersCollection
+          .doc(tempId)
+          .collection(favoritesCollectionKey)
+          .get(); // get favourites collection
+
+      favouriteAds.clear();
+      for (var doc in event.docs) {
+        favouriteAds.add(AdModel.fromJson(doc.data()));
+      }
+    } catch (e) {
+      print("Error getting favourites ads: $e");
+    } finally {
+      isGettingFavouritesAds.value = false;
+      isAdFavourite(adId);
+      update();
+    }
+  }
+
+  /// function to check if ad is favourite
+  RxBool isAdFavourite(String adId) {
+    return favouriteAds.any((element) => element.id == adId).obs;
   }
 
   /// Remove ad from Favourites
@@ -160,9 +197,12 @@ class AdServicesController extends GetxController {
       update();
       return;
     }
+
     try {
-      await FireStoreMethods.addAdToRecentlyViewed(
-          uid: tempId, recentlyViewedItem: adModel);
+      await tempId == adModel.ownerID
+          ? null
+          : FireStoreMethods.addAdToRecentlyViewed(
+              uid: tempId, recentlyViewedItem: adModel);
     } catch (e) {
       print("Error adding ad to recently viewed: $e");
     } finally {
@@ -201,41 +241,6 @@ class AdServicesController extends GetxController {
     }
   }
 
-  /// get user favourite ads
-  RxBool isGettingFavouritesAds = false.obs;
-
-  getFavouriteAds() async {
-    isGettingFavouritesAds.value = true;
-    String tempId = await storageBox.read(KUid) ?? "";
-    if (tempId == null || tempId.isEmpty) {
-      favouriteAds.clear();
-      isGettingFavouritesAds.value = false;
-      update();
-      return;
-    }
-
-    try {
-      final event = await FireStoreMethods.usersCollection
-          .doc(tempId)
-          .collection(favoritesCollectionKey)
-          .get(); // get favourites collection
-
-      favouriteAds.clear();
-      for (var doc in event.docs) {
-        favouriteAds.add(AdModel.fromJson(doc.data()));
-      }
-    } catch (e) {
-      print("Error getting favourites ads: $e");
-    } finally {
-      isGettingFavouritesAds.value = false;
-      update();
-    }
-  }
-
-  /// function to check if ad is favourite
-  bool isAdFavourite(String adId) {
-    return favouriteAds.any((element) => element.id == adId);
-  }
 
   Future<void> openWhatsApp(String phoneNumber) async {
     String whatsappUrl = "whatsapp://send?phone=$phoneNumber";

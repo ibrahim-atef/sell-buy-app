@@ -388,4 +388,6 @@ const Map<String, String> en = {
   "Mitsubishi": "Mitsubishi",
   "Nissan": "Nissan",
   "Porsche": "Porsche",
+  "Please try with different filters": "Please try with different filters",
+ "No Changes": "No Changes",
 };

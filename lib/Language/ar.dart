@@ -317,6 +317,7 @@ const Map<String, String> ar = {
   "Insured": "مؤمن عليها",
   "Specifications": "مواصفات",
   "for example: 2020": "مثال: 2020",
+
   "gasoline": "بنزين",
   "diesel": "ديزل",
   "mixed": "مختلط",
@@ -397,5 +398,6 @@ const Map<String, String> ar = {
   "Mitsubishi": "ميتسوبيشي جديد",
   "Nissan": "نيسان جديد",
   "Porsche": "بورش جديد",
-
+"Please try with different filters" : "الرجاء المحاولة مع فلاتر مختلفة",
+  "No Changes" : "لا تغييرات",
 };

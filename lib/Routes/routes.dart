@@ -41,7 +41,7 @@ class AppRoutes {
     ),
     GetPage(
       name: Routes.LoginScreen,
-      page: () => LoginScreen(),
+      page: () => LoginScreen(isSignedOut: false,),
       transition: Transition.downToUp,
       transitionDuration: Duration(milliseconds: 500),
       preventDuplicates: true,

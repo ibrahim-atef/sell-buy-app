@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:sell_buy/View/Screens/Authentication/login_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../Model/user_data_model.dart';
 import '../Routes/routes.dart';
@@ -224,7 +225,7 @@ class AuthController extends GetxController {
     await authBox.erase();
     await auth.signOut();
 
-    Get.offNamed(Routes.LoginScreen);
+    Get.off(()=>LoginScreen(isSignedOut: true));
   }
 
   ///-------------------------------------------------------delete acc
