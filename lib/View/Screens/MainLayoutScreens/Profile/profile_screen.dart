@@ -9,7 +9,7 @@ import 'package:sell_buy/Utilities/themes.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/button_component.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/custom_shimmer_widget.dart';
 import 'package:sell_buy/View/Widgets/utilities_widgets/text_Component.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../Controllers/app_setting_controller.dart';
 import '../../../../Utilities/my_strings.dart';
 import '../../../../routes/routes.dart';
@@ -274,6 +274,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+
+
   Widget _buildOptionsSection() {
     return GetBuilder<AppSettingController>(
       builder: (_) {
@@ -281,41 +283,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             buildOptionItem(Icons.visibility, 'Recently viewed'.tr, () {
               settingController.myData.value == null ||
-                      !settingController.isUserLoggedIn()
+                  !settingController.isUserLoggedIn()
                   ? Get.toNamed(Routes.LoginScreen)
                   : Get.toNamed(
-                      Routes.recentlyViewedAds,
-                    );
+                Routes.recentlyViewedAds,
+              );
             }),
             // "Recently Viewed"
             buildOptionItem(
               Icons.favorite,
               'Favorites'.tr,
-              () {
+                  () {
                 settingController.myData.value == null ||
-                        !settingController.isUserLoggedIn()
+                    !settingController.isUserLoggedIn()
                     ? Get.toNamed(Routes.LoginScreen)
                     : Get.toNamed(
-                        Routes.favoriteAdsScreen,
-                      );
+                  Routes.favoriteAdsScreen,
+                );
               },
             ),
             buildOptionItem(IconBroken.Edit, 'Edit Profile '.tr, () {
               settingController.myData.value == null ||
-                      !settingController.isUserLoggedIn()
+                  !settingController.isUserLoggedIn()
                   ? Get.toNamed(Routes.LoginScreen)
                   : Get.toNamed(
-                      Routes.EditProfileScreen,
-                    );
+                Routes.EditProfileScreen,
+              );
             }),
             // "Saved Searches"
             buildOptionItem(
               Icons.language,
               settingController.langLocal.value == ara ? 'العربية' : 'English',
-              () {
+                  () {
                 // Switch language directly
                 String newLang =
-                    settingController.langLocal.value == ara ? ene : ara;
+                settingController.langLocal.value == ara ? ene : ara;
                 settingController.changeLanguage(
                     newLang); // This will now update immediately
               },
@@ -335,7 +337,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
             ),
             // "Technical Support"
-            buildOptionItem(Icons.security, 'Terms and Conditions'.tr, () {}),
+
+            // Updated Terms and Conditions button
+            buildOptionItem(Icons.security, 'Terms and Conditions'.tr, () async {
+              const String privacyPolicyUrl = "https://sites.google.com/view/sellbuyapp/%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9-%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%D8%A9";
+
+              // Launch the Privacy Policy URL
+              if (await canLaunchUrl(Uri.parse(privacyPolicyUrl))) {
+                await launchUrl(Uri.parse(privacyPolicyUrl),
+                    mode: LaunchMode.externalApplication);
+              } else {
+                Get.snackbar(
+                  'Error',
+                  'Could not open Terms and Conditions',
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              }
+            }),
+
             GetBuilder<AuthController>(
               builder: (authController) {
                 return GetBuilder<AppSettingController>(
@@ -343,8 +362,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     return !appSettingController.isUserLoggedIn()
                         ? SizedBox.shrink()
                         : buildOptionItem(IconBroken.Logout, 'Logout'.tr, () {
-                            authController.logout();
-                          });
+                      authController.logout();
+                    });
                   },
                 );
               },
@@ -355,6 +374,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
     );
   }
+
 }
 
 Widget buildOptionItem(icon, String title, final Function() onPressed,

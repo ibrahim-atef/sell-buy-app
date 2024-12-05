@@ -34,7 +34,7 @@ class EditProfileScreen extends StatelessWidget {
             SizedBox(height: 20),
             _buildSectionTitle('personal information'.tr, () {
               null;
-            }, icon: IconBroken.Edit),
+            }, icon:null),
             _buildInfoRow(IconBroken.User, 'user name'.tr,
                 '${settingController.myData.value?.userName}'),
             _buildInfoRow(IconBroken.Message, 'E-mail'.tr,

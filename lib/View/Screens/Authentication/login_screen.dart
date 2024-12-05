@@ -11,9 +11,11 @@ import '../../../Controllers/app_setting_controller.dart';
 import '../../../Controllers/home_controller.dart';
 import '../../Widgets/utilities_widgets/custom_text_from_field.dart';
 import '../../Widgets/utilities_widgets/button_component.dart';
+import 'forgot_passowrd_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   final bool isSignedOut;
+
   LoginScreen({Key? key, required this.isSignedOut}) : super(key: key);
   final formKey = GlobalKey<FormState>();
   final authController = Get.put(AuthController());
@@ -21,23 +23,24 @@ class LoginScreen extends StatelessWidget {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: white,
-        leading:isSignedOut?SizedBox.shrink(): IconButton(
-          onPressed: () {
-            settingController.onInit();
-            Get.back();
-          },
-          icon: Icon(
-            IconBroken.Close_Square,
-            color: black,
-          ),
-        ),
+        leading: isSignedOut
+            ? SizedBox.shrink()
+            : IconButton(
+                onPressed: () {
+                  settingController.onInit();
+                  Get.back();
+                },
+                icon: Icon(
+                  IconBroken.Close_Square,
+                  color: black,
+                ),
+              ),
       ),
       backgroundColor: white,
       body: Center(
@@ -118,6 +121,19 @@ class LoginScreen extends StatelessWidget {
                               )),
                         );
                       }),
+                      GestureDetector(
+                       onTap: (){Get.to(()=>ForgotPassword());},
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Align(
+                              alignment: Alignment.centerRight,
+                              child: TextComponent(
+                                  text: 'Forget Password?'.tr,
+                                  size: 13,
+                                  color: mainColor,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ),
                       SizedBox(height: 20),
                       Padding(
                         padding:

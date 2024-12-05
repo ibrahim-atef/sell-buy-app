@@ -50,7 +50,7 @@ class SearchScreen extends StatelessWidget {
 
         // Check for empty results
         if (filteredAds.isEmpty && homeController.randomAds.isEmpty) {
-          return Center(child: Text('No results found'));
+          return  SizedBox.shrink();
         }
 
         // If no filtered ads, show random ads
@@ -105,7 +105,7 @@ class SearchScreen extends StatelessWidget {
 
         // Check for empty results
         if (filteredCommercialAds.isEmpty) {
-          return Center(child: Text('No results found'));
+          return SizedBox.shrink();
         }
 
         // Build the GridView for commercial ads
