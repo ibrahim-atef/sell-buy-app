@@ -117,7 +117,7 @@ class _AddAdExtraDetailsState extends State<AddAdExtraDetails> {
     "fashion-accessories": ["more_specifications"],
     "fashion-mens-clothing": ["more_specifications"],
     "fashion-womens-clothing": ["more_specifications"],
-    "furniture-bedroomts": ["more_specifications"],
+    "furniture-bedroom": ["more_specifications"],
     "furniture-living-room": ["more_specifications"],
     "furniture-office" : ["more_specifications"],
     "pets-accessories": ["more_specifications"],

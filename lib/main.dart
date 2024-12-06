@@ -11,8 +11,7 @@ import 'Model/categories_subcategories_model.dart';
 import 'language/localiztion.dart';
 
 
-
-
+ 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,6 +52,4 @@ class MyApp extends StatelessWidget {
 /*
 ---> total hours on this project : 5 +5 +5 + 4 + 4+1
 com.businessThamer.sellBuy
-hh111111
-
  */

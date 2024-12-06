@@ -18,7 +18,7 @@ class EditProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Profile ".tr),
+        title: Text("Profile".tr),
         leading: IconButton(
           onPressed: () {
             Get.back();
@@ -64,55 +64,58 @@ class EditProfileScreen extends StatelessWidget {
             //   },
             // ),
 
-            GetBuilder<AuthController>(
-              builder: (_) {
-                return ListTile(
-                  leading: Icon(Icons.delete_forever, color: Colors.red),
-                  title: Text(
-                    'Delete my information and account'.tr,
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  onTap: () { Get.defaultDialog(
-                    title: "Delete".tr,
-                    textConfirm: "Yes".tr,
+            // GetBuilder<AuthController>(
+            //   builder: (_) {
+            //     return ListTile(
+            //       leading: Icon(Icons.delete_forever, color: Colors.red),
+            //       title: Text(
+            //         'Delete my information and account'.tr,
+            //         style: TextStyle(color: Colors.red),
+            //       ),
+            //       onTap: () {
+            //          Get.defaultDialog(
+            //         title: "Delete".tr,
+            //         textConfirm: "Yes".tr,
 
-                    confirmTextColor: Colors.white,
-                    textCancel: "No".tr,
-                    buttonColor: mainColor,
-                    cancelTextColor: mainColor,
-                    backgroundColor: white,
-                    onConfirm: () {
-                      if (!authController.isDeleteAccount.value) {
-                        // Call deleteAccount function
-                        authController.deleteAccount();
-                      }
-                    },
-                    onCancel: () {
-                      // Optional: Handle cancel action if needed
-                    },
-                    barrierDismissible: false,
-                    // Optional: Show a loading indicator if isDeleteAccount is true
-                    content: Obx(() {
-                      if (authController.isDeleteAccount.value) {
-                        return Center(
-                          child: LinearProgressIndicator(color: mainColor,),
-                        );
-                      }
-                      return SizedBox(child: Center(
-                        child: Text(
-                          'are you sure u want to delete ur account'.tr + "!!",textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'Amiri',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17),
-                        ),
-                      ),); // Empty widget if not deleting
-                    }),
-                  );},
-                );
-              },
-            ),
+            //         confirmTextColor: Colors.white,
+            //         textCancel: "No".tr,
+            //         buttonColor: mainColor,
+            //         cancelTextColor: mainColor,
+            //         backgroundColor: white,
+            //         onConfirm: () {
+            //           if (!authController.isDeleteAccount.value) {
+            //             // Call deleteAccount function
+            //             authController.deleteAccount();
+            //           }
+            //         },
+            //         onCancel: () {
+            //           // Optional: Handle cancel action if needed
+            //         },
+            //         barrierDismissible: false,
+            //         // Optional: Show a loading indicator if isDeleteAccount is true
+            //         content: Obx(() {
+            //           if (authController.isDeleteAccount.value) {
+            //             return Center(
+            //               child: LinearProgressIndicator(color: mainColor,),
+            //             );
+            //           }
+            //           return SizedBox(child: Center(
+            //             child: Text(
+            //               'are you sure u want to delete ur account'.tr + "!!",textAlign: TextAlign.center,
+            //               style: TextStyle(
+            //                   color: Colors.black,
+            //                   fontFamily: 'Amiri',
+            //                   fontWeight: FontWeight.bold,
+            //                   fontSize: 17),
+            //             ),
+            //           ),); // Empty widget if not deleting
+            //         }),
+            //       );
+            //       },
+            //     );
+            //   },
+            // ),
+          
             ListTile(
               leading: Icon(IconBroken.Logout),
               title: Text('Logout'.tr),

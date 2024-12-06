@@ -302,7 +302,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               },
             ),
-            buildOptionItem(IconBroken.Edit, 'Edit Profile '.tr, () {
+            buildOptionItem(IconBroken.Edit, 'Profile'.tr, () {
               settingController.myData.value == null ||
                   !settingController.isUserLoggedIn()
                   ? Get.toNamed(Routes.LoginScreen)
@@ -310,7 +310,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Routes.EditProfileScreen,
               );
             }),
-            // "Saved Searches"
+            //  
             buildOptionItem(
               Icons.language,
               settingController.langLocal.value == ara ? 'العربية' : 'English',
@@ -337,7 +337,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
             ),
             // "Technical Support"
+            buildOptionItem(
+              Icons.delete_forever,
+               'Delete my information and account'.tr, () {
+                    Get.defaultDialog(
+                    title: "Delete".tr,
+                    textConfirm: "Yes".tr,
 
+                    confirmTextColor: Colors.white,
+                    textCancel: "No".tr,
+                    buttonColor: mainColor,
+                    cancelTextColor: mainColor,
+                    backgroundColor: white,
+                    onConfirm: () {
+                      if (!authController.isDeleteAccount.value) {
+                        // Call deleteAccount function
+                        authController.deleteAccount();
+                      }
+                    },
+                    onCancel: () {
+                      // Optional: Handle cancel action if needed
+                    },
+                    barrierDismissible: false,
+                    // Optional: Show a loading indicator if isDeleteAccount is true
+                    content: Obx(() {
+                      if (authController.isDeleteAccount.value) {
+                        return Center(
+                          child: LinearProgressIndicator(color: mainColor,),
+                        );
+                      }
+                      return SizedBox(child: Center(
+                        child: Text(
+                          'are you sure u want to delete ur account'.tr + "!!",textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Amiri',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17),
+                        ),
+                      ),); // Empty widget if not deleting
+                    }),
+                  );
+                 
+               }
+            ),
             // Updated Terms and Conditions button
             buildOptionItem(Icons.security, 'Terms and Conditions'.tr, () async {
               const String privacyPolicyUrl = "https://sites.google.com/view/sellbuyapp/%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9-%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%D8%A9";

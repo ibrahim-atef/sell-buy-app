@@ -379,6 +379,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                                   ))
                               : null;
                           // Call the controller's method to upload the ad
+                         
                           if (controller.extraAdDetails.keys.isEmpty) {
                             Get.snackbar(
                               "Error".tr,

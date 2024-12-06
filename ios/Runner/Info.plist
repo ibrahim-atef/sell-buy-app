@@ -41,19 +41,23 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
+<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>This app requires access to the photo library to allow users to select and upload photos.</string>
-    <key>NSCameraUsageDescription</key>
-    <string>This app requires access to the camera to take and upload photos.</string>
+	<string>This app requires access to the photo library to allow users to select and upload photos.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires access to the camera to take and upload photos.</string>
 	<key>NSMicrophoneUsageDescription</key>
- 	<string>This app requires access to the microphone to record audio for videos.</string>
- 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>We need access to your photos to allow you to select images.</string>
-
-
+	<string>This app requires access to the microphone to record audio for videos.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We require your location to display ads relevant to your area.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>We use your phone number to verify your identity and ensure a secure platform for buyers and sellers.</string>
+	<key>NSAdvertisingAttributionReportEndpoint</key>
+	<string>We use your interaction with ads to optimize and personalize your experience on our app.</string>
+	<key>Privacy - Data Collection Purpose</key>
+	<string>We collect data to provide you with personalized services, such as matching ads to your preferences.</string>
 </dict>
 </plist>
