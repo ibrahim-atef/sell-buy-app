@@ -41,23 +41,19 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-<key>CADisableMinimumFrameDurationOnPhone</key>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library to allow users to select and upload photos.</string>
+	<string>The Sell Buy app requires access to your photo library to allow you to upload images for ads you create, such as product photos.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to the camera to take and upload photos.</string>
+	<string>This app requires access to your camera to take photos for uploading ads.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app requires access to the microphone to record audio for videos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We require your location to display ads relevant to your area.</string>
+	<string>We require your location to display ads relevant to your area and improve your user experience.</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>We use your phone number to verify your identity and ensure a secure platform for buyers and sellers.</string>
-	<key>NSAdvertisingAttributionReportEndpoint</key>
-	<string>We use your interaction with ads to optimize and personalize your experience on our app.</string>
-	<key>Privacy - Data Collection Purpose</key>
-	<string>We collect data to provide you with personalized services, such as matching ads to your preferences.</string>
+	<string>Your phone number is used for secure user-to-user communication and is displayed in ads you post. We do not track users across apps or websites.</string>
 </dict>
 </plist>
