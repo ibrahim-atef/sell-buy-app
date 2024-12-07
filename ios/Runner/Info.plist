@@ -53,7 +53,5 @@
 	<string>This app requires access to the microphone to record audio for videos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We require your location to display ads relevant to your area and improve your user experience.</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>Your phone number is used for secure user-to-user communication and is displayed in ads you post. We do not track users across apps or websites.</string>
 </dict>
 </plist>
