@@ -20,7 +20,20 @@ class AppSettingController extends GetxController {
     langLocal.value = await getLanguage;
     super.onInit();
   }
-
+  Future<void> updatePhoneNumber(String newPhoneNumber) async {
+    if (uid != null) {
+      try {
+        await FireStoreMethods.usersCollection.doc(uid).update({
+          'phoneNumber': newPhoneNumber,
+        });
+        myData.value?.phoneNumber = newPhoneNumber; // Update local data
+        update(); // Notify UI
+      } catch (e) {
+        debugPrint('Error updating phone number: $e');
+        throw Exception('Failed to update phone number');
+      }
+    }
+  }
   Future<void> initUser() async {
     // Set loading to true
     isUserLoading.value = true;

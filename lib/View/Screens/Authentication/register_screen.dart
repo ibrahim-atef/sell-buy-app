@@ -101,11 +101,13 @@ class RegisterScreen extends StatelessWidget {
                           controller: phoneNumberController,
                           obscureText: false,
                           validator: (value) {
-                            if (value!.isEmpty)
-                              return 'Please enter phone number'.tr;
-                            if (!RegExp(phonePattern).hasMatch(
-                                authController.countryCode.value + value))
+                            // Phone number is optional, so no validation if it's empty
+                            if (value != null &&
+                                value.isNotEmpty &&
+                                !RegExp(phonePattern).hasMatch(
+                                    authController.countryCode.value + value)) {
                               return 'Please enter a valid phone number'.tr;
+                            }
                             return null;
                           },
                           hintText: 'xxxxxxxx'.tr,
@@ -284,9 +286,12 @@ class RegisterScreen extends StatelessWidget {
                           return ButtonComponent(
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                String phoneNumber =
-                                    authController.countryCode.value +
-                                        phoneNumberController.text;
+                                String phoneNumber = phoneNumberController
+                                    .text
+                                    .isNotEmpty
+                                    ? authController.countryCode.value +
+                                    phoneNumberController.text
+                                    : '';
 
                                 if (!authController.agreePolicies) {
                                   Get.snackbar(
